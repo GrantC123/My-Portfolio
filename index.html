@@ -3,13 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Portfolio Navigation</title>
     <link rel="stylesheet" href="styles.css">
-
+    <link rel="stylesheet" href="Button.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Google Font Link -->
 </head>
 <body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Your Logo</div>
+            <ul class="nav-menu">
+                <li><a href="#work">Work</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
 
-    <p class="first"> yo yo, sheesh</p>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to My Portfolio</h1>
+            <p>I create amazing web experiences</p>
+            <a href="#" class="cta-button">Learn More</a>
+        </div>
+        <div class="hero-image">
+            <img src="your-image.jpg" alt="Hero Image">
+        </div>
+    </section>
+
+   <!-- Amex Design System -->
     
+    <section class="project-showcase">
+        <div class="project-info">
+          <h2 class="project-name">Amex Design System</h2>
+          <p class="project-year">2024</p>
+          <p class="project-role">Lead Designer</p>
+          <a href="#" class="project-cta">View Project</a>
+        </div>
+        <div class="project-image">
+          <img src="Images/Nike-page-re-design.jpg" alt="Amex Design System">
+        </div>
+      </section>
+
+      <section class="project-showcase">
+        <div class="project-info">
+          <h2 class="project-name">Project Name</h2>
+          <p class="project-year">2024</p>
+          <p class="project-role">Lead Designer</p>
+          <a href="#" class="project-cta">View Project</a>
+        </div>
+        <div class="project-image">
+          <img src="/Images/Nike-page-re-design.jpg" alt="Project Name">
+        </div>
+      </section>
+
+      <section class="project-showcase">
+        <div class="project-info">
+          <h2 class="project-name">Project Name</h2>
+          <p class="project-year">2024</p>
+          <p class="project-role">Lead Designer</p>
+          <a href="#" class="project-cta">View Project</a>
+        </div>
+        <div class="project-image">
+          <img src="project-image.jpg" alt="Project Name">
+        </div>
+      </section>
+
+      <section class="project-showcase">
+        <div class="project-info">
+          <h2 class="project-name">Project Name</h2>
+          <p class="project-year">2024</p>
+          <p class="project-role">Lead Designer</p>
+          <a href="#" class="project-cta">View Project</a>
+        </div>
+        <div class="project-image">
+          <img src="project-image.jpg" alt="Project Name">
+        </div>
+      </section> 
+
+   <!-- Container for the React component -->
+   <div id="react-button-container"></div>
+
+   <!-- Load React and ReactDOM -->
+   <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin></script>
+   <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js" crossorigin></script>
+
+   <!-- Include your Button component -->
+   <script src="Button.js"></script> <!-- Adjust path as necessary -->
+
+   <script>
+       // Render the React component
+       const root = ReactDOM.createRoot(document.getElementById('react-button-container'));
+       root.render(React.createElement(Button, { onClick: () => alert('Button clicked!'), label: 'Click Me!' }));
+   </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
