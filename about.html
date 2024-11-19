@@ -1,41 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"> <!-- Character encoding -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
-    <meta name="description" content="A brief description of your webpage"> <!-- Description for SEO -->
-    <title>Your Page Title</title> <!-- Title of the page -->
-    
-    <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="styles.css"> <!-- Adjust the path as necessary -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="styles.css">
 
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Optional: favicon for the site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap" rel="stylesheet">
+
+
 </head>
 <body>
+
     <header>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
+        <nav class="navbar">
+            <div class="logo">
+              <a href="index.html"><img src="Images/logo.svg" alt="Hero Image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#work">Work</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="#linkedin"><img src="Images/LinkedIn-Icon.svg" alt="Hero Image"></a></li>
             </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </nav>
+
+        <div class="about-container">
+            <h1>About Us</h1>
+        </div>
     </header>
 
-    <main>
-        <section id="home">
-            <h1>Welcome to My Website</h1>
-            <p>This is a brief introduction to what my website is about.</p>
-        </section>
+    <div class="container">
+        <div class="content">
+            <h2>Our Story</h2>
+            <p>Welcome to our company! We are dedicated to providing the best service to our customers.</p>
+            
+            <h2>Our Team</h2>
+            <div id="team-container"></div>
+            
+            <button id="load-more">Load More</button>
+        </div>
+    </div>
 
-        <section id="about">
-            <h2>About Us</h2>
-            <p>Information about the website or the person behind it.</p>
-        </section>
+    <script src="script.js"></script>
+    <script src="wc-nav-component.js"></script>
 
-        <section id="services">
-            <h2>Our Services</h2>
-            <p>Details about the services offered.</p>
-        </section>
+    <!-- Footer Section -->
+<!--
+    <footer class="footer">
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h3>Grant</h3>
+            <p>Product Designer crafting intuitive and beautiful digital experiences.</p>
+            <div class="social-icons">
+              <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble"></i></a>
+              <a href="#" aria-label="Behance"><i class="fab fa-behance"></i></a>
+            </div>
+          </div>
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#work">Work</a></li>
+              <li><a href="#process">Process</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section contact">
+            <h3>Contact</h3>
+            <p><i class="fas fa-envelope"></i> hello@grantdesigns.com</p>
+            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 Grant Designs. All rights reserved.</p>
+        </div>
+      </footer> 
+
+      -->
+      <footer>
+        <my-footer></my-footer>
+      </footer>
+      <script src="wc-footer.js"></script>
+
+</body>
+</html>

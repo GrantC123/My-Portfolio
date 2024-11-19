@@ -6,17 +6,26 @@
     <title>Portfolio Navigation</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="Button.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Google Font Link -->
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap" rel="stylesheet">
+
+
 </head>
 <body>
     <header>
         <nav class="navbar">
-            <div class="logo">Your Logo</div>
+            <div class="logo">
+              <a href="index.html"><img src="Images/logo.svg" alt="Hero Image"></a>
+            </div>
             <ul class="nav-menu">
                 <li><a href="#work">Work</a></li>
                 <li><a href="#process">Process</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="#linkedin"><img src="Images/LinkedIn-Icon.svg" alt="Hero Image"></a></li>
             </ul>
             <div class="hamburger">
                 <span class="bar"></span>
@@ -26,25 +35,28 @@
         </nav>
     </header>
 
+
     <section class="hero">
+      <div class="hero-contentwrapper">
         <div class="hero-content">
-            <h1>Welcome to My Portfolio</h1>
-            <p>I create amazing web experiences</p>
+            <h1>I'm Grant</h1>
+            <h2>I'm a Product Designer</h2>
             <a href="#" class="cta-button">Learn More</a>
         </div>
         <div class="hero-image">
-            <img src="your-image.jpg" alt="Hero Image">
+            <img src="Images/me-hero.png" alt="Hero Image">
         </div>
+      </div>
     </section>
 
-   <!-- Amex Design System -->
-    
+   <!-- Project Showcase Section -->
+    <section class="showcase-container">
     <section class="project-showcase">
         <div class="project-info">
           <h2 class="project-name">Amex Design System</h2>
           <p class="project-year">2024</p>
           <p class="project-role">Lead Designer</p>
-          <a href="#" class="project-cta">View Project</a>
+          <a href="#" class="cta-button">View Project</a>
         </div>
         <div class="project-image">
           <img src="Images/Nike-page-re-design.jpg" alt="Amex Design System">
@@ -56,7 +68,7 @@
           <h2 class="project-name">Project Name</h2>
           <p class="project-year">2024</p>
           <p class="project-role">Lead Designer</p>
-          <a href="#" class="project-cta">View Project</a>
+          <a href="#" class="cta-button">View Project</a>
         </div>
         <div class="project-image">
           <img src="/Images/Nike-page-re-design.jpg" alt="Project Name">
@@ -68,7 +80,7 @@
           <h2 class="project-name">Project Name</h2>
           <p class="project-year">2024</p>
           <p class="project-role">Lead Designer</p>
-          <a href="#" class="project-cta">View Project</a>
+          <a href="#" class="cta-button">View Project</a>
         </div>
         <div class="project-image">
           <img src="project-image.jpg" alt="Project Name">
@@ -80,29 +92,52 @@
           <h2 class="project-name">Project Name</h2>
           <p class="project-year">2024</p>
           <p class="project-role">Lead Designer</p>
-          <a href="#" class="project-cta">View Project</a>
+          <a href="#" class="cta-button">View Project</a>
         </div>
         <div class="project-image">
           <img src="project-image.jpg" alt="Project Name">
         </div>
       </section> 
+    </section>
 
-   <!-- Container for the React component -->
-   <div id="react-button-container"></div>
+ <!-- Footer Section 
 
-   <!-- Load React and ReactDOM -->
-   <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin></script>
-   <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js" crossorigin></script>
-
-   <!-- Include your Button component -->
-   <script src="Button.js"></script> <!-- Adjust path as necessary -->
-
-   <script>
-       // Render the React component
-       const root = ReactDOM.createRoot(document.getElementById('react-button-container'));
-       root.render(React.createElement(Button, { onClick: () => alert('Button clicked!'), label: 'Click Me!' }));
-   </script>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section about">
+          <h3>Grant</h3>
+          <p>Product Designer crafting intuitive and beautiful digital experiences.</p>
+          <div class="social-icons">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble"></i></a>
+            <a href="#" aria-label="Behance"><i class="fab fa-behance"></i></a>
+          </div>
+        </div>
+        <div class="footer-section links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section contact">
+          <h3>Contact</h3>
+          <p><i class="fas fa-envelope"></i> hello@grantdesigns.com</p>
+          <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Grant Designs. All rights reserved.</p>
+      </div>
+    </footer>
+-->
 
     <script src="script.js"></script>
+    <footer>
+    <my-footer></my-footer>
+  </footer>
+      <script src="wc-footer.js"></script>
 </body>
 </html>
