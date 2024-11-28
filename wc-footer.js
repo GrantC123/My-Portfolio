@@ -49,7 +49,7 @@ class MyFooter extends HTMLElement {
                 }
                 
                 .social-icons a:hover {
-                    color: #007bff; /* Change to blue on hover */
+                    color: #fff; /* Change to blue on hover */
                 }
                 
                 .footer-section.links ul {
@@ -104,7 +104,7 @@ class MyFooter extends HTMLElement {
                       <h3>Grant</h3>
                       <p>Product Designer crafting intuitive and beautiful digital experiences.</p>
                       <div class="social-icons">
-                          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                          <a href="https://www.linkedin.com/in/grantcrowder/" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                           <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble"></i></a>
                           <a href="#" aria-label="Behance"><i class="fab fa-behance"></i></a>
                       </div>
@@ -120,8 +120,8 @@ class MyFooter extends HTMLElement {
                   </div>
                   <div class="footer-section contact">
                       <h3>Contact</h3>
-                      <p><i class="fas fa-envelope"></i> hello@grantdesigns.com</p>
-                      <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                      <p><i class="fas fa-envelope"></i> grantcrowderdesign@gmail.com</p>
+                      <p><i class="fas fa-phone"></i> +1 (336) 991-2524</p>
                   </div>
               </div>
               <div class="footer-bottom">

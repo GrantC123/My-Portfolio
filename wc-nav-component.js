@@ -83,7 +83,7 @@ class NavigationMenu extends HTMLElement {
                         display: block; /* Show hamburger icon on mobile */
                         float: right; /* Align to the right */
                     }
-                }
+
             </style>
 
             <nav class="navbar">
@@ -95,7 +95,7 @@ class NavigationMenu extends HTMLElement {
                     <li><a href="#process">Process</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="#contact">yerp</a></li>
-                    <li><a href="#linkedin"><img src="Images/LinkedIn-Icon.svg" alt="LinkedIn"></a></li>
+                    <li><a href="https://www.linkedin.com/in/grantcrowder/"><img src="Images/LinkedIn-Icon.svg" alt="LinkedIn"></a></li>
                 </ul>
                 <div class="hamburger" id="hamburger">
                     <span class="bar"></span>
