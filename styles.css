@@ -127,6 +127,18 @@ body {
     height: auto;
 }
 
+/* Global Page Wrapper*/
+
+.page-wrapper {
+    max-width: 1264px;
+    width: 100%;
+    margin: 0 auto;
+    padding:0 2rem;
+    box-sizing: border-box;
+
+
+}
+
 /* Project Showcase Styles */
 
 .showcase-container {
@@ -258,6 +270,14 @@ body {
     .project-image {
         max-width: 100%;
     }
+
+    .page-wrapper {
+        width: 100%;
+        margin: 0 auto;
+        padding:0 rem;
+        box-sizing: border-box;
+
+    }
 }
 
 
@@ -341,7 +361,7 @@ body {
       align-items: center; /* Center items on smaller screens */
       padding: 0; /* Remove padding on smaller screens for better spacing */
       width: calc(100% - 4rem); /* Adjust width for smaller screens */
-      margin-left: auto; 
+      margin-left: aut1reo; 
       margin-right: auto; 
       max-width: none; /* Remove max-width for stacking */
       box-sizing: border-box; /* Ensure padding is included in width */
@@ -350,4 +370,13 @@ body {
      .footer-section {
        margin-bottom: 2rem; 
      }
+    }
+
+     @media (max-width: 768px) {
+        .page-wrapper {
+            padding: 0 1rem;
+        }
+        .navbar {
+            padding: 0 1rem;
+        }
   }

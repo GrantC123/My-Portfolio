@@ -121,7 +121,7 @@ class MyFooter extends HTMLElement {
                   <div class="footer-section contact">
                       <h3>Contact</h3>
                       <p><i class="fas fa-envelope"></i> grantcrowderdesign@gmail.com</p>
-                      <p><i class="fas fa-phone"></i> +1 (336) 991-2524</p>
+
                   </div>
               </div>
               <div class="footer-bottom">
