@@ -62,6 +62,49 @@
         .linkedin {
             height: 24px;
         }
+
+        .contact-info-container{
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            gap: 1rem; 
+            color:#595e5f; 
+            width:100%;"
+        }
+
+        .contact-divider {
+            width:1px; 
+            height: 24px; 
+            background-color:#D4DCEA;"
+        }
+
+       /* Media Queries */
+@media (max-width: 600px) {
+
+/* Navigation Mobile Styles */
+.container {
+            padding: 3rem 1rem;
+        }
+
+h1 {
+            font-size: 2rem;
+        }
+
+img {
+            height: 3.5rem;
+        }
+
+.contact-divider {
+
+    display: none;
+
+}
+
+
+.contact-info-container{
+    flex-direction: column;
+
+}
     </style>
 </head>
 <body>
@@ -72,9 +115,9 @@
             My portfolio is currently under construction. I'm working hard to create something amazing. 
             Stay tuned. 
         </p>
-        <div style="display: flex;align-items: center; justify-content: center; gap: 1rem; color:#595e5f; width:100%;">
+        <div class="contact-info-container">
         <p style="line-break: anywhere;">grantcrowderdesign@gmail.com</p>
-        <div style="width:1px; height: 24px; background-color:#D4DCEA;"></div>
+        <div class="contact-divider"></div>
         <a style="display:flex;" href="https://www.linkedin.com/in/grantcrowder/"><img class="linkedin" src="Images/linkedin.svg"></a>
 
         </div>
