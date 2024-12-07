@@ -30,6 +30,7 @@ class MyFooter extends HTMLElement {
                     flex: 1;
                     margin-bottom: 2rem;
                     min-width: 250px;
+                    width:100%;
                 }
                 
                 .footer-section h3 {
@@ -120,7 +121,7 @@ class MyFooter extends HTMLElement {
                   </div>
                   <div class="footer-section contact">
                       <h3>Contact</h3>
-                      <p><i class="fas fa-envelope"></i> grantcrowderdesign@gmail.com</p>
+                      <p>grantcrowderdesign@gmail.com</p>
 
                   </div>
               </div>
