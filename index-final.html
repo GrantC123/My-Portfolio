@@ -24,10 +24,13 @@
             <h1 style="line-height: 100%;">Grant Crowder</h1>
             <h2>A Senior product designer excited by intuitive solutions. Currently designing at Red Ventures.
             </h2>
+
+            <my-button label="Custom Button"></my-button>
+
             <a href="#project-section" class="cta-button">Check out my work</a>
         </div>
         <div class="hero-image">
-            <img src="Images/me-hero.png" alt="Hero Image">
+            <img src="Images/me-me-me.svg" alt="Hero Image">
         </div>
       </div>
     </section>
@@ -36,96 +39,51 @@
    <!-- Project Showcase Section -->
     <section class="showcase-container page-wrapper" style="margin:5rem auto;">
 
-    <h2>My Projects</h2>
+    <h2 class="h2-center-aligned">Top case studies</h2>
     <p>Here are some of my current and most recent projects.</p>
-    <section class="project-showcase">
-        <div class="project-info">
-          <h2 class="project-name">Amex Design System</h2>
-          <p class="project-year">2024</p>
-          <p class="project-role">Lead Designer</p>
-          <a href="#" class="cta-button">View Project <img style="padding-left:0.5rem;" src="Images/arrow.svg"></a>
-        </div>
-        <div class="project-image">
-          <img loading=”lazy” src="Images/design-system-test.jpg" alt="Amex Design System">
-        </div>
-      </section>
+      <section class="project-grid">
+        <a href="bankrate-data-center.html"><project-tile
+            image="https://via.placeholder.com/1280x720"
+            year="2024"
+            title="Bankrate Data Center"
+            description="Description of Project 1. This is a sample project to demonstrate the responsive layout."
+            label="UX Design">
+        </project-tile>
+      </a>
 
-      <section class="project-showcase">
-       <div class="project-image">
-          <img loading=”lazy” src="Images/design-system-test.jpg" alt="Project Name">
-        </div>
-        <div class="project-info">
-          <h2 class="project-name">Project Name</h2>
-          <p class="project-year">2024</p>
-          <p class="project-role">Lead Designer</p>
-          <a href="#" class="cta-button">View Project <img style="padding-left:0.5rem;" src="Images/arrow.svg"></a>
-        </div>
-      </section>
+        <project-tile
+            image="https://via.placeholder.com/1280x720"
+            year="2021-2024"
+            title="Amex Design System"
+            description="Description of Project 2. Another example to show how multiple projects appear in the grid."
+            label="UI/UX">
+        </project-tile>
+        <project-tile
+            image="https://via.placeholder.com/1280x720"
+            year="2022"
+            title="Project 3"
+            description="Description of Project 3. This project has a longer description to demonstrate how the layout handles varying content lengths."
+            label="Web Design">
+        </project-tile>
+        <project-tile
+        image="https://via.placeholder.com/1280x720"
+        year="2022"
+        title="Project 4"
+        description="Description of Project 3. This project has a longer description to demonstrate how the layout handles varying content lengths."
+        label="Web Design">
+    </project-tile>
+  </section>
+</section>
 
-      <section class="project-showcase">
-        <div class="project-info">
-          <h2 class="project-name">Hilton Subdomain Refresh</h2>
-          <p class="project-year">2021</p>
-          <p class="project-role">Lead Designer</p>
-          <a href="hilton-subdomain.html" class="cta-button">View Project <img style="padding-left:0.5rem;" src="Images/arrow.svg"></a>
-        </div>
-        <div class="project-image">
-          <img loading=”lazy” src="Images/design-system-test.jpg" alt="Project Name">
-        </div>
-      </section>
 
-      <section class="project-showcase">
-        <div class="project-info">
-          <h2 class="project-name">Editorial Imagery</h2>
-          <p class="project-year">2020-2024</p>
-          <p class="project-role">Product Designer</p>
-          <a href="#" class="cta-button">View Project <img style="padding-left:0.5rem;" src="Images/arrow.svg"></a>
-        </div>
-        <div class="project-image">
-          <img loading=”lazy” src="Images/NextAdvisor.jpg" alt="Project Name">
-        </div>
-      </section> 
-    </section>
 
- <!-- Footer Section 
-
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section about">
-          <h3>Grant</h3>
-          <p>Product Designer crafting intuitive and beautiful digital experiences.</p>
-          <div class="social-icons">
-            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="#" aria-label="Dribbble"><i class="fab fa-dribbble"></i></a>
-            <a href="#" aria-label="Behance"><i class="fab fa-behance"></i></a>
-          </div>
-        </div>
-        <div class="footer-section links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#process">Process</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-section contact">
-          <h3>Contact</h3>
-          <p><i class="fas fa-envelope"></i> hello@grantdesigns.com</p>
-          <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 Grant Designs. All rights reserved.</p>
-      </div>
-    </footer>
--->
-
-    <script src="script.js"></script>
-    <footer>
+    
+  <footer>
     <my-footer></my-footer>
   </footer>
+  <script src="script.js"></script>
       <script src="wc-footer.js"></script>
       <script src="wc-nav-component.js"></script>
+      <script src="wc-project-tile.js"></script>
 </body>
 </html>

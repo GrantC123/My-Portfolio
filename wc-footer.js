@@ -126,7 +126,7 @@ class MyFooter extends HTMLElement {
                   </div>
               </div>
               <div class="footer-bottom">
-                  <p>&copy; 2024 Grant Designs. All rights reserved.</p>
+                  <p>&copy; 2025 Grant Designs. All rights reserved.</p>
               </div>
             </footer>
         `;

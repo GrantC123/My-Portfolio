@@ -4,9 +4,14 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'Stinger Fit Bold'; 
+    src: url('fonts/StingerFitTrial-Bold.ttf') format('truetype'); 
+}
+
 
 body {
-    font-family: 'Funnel Display', sans-serif;
+    font-family: 'Stinger Fit Bold', sans-serif;
     /* Use Funnel Display font */
     /* Use Google Font */
     line-height: 1.6;
@@ -23,10 +28,12 @@ body li {
 
 p {
     color:#555;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-h {
-    color: #1e1e1e;;
+h1,h2,h3,h4,h5,h6 {
+    color: #1e1e1e;
+
 }
 /* Navigation Styles */
 .navbar {
@@ -115,7 +122,7 @@ h {
 }
 
 .hero-content h1 {
-    font-size: 8rem;
+    font-size: 9rem;
     margin-bottom: 1rem;
 }
 
@@ -161,77 +168,7 @@ h {
 
 }
 
-/* Project Showcase Styles */
 
-.showcase-container {
-    margin-left: 32px;
-    margin-right: 32px;
-}
-
-.project-showcase {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    width: 100%;
-    margin: 2rem auto;
-    border-radius: 1rem;
-    background: #FFF;
-    box-shadow: 0px 12px 16px 0px rgba(0, 0, 0, 0.08);
-
-}
-
-.project-info {
-    flex: 1;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-}
-
-.project-name {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.project-year,
-.project-role {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.project-cta {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.project-cta:hover,
-.project-cta:focus {
-    background-color: #0056b3;
-}
-
-.project-image {
-    flex: 1;
-    background-color: #fff;
-    max-width: none;
-    max-height: none;
-    margin: 0 auto;
-    display: block;
-    position: static;
-    overflow: auto;
-}
-
-.project-image img {
-    height: 400px;
-  width: 100%;
-  object-fit: cover;
-}
 
 /* Media Queries */
 @media (max-width: 768px) {
@@ -288,21 +225,6 @@ h {
         text-align: center;
     }
 
-    /* Project Showcase Mobile Styles */
-    .project-showcase {
-        flex-direction: column;
-    }
-
-    .project-info {
-        padding-right: 0;
-        margin-bottom: 20px;
-        flex:1;
-    }
-
-    .project-image {
-        max-width: 100%;
-    }
-
     .page-wrapper {
         width: 100%;
         margin: 0 auto;
@@ -312,109 +234,6 @@ h {
     }
 }
 
-
-/* Footer Section */
-
-
-.footer {
-    background-color: #000;
-    /* Black background */
-    color: #fff;
-    /* White text */
-    padding: 3rem 0 1rem;
-    font-family: 'Funnel Display', sans-serif;
-}
-
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.footer-section {
-    flex: 1;
-    margin-bottom: 2rem;
-    min-width: 250px;
-}
-
-.footer-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-.footer-section p {
-    margin-bottom: 1rem;
-}
-
-.social-icons a {
-    color: #fff;
-    /* White icons */
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    transition: color 0.3s ease;
-}
-
-.social-icons a:hover {
-    color: #007bff;
-    /* Change to blue on hover */
-}
-
-.footer-section.links ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.footer-section.links li {
-    margin-bottom: 0.5rem;
-}
-
-.footer-section.links a {
-    color: #fff;
-    /* White links */
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-section.links a:hover {
-    color: #007bff;
-    /* Change to blue on hover */
-}
-
-.footer-section.contact i {
-    margin-right: 0.5rem;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #555;
-    /* Dark gray border */
-}
-
-@media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        align-items: center;
-        /* Center items on smaller screens */
-        padding: 0;
-        /* Remove padding on smaller screens for better spacing */
-        width: calc(100% - 4rem);
-        /* Adjust width for smaller screens */
-        margin-left: aut1reo;
-        margin-right: auto;
-        max-width: none;
-        /* Remove max-width for stacking */
-        box-sizing: border-box;
-        /* Ensure padding is included in width */
-    }
-
-    .footer-section {
-        margin-bottom: 2rem;
-    }
-}
 
 @media (max-width: 768px) {
     .page-wrapper {
@@ -493,3 +312,14 @@ h {
   html {
     scroll-behavior: smooth;
   }
+
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 25vw, 350px), 1fr));
+    max-width:1280px;
+    gap: clamp(1rem, 2vw, 2rem);
+    padding: clamp(1rem, 3vw, 3rem);
+    margin:auto;
+  }
+  
