@@ -325,7 +325,8 @@ h1,h2,h3,h4,h5,h6 {
     grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 25vw, 350px), 1fr));
     max-width:1280px;
     gap: clamp(1rem, 2vw, 2rem);
-    padding: clamp(1rem, 3vw, 3rem);
+    padding: clamp(1rem, 3vw,);
     margin:auto;
+    padding-top: 2rem;
   }
   
