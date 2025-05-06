@@ -32,33 +32,35 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#151515]">
-      {/* Hero Section */}
-      <header className="container mx-auto px-4 py-24 flex-grow flex items-center">
-        <div className="flex flex-col justify-between h-full">
-          <h1 className="flex flex-col justify-between h-full">
-            <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16">
-              <span className="text-[#000]">I'm Grant. </span>
-              <AnimatedText
-                text="I craft impactful solutions with creativity and expertise, always delivering high-quality work aligned with my clients' goals. Currently designing at Red Ventures."
-                className="text-[#595959]"
-              />
-            </p>
-            <Link
-              href="#work"
-              className="group flex items-center self-start transition-transform hover:scale-105"
-              aria-label="View My Work"
-            >
-              <img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Button-erM9SRUcTOdDYna12TDDic8MpXB3Zq.svg"
-                alt="View My Work"
-                width={180}
-                height={48}
-                className="h-auto"
-              />
-            </Link>
-          </h1>
+      {/* Hero Section - Full width background */}
+      <section className="w-full bg-[#030022] py-24">
+        <div className="container mx-auto px-4 flex-grow flex items-center">
+          <div className="flex flex-col justify-between h-full">
+            <h1 className="flex flex-col justify-between h-full">
+              <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16">
+                <span className="text-[#A0AEFF]">I'm Grant. </span>
+                <AnimatedText
+                  text="I craft impactful solutions with creativity and expertise, always delivering high-quality work aligned with my clients' goals. Currently designing at Red Ventures."
+                  className="text-white"
+                />
+              </p>
+              <Link
+                href="#work"
+                className="group flex items-center self-start transition-transform hover:scale-105"
+                aria-label="View My Work"
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Button-erM9SRUcTOdDYna12TDDic8MpXB3Zq.svg"
+                  alt="View My Work"
+                  width={180}
+                  height={48}
+                  className="h-auto"
+                />
+              </Link>
+            </h1>
+          </div>
         </div>
-      </header>
+      </section>
 
       {/* Work Section */}
       <section className="py-24 bg-[#f1f1f1]" id="work">

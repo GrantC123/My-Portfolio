@@ -64,10 +64,10 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         "Editorial illustration for '1 in 3 Americans say the state of the US economy is harming their mental health'",
     },
     {
-      src: "/placeholder.svg?key=wxhmx",
-      alt: "Financial advisor illustration",
-      title: "Investment Strategies",
-      description: "Digital illustration for investment guide",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5-common-types-of-bank-account-fraud-and-how-to-protect-yourself.jpg-BHntnFB9wa05oRV9HLkQSCCmDlQ40b.jpeg",
+      alt: "Laptop with binary code and floating check",
+      title: "Bank Account Fraud",
+      description: "Editorial illustration for '5 common types of bank account fraud and how to protect yourself'",
     },
     {
       src: "/placeholder.svg?key=39rul",
