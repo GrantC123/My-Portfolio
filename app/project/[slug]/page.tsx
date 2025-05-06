@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -9,8 +11,7 @@ import { projects } from "../../data"
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = projects.find((p) => p.slug === params.slug)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-  const [lightboxImage, setLightboxImage] = useState("")
-  const [lightboxAlt, setLightboxAlt] = useState("")
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // Get all projects except the current one
   const otherProjects = projects.filter((p) => p.slug !== params.slug)
@@ -31,7 +32,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
     currentPreviewProjects.push(...wrappedProjects)
   }
 
-  // Handle previous button click
+  // Handle previous button click for project previews
   const handlePrevious = () => {
     setPreviewStartIndex((prevIndex) => {
       const newIndex = prevIndex - 1
@@ -39,32 +40,13 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
     })
   }
 
-  // Handle next button click
+  // Handle next button click for project previews
   const handleNext = () => {
     setPreviewStartIndex((prevIndex) => {
       const newIndex = prevIndex + 1
       return newIndex >= otherProjects.length ? 0 : newIndex
     })
   }
-
-  // Open lightbox with specific image
-  const openLightbox = (src: string, alt: string) => {
-    setLightboxImage(src)
-    setLightboxAlt(alt)
-    setIsLightboxOpen(true)
-  }
-
-  // Scroll to top when the page loads
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [params.slug])
-
-  if (!project) {
-    return <div>Project not found</div>
-  }
-
-  // Check if this is the Editorial Imagery project
-  const isGalleryProject = project.slug === "editorial-imagery"
 
   // Gallery images for Editorial Imagery project
   const galleryImages = [
@@ -75,10 +57,11 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       description: "Editorial illustration for NextAdvisor article on personal finance",
     },
     {
-      src: "/placeholder.svg?key=j32nz",
-      alt: "Credit card illustration",
-      title: "Credit Card Comparison",
-      description: "Magazine spread design for credit card feature",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1-in-3-Americans-say-the-state-of-the-US-economy-is-harming-their-mental-health.jpg-uvcPQaJJq4BsODH77yaLcKXyZJrD30.jpeg",
+      alt: "Melting dollar bill illustration with person standing beneath it",
+      title: "Economic Anxiety",
+      description:
+        "Editorial illustration for '1 in 3 Americans say the state of the US economy is harming their mental health'",
     },
     {
       src: "/placeholder.svg?key=wxhmx",
@@ -105,6 +88,64 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       description: "Visual guide to understanding mortgage rates",
     },
   ]
+
+  // Open lightbox with specific image index
+  const openLightbox = (index: number) => {
+    setCurrentImageIndex(index)
+    setIsLightboxOpen(true)
+  }
+
+  // Navigate to previous image in lightbox
+  const prevImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
+    setCurrentImageIndex((prevIndex) => {
+      const newIndex = prevIndex - 1
+      return newIndex < 0 ? galleryImages.length - 1 : newIndex
+    })
+  }
+
+  // Navigate to next image in lightbox
+  const nextImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
+    setCurrentImageIndex((prevIndex) => {
+      const newIndex = prevIndex + 1
+      return newIndex >= galleryImages.length ? 0 : newIndex
+    })
+  }
+
+  // Handle keyboard navigation in lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isLightboxOpen) return
+
+      if (e.key === "ArrowLeft") {
+        prevImage()
+      } else if (e.key === "ArrowRight") {
+        nextImage()
+      } else if (e.key === "Escape") {
+        setIsLightboxOpen(false)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [isLightboxOpen])
+
+  // Scroll to top when the page loads
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [params.slug])
+
+  if (!project) {
+    return <div>Project not found</div>
+  }
+
+  // Check if this is the Editorial Imagery project
+  const isGalleryProject = project.slug === "editorial-imagery"
+
+  // For Bankrate project, we have a special image
+  const bankrateImage =
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bankrate-DC-Cover-7B6cx26SzmCuDaMgE8FUqZ8XyQoso5.png"
 
   return (
     <div className="min-h-screen bg-[#ffffff] text-[#151515]" id="project-top">
@@ -156,7 +197,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 <div
                   key={index}
                   className="group cursor-pointer overflow-hidden rounded-xl"
-                  onClick={() => openLightbox(image.src, image.alt)}
+                  onClick={() => openLightbox(index)}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
                     <Image
@@ -266,16 +307,15 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             {project.slug === "bankrate-data-center" && (
               <>
                 <button
-                  onClick={() =>
-                    openLightbox(
-                      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bankrate-DC-Cover-7B6cx26SzmCuDaMgE8FUqZ8XyQoso5.png",
-                      "Bankrate Data Center interface",
-                    )
-                  }
+                  onClick={() => {
+                    // For Bankrate, we'll use a special case since it's not part of the gallery
+                    setCurrentImageIndex(0)
+                    setIsLightboxOpen(true)
+                  }}
                   className="mt-16 -mx-4 md:-mx-8 lg:-mx-16 w-full cursor-zoom-in"
                 >
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bankrate-DC-Cover-7B6cx26SzmCuDaMgE8FUqZ8XyQoso5.png"
+                    src={bankrateImage || "/placeholder.svg"}
                     alt="Bankrate Data Center interface showing the homepage with search functionality and data visualization"
                     width={1920}
                     height={1080}
@@ -303,23 +343,69 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
             onClick={() => setIsLightboxOpen(false)}
           >
+            {/* Close button */}
             <button
-              className="absolute top-4 right-4 text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+              className="absolute top-4 right-4 text-white p-2 rounded-full hover:bg-white/10 transition-colors z-20"
               onClick={(e) => {
                 e.stopPropagation()
                 setIsLightboxOpen(false)
               }}
+              aria-label="Close lightbox"
             >
               <X size={24} />
             </button>
-            <div className="max-w-5xl w-full h-auto px-4">
-              <Image
-                src={lightboxImage || "/placeholder.svg"}
-                alt={lightboxAlt}
-                width={1920}
-                height={1080}
-                className="w-full h-auto object-contain"
-              />
+
+            {/* Previous button */}
+            <button
+              className="absolute left-4 md:left-8 text-white p-2 rounded-full hover:bg-white/10 transition-colors z-20"
+              onClick={prevImage}
+              aria-label="Previous image"
+            >
+              <ArrowLeft size={24} />
+            </button>
+
+            {/* Next button */}
+            <button
+              className="absolute right-4 md:right-8 text-white p-2 rounded-full hover:bg-white/10 transition-colors z-20"
+              onClick={nextImage}
+              aria-label="Next image"
+            >
+              <ArrowRight size={24} />
+            </button>
+
+            {/* Image container */}
+            <div className="max-w-5xl w-full h-auto px-4 relative">
+              {isGalleryProject ? (
+                <>
+                  <Image
+                    src={galleryImages[currentImageIndex].src || "/placeholder.svg"}
+                    alt={galleryImages[currentImageIndex].alt}
+                    width={1920}
+                    height={1080}
+                    className="w-full h-auto object-contain"
+                  />
+                  <div className="absolute bottom-4 left-0 right-0 text-center text-white">
+                    <h3 className="text-xl font-bold">{galleryImages[currentImageIndex].title}</h3>
+                    <p className="text-sm opacity-80">{galleryImages[currentImageIndex].description}</p>
+                  </div>
+                </>
+              ) : (
+                // For non-gallery projects that might use the lightbox (like Bankrate)
+                <Image
+                  src={bankrateImage || "/placeholder.svg"}
+                  alt="Bankrate Data Center interface"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto object-contain"
+                />
+              )}
+
+              {/* Image counter */}
+              {isGalleryProject && (
+                <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                  {currentImageIndex + 1} / {galleryImages.length}
+                </div>
+              )}
             </div>
           </div>
         )}
