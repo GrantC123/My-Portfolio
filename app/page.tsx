@@ -38,9 +38,9 @@ export default function Home() {
           <div className="flex flex-col justify-between h-full">
             <h1 className="flex flex-col justify-between h-full">
               <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16">
-                <span className="text-[#A0AEFF]">I'm Grant. </span>
+                <span className="text-[#A0AEFF]">I'm Grant</span>
                 <AnimatedText
-                  text="I craft impactful solutions with creativity and expertise, always delivering high-quality work aligned with my clients' goals. Currently designing at Red Ventures."
+                  text=" — Senior Product Designer and creative leader driving results through strategic design and team empowerment."
                   className="text-white"
                 />
               </p>
