@@ -62,7 +62,7 @@ export default function Navigation() {
             href="https://www.linkedin.com/in/grantcrowder/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm hover:text-[#450BEC] transition-colors"
+            className="text-sm hover:text-purple-600 transition-colors"
           >
             <LinkedInIcon />
           </Link>
@@ -75,21 +75,21 @@ export default function Navigation() {
           <div className="flex flex-col space-y-4">
             <Link
               href="/#work"
-              className="text-sm py-2 hover:text-[#450BEC] transition-colors"
+              className="text-sm py-2 hover:text-purple-600 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Work
             </Link>
             <Link
               href="/about"
-              className="text-sm py-2 hover:text-[#450BEC] transition-colors"
+              className="text-sm py-2 hover:text-purple-600 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link
               href="/resume"
-              className="text-sm py-2 hover:text-[#450BEC] transition-colors"
+              className="text-sm py-2 hover:text-purple-600 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Resume
@@ -98,7 +98,7 @@ export default function Navigation() {
               href="https://www.linkedin.com/in/grantcrowder/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm py-2 hover:text-[#450BEC] transition-colors flex items-center"
+              className="text-sm py-2 hover:text-purple-600 transition-colors flex items-center"
               onClick={() => setIsMenuOpen(false)}
             >
               <LinkedInIcon className="mr-2" />

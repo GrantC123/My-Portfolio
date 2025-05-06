@@ -24,7 +24,7 @@ const Footer = () => {
             href="https://www.linkedin.com/in/grantcrowder/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm hover:text-[#450BEC] transition-colors"
+            className="text-sm hover:text-purple-600 transition-colors"
           >
             <LinkedInIcon />
           </Link>

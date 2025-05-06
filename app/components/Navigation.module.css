@@ -9,7 +9,7 @@
   height: 2px;
   bottom: -4px;
   left: 0;
-  background-color: #450bec;
+  background-color: #450bec; /* purple-600 */
   transform: scaleX(0);
   transform-origin: bottom right;
   transition: transform 0.3s ease-out;

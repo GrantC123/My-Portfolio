@@ -18,7 +18,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
           What people are saying
-          <span className="w-3 h-3 rounded-full bg-[#450BEC]" />
+          <span className="w-3 h-3 rounded-full bg-purple-600" />
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {testimonials.map((testimonial, index) => (
