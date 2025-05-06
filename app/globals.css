@@ -38,3 +38,22 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Custom styles to force border-radius */
+.password-input,
+.password-input:focus,
+.password-input:active,
+.password-input:hover {
+  border-radius: 0.5rem !important;
+  -webkit-border-radius: 0.5rem !important;
+  -moz-border-radius: 0.5rem !important;
+}
+
+.password-button,
+.password-button:focus,
+.password-button:active,
+.password-button:hover {
+  border-radius: 0.5rem !important;
+  -webkit-border-radius: 0.5rem !important;
+  -moz-border-radius: 0.5rem !important;
+}

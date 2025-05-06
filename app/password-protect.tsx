@@ -44,19 +44,19 @@ export default function PasswordProtect({ onAccessGranted }: { onAccessGranted: 
               name="password"
               type="password"
               required
-              className="!rounded-lg appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+              className="password-input appearance-none !rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
               placeholder="Enter site password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{ borderRadius: "0.5rem" }}
+              style={{ borderRadius: "0.5rem !important" }}
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <div>
             <button
               type="submit"
-              className="!rounded-lg group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-              style={{ borderRadius: "0.5rem" }}
+              className="password-button !rounded-lg group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              style={{ borderRadius: "0.5rem !important" }}
             >
               Access Site
             </button>
