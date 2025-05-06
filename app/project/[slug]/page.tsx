@@ -416,29 +416,29 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
           <div className="flex flex-col gap-8">
             {/* Project Previews */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
               {currentPreviewProjects.map((previewProject, index) => (
-                <Link key={index} href={`/project/${previewProject.slug}`} className="block group">
-                  <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 h-full">
-                    <div className="relative aspect-video">
-                      <Image
-                        src={previewProject.image || "/placeholder.svg"}
-                        alt={previewProject.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                <Link key={index} href={`/project/${previewProject.slug}`} className="block w-full">
+                  <div className="bg-white rounded-3xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
+                    <div className="relative mb-4 flex-shrink-0">
+                      <div className="bg-[#f1f1f1] aspect-video relative rounded-2xl overflow-hidden">
+                        <Image
+                          src={previewProject.image || "/placeholder.svg"}
+                          alt={previewProject.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                       <div className="absolute top-4 left-4">
-                        <span className="bg-[#151515] text-white px-3 py-1 rounded-lg text-xs font-medium tracking-[1px]">
+                        <span className="bg-[#151515] text-white px-4 py-2 rounded-lg text-sm font-medium tracking-[2px]">
                           {previewProject.category === "VISUAL DESIGN" ? "GALLERY" : "CASE STUDY"}
                         </span>
                       </div>
                     </div>
-                    <div className="p-4">
-                      <p className="text-xs text-[#595959] mb-1">EXPLORE PROJECT</p>
-                      <h3 className="text-lg font-bold mb-2 group-hover:text-[#450BEC] transition-colors">
-                        {previewProject.title}
-                      </h3>
-                      <p className="text-sm text-[#333333] line-clamp-2">{previewProject.description}</p>
+                    <div className="flex flex-col flex-grow">
+                      <div className="text-sm text-[#595959] mb-2">{previewProject.category}</div>
+                      <h3 className="text-2xl font-bold mb-4">{previewProject.title}</h3>
+                      <p className="text-[#333333] mb-6 flex-grow line-clamp-3">{previewProject.description}</p>
                     </div>
                   </div>
                 </Link>
