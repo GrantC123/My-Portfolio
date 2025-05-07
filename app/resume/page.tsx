@@ -6,7 +6,7 @@ export default function ResumePage() {
       <div className="container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-[400px_1fr] gap-8">
           {/* Left Sidebar */}
-          <div className="bg-[#2c2e35] text-white p-8 rounded-xl">
+          <div className="bg-purple-900 text-white p-8 rounded-xl">
             <div className="flex flex-col items-center mb-8">
               <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
                 <Image
@@ -28,9 +28,11 @@ export default function ResumePage() {
             </div>
 
             <p className="text-sm mb-12">
-              Highly motivated, collaborative, and results-driven Senior Product Designer with seven years of diverse design experience, including two years in a managerial role. Seeking to leverage my expertise in design
-              strategy, technical expertise, team leadership, and project management to drive innovation and deliver exceptional creative value. Dedicated to fostering a collaborative environment that encourages inclusivity and exceeds
-              expectations.
+              Highly motivated, collaborative, and results-driven Senior Product Designer with seven years of diverse
+              design experience, including two years in a managerial role. Seeking to leverage my expertise in design
+              strategy, technical expertise, team leadership, and project management to drive innovation and deliver
+              exceptional creative value. Dedicated to fostering a collaborative environment that encourages inclusivity
+              and exceeds expectations.
             </p>
 
             <div className="mb-8">

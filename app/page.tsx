@@ -37,10 +37,10 @@ export default function Home() {
         <div className="container mx-auto px-4 flex-grow flex items-center">
           <div className="flex flex-col justify-between h-full">
             <h1 className="flex flex-col justify-between h-full">
-              <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16">
+              <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16 font-light">
                 <span className="text-purple-300">I'm Grant</span>
                 <AnimatedText
-                  text=" — Senior Product Designer and creative leader driving results through strategic design and team empowerment."
+                  text=" — Senior Product Designer and Creative Leader driving results through strategic design and team empowerment."
                   className="text-white"
                 />
               </p>
