@@ -243,7 +243,13 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         ) : (
           /* Case Study Layout for other projects */
           <>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">{project.title}</h1>
+            {project.slug === "bankrate-data-center" ? (
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">
+                Centralizing Bankrate's historical proprietary data into one Data Center.
+              </h1>
+            ) : (
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">{project.title}</h1>
+            )}
             <p className="text-xl text-[#595959] mb-8">{project.category}</p>
 
             <div className="mb-16">
@@ -259,7 +265,20 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             <div className="grid md:grid-cols-3 gap-16">
               <div className="md:col-span-2">
                 <h2 className="text-2xl font-bold mb-4">Overview</h2>
-                <p className="text-[#333333] mb-4">{project.overview || "No overview available."}</p>
+                {project.slug === "bankrate-data-center" ? (
+                  <p className="text-[#333333] mb-4">
+                    As a Senior Product Designer, I led the design of Bankrate's effort to consolidate proprietary data
+                    to create backlinks. I used iterative prototyping to increase backlinking by XX%.
+                  </p>
+                ) : (
+                  <p className="text-[#333333] mb-4">{project.overview || "No overview available."}</p>
+                )}
+
+                <h2 className="text-2xl font-bold mb-4">The outcome</h2>
+                <p className="text-[#333333] mb-4">
+                  {project.outcome ||
+                    "Increased user engagement and provided a centralized platform for data analysis, resulting in more efficient decision-making processes."}
+                </p>
 
                 <h2 className="text-2xl font-bold mb-4">Challenge</h2>
                 <p className="text-[#333333] mb-4">{project.challenge || "No challenge description available."}</p>

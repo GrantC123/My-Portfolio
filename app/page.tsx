@@ -89,8 +89,14 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex flex-col flex-grow">
-                    <div className="text-sm text-[#595959] mb-2">{project.category}</div>
-                    <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
+                    <div className="text-sm text-[#595959] mb-2">
+                      {project.slug === "bankrate-data-center" ? "WEBSITE DESIGN" : project.category}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4">
+                      {project.slug === "bankrate-data-center"
+                        ? "Centralizing Bankrate's historical proprietary data into one Data Center."
+                        : project.title}
+                    </h3>
                     <p className="text-[#333333] mb-6 flex-grow line-clamp-3">{project.description}</p>
                   </div>
                 </div>
