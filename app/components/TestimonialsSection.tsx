@@ -14,15 +14,18 @@ interface TestimonialsSectionProps {
 
 const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials }) => {
   return (
-    <section className="py-24 bg-[#f1f1f1]">
+    <section className="py-24 bg-purple-900 text-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
+        <h2 className="text-3xl font-bold mb-16 flex items-center gap-4 text-white">
           What people are saying
-          <span className="w-3 h-3 rounded-full bg-purple-600" />
+          <span className="w-3 h-3 rounded-full bg-purple-300" />
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white rounded-3xl p-6 border border-[#e0e0e0] flex flex-col h-full">
+            <div
+              key={index}
+              className="bg-white rounded-3xl p-6 border border-[#e0e0e0] flex flex-col h-full text-gray-900"
+            >
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-[#f1f1f1] rounded-full overflow-hidden">
                   <Image

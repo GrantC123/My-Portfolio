@@ -62,7 +62,7 @@ export default function About() {
         </section>
 
         {/* Skills Section */}
-        <section className="bg-[#011205] text-white py-24">
+        <section className="bg-purple-900 text-white py-24">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-16">Skill Set</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12">

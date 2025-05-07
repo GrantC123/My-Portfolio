@@ -29,6 +29,28 @@ export const projects = [
   },
   {
     category: "PRODUCT DESIGN",
+    title: "Bankrate Review Template",
+    description:
+      "A standardized review template system for Bankrate, enhancing content consistency and user experience across financial product reviews.",
+    image: "/placeholder.svg?key=7tibd",
+    slug: "bankrate-review-template",
+    overview:
+      "Bankrate is a trusted source for financial product reviews, helping consumers make informed decisions about credit cards, loans, banking products, and more. With thousands of reviews across multiple financial verticals, maintaining consistency in presentation and user experience is crucial for brand integrity and user trust.",
+    challenge:
+      "Bankrate needed a standardized yet flexible review template system that could accommodate different financial products while maintaining brand consistency and improving user engagement.",
+    challengeDetails:
+      "The existing review system had evolved organically over time, resulting in inconsistent user experiences across different product categories. Key challenges included varying information architecture, inconsistent visual presentation, and difficulty in comparing similar products. Additionally, the templates needed to support complex data visualization, user-generated content, and responsive design across all devices.",
+    solution:
+      "We designed a comprehensive review template system with modular components that could be configured for different financial products while maintaining a consistent user experience and brand identity.",
+    solutionDetails:
+      "The template system includes standardized sections for product overviews, feature comparisons, expert analysis, and user reviews. Each section was designed with flexibility in mind, allowing content teams to customize the presentation based on the specific financial product while adhering to established design patterns. The system also includes interactive elements like calculators, comparison tools, and filtering options to enhance user engagement.",
+    client: "Bankrate",
+    timeline: "4 months",
+    role: "Senior Product Designer",
+    deliverables: "Component Library, Template System, Design Documentation, Interactive Prototypes",
+  },
+  {
+    category: "PRODUCT DESIGN",
     title: "Amex Design System",
     description:
       "A comprehensive design system for American Express, ensuring consistency across their digital products.",
