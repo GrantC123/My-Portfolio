@@ -3,7 +3,6 @@ import { inter } from "./fonts"
 import "./globals.css"
 import Navigation from "./components/Navigation"
 import Footer from "./components/Footer"
-import PasswordProtectionWrapper from "./components/PasswordProtectionWrapper"
 
 export default function RootLayout({
   children,
@@ -13,11 +12,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className={inter.className}>
-        <PasswordProtectionWrapper>
-          <Navigation />
-          <main>{children}</main>
-          <Footer />
-        </PasswordProtectionWrapper>
+        <Navigation />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   )
