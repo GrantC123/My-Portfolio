@@ -9,20 +9,13 @@
 }
 
 /* Custom button styles to ensure rounded corners */
-button.rounded-lg,
-\
-button.!rounded-lg,
-.rounded-lg,
-.!rounded-lg {
+.custom-rounded-lg {
   border-radius: 0.5rem !important;
   -webkit-border-radius: 0.5rem !important;
   -moz-border-radius: 0.5rem !important;
 }
 
-button.rounded-full,
-button.!rounded-full,
-.rounded-full,
-.!rounded-full {
+.custom-rounded-full {
   border-radius: 9999px !important;
   -webkit-border-radius: 9999px !important;
   -moz-border-radius: 9999px !important;

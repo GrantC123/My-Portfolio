@@ -319,7 +319,7 @@ export default function StyleGuidePage() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <p className="mb-4 text-sm text-gray-500">Primary Button</p>
                 <button
-                  className="bg-purple-600 text-white px-6 py-3 !rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                  className="bg-purple-600 text-white px-6 py-3 rounded-lg custom-rounded-lg font-medium hover:bg-purple-700 transition-colors"
                   style={{ borderRadius: "0.5rem" }}
                 >
                   Primary Button
@@ -329,7 +329,7 @@ export default function StyleGuidePage() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <p className="mb-4 text-sm text-gray-500">Secondary Button</p>
                 <button
-                  className="border border-purple-600 text-purple-600 px-6 py-3 !rounded-lg font-medium hover:bg-purple-50 transition-colors"
+                  className="border border-purple-600 text-purple-600 px-6 py-3 rounded-lg custom-rounded-lg font-medium hover:bg-purple-50 transition-colors"
                   style={{ borderRadius: "0.5rem" }}
                 >
                   Secondary Button
@@ -385,7 +385,7 @@ export default function StyleGuidePage() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <p className="mb-4 text-sm text-gray-500">Category Label</p>
                 <span
-                  className="bg-[#151515] text-white px-4 py-2 !rounded-lg text-sm font-medium tracking-[2px] inline-block"
+                  className="bg-[#151515] text-white px-4 py-2 rounded-lg custom-rounded-lg text-sm font-medium tracking-[2px] inline-block"
                   style={{ borderRadius: "0.5rem" }}
                 >
                   CASE STUDY
@@ -395,7 +395,7 @@ export default function StyleGuidePage() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <p className="mb-4 text-sm text-gray-500">Tag</p>
                 <span
-                  className="bg-purple-100 text-purple-800 px-3 py-1 !rounded-full text-sm font-medium inline-block"
+                  className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full custom-rounded-full text-sm font-medium inline-block"
                   style={{ borderRadius: "9999px" }}
                 >
                   UX Design
