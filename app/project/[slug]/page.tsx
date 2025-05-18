@@ -2,16 +2,18 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, X } from "lucide-react"
 import { projects } from "../../data"
+import StickyTOC from "../../components/StickyTOC"
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = projects.find((p) => p.slug === params.slug)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const imageRef = useRef<HTMLDivElement>(null)
 
   // Get all projects except the current one
   const otherProjects = projects.filter((p) => p.slug !== params.slug)
@@ -147,6 +149,21 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   const bankrateImage =
     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bankrate-DC-Cover-7B6cx26SzmCuDaMgE8FUqZ8XyQoso5.png"
 
+  // Define TOC items based on project type
+  const tocItems = isGalleryProject
+    ? [
+        { id: "project-details", label: "Project Details" },
+        { id: "overview", label: "Overview" },
+        { id: "gallery", label: "Gallery" },
+      ]
+    : [
+        { id: "project-details", label: "Project Details" },
+        { id: "overview", label: "Overview" },
+        { id: "outcome", label: "Outcome" },
+        { id: "challenge", label: "Challenge" },
+        { id: "solution", label: "Solution" },
+      ]
+
   return (
     <div className="min-h-screen bg-[#ffffff] text-[#151515]" id="project-top">
       <header className="py-4">
@@ -167,6 +184,8 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         </div>
       </header>
 
+      <StickyTOC items={tocItems} imageRef={imageRef} />
+
       <main className="container mx-auto px-4 py-16">
         {isGalleryProject ? (
           /* Gallery Layout for Editorial Imagery */
@@ -174,7 +193,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             <h1 className="text-4xl md:text-6xl font-bold mb-4">{project.title}</h1>
             <p className="text-xl text-[#595959] mb-8">{project.category}</p>
 
-            <div className="mb-16">
+            <div className="mb-8" ref={imageRef}>
               <Image
                 src={project.image || "/placeholder.svg"}
                 alt={project.title}
@@ -184,42 +203,9 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               />
             </div>
 
-            <div className="mb-16">
-              <p className="text-lg text-[#333333] mb-8 max-w-3xl">
-                {project.overview ||
-                  "A collection of editorial illustrations and designs created for various financial publications and digital platforms. These visuals were designed to complement articles, enhance reader engagement, and communicate complex financial concepts in an accessible way."}
-              </p>
-            </div>
-
-            {/* Gallery Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {galleryImages.map((image, index) => (
-                <div
-                  key={index}
-                  className="group cursor-pointer overflow-hidden rounded-xl"
-                  onClick={() => openLightbox(index)}
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
-                    <Image
-                      src={image.src || "/placeholder.svg"}
-                      alt={image.alt}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-end">
-                      <div className="p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 className="font-bold text-lg">{image.title}</h3>
-                        <p className="text-sm opacity-90">{image.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             {/* Project Details */}
-            <div className="bg-gray-50 rounded-xl p-8 mb-16">
-              <h2 className="text-2xl font-bold mb-6">Project Details</h2>
+            <div id="project-details" className="bg-gray-50 rounded-xl p-6 mb-16">
+              <h2 className="text-2xl font-bold mb-6 text-center">Project Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div>
                   <strong className="block text-[#595959] mb-2">Client</strong>
@@ -239,6 +225,43 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 </div>
               </div>
             </div>
+
+            <div id="overview" className="mx-auto mb-16" style={{ maxWidth: "846px" }}>
+              <h2 className="text-2xl font-bold mb-4">Overview</h2>
+              <p className="text-lg text-[#333333] mb-8">
+                {project.overview ||
+                  "A collection of editorial illustrations and designs created for various financial publications and digital platforms. These visuals were designed to complement articles, enhance reader engagement, and communicate complex financial concepts in an accessible way."}
+              </p>
+            </div>
+
+            {/* Gallery Grid */}
+            <div id="gallery" className="mb-16">
+              <h2 className="text-2xl font-bold mb-8">Gallery</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {galleryImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className="group cursor-pointer overflow-hidden rounded-xl"
+                    onClick={() => openLightbox(index)}
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                      <Image
+                        src={image.src || "/placeholder.svg"}
+                        alt={image.alt}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-end">
+                        <div className="p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                          <h3 className="font-bold text-lg">{image.title}</h3>
+                          <p className="text-sm opacity-90">{image.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </>
         ) : (
           /* Case Study Layout for other projects */
@@ -252,7 +275,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             )}
             <p className="text-xl text-[#595959] mb-8">{project.category}</p>
 
-            <div className="mb-16">
+            <div className="mb-8" ref={imageRef}>
               <Image
                 src={project.image || "/placeholder.svg"}
                 alt={project.title}
@@ -262,8 +285,32 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               />
             </div>
 
-            <div className="grid md:grid-cols-3 gap-16">
-              <div className="md:col-span-2">
+            {/* Project Details in horizontal row */}
+            <div id="project-details" className="bg-gray-50 rounded-xl p-6 mb-16">
+              <h2 className="text-2xl font-bold mb-6 text-center">Project Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div>
+                  <strong className="block text-[#595959] mb-2">Client</strong>
+                  <p>{project.client}</p>
+                </div>
+                <div>
+                  <strong className="block text-[#595959] mb-2">Timeline</strong>
+                  <p>{project.timeline}</p>
+                </div>
+                <div>
+                  <strong className="block text-[#595959] mb-2">Role</strong>
+                  <p>{project.role}</p>
+                </div>
+                <div>
+                  <strong className="block text-[#595959] mb-2">Deliverables</strong>
+                  <p>{project.deliverables}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Main content centered with custom max-width */}
+            <div className="mx-auto" style={{ maxWidth: "846px" }}>
+              <div id="overview">
                 <h2 className="text-2xl font-bold mb-4">Overview</h2>
                 {project.slug === "bankrate-data-center" ? (
                   <p className="text-[#333333] mb-4">
@@ -273,13 +320,17 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 ) : (
                   <p className="text-[#333333] mb-4">{project.overview || "No overview available."}</p>
                 )}
+              </div>
 
+              <div id="outcome">
                 <h2 className="text-2xl font-bold mb-4">The outcome</h2>
                 <p className="text-[#333333] mb-4">
                   {project.outcome ||
                     "Increased user engagement and provided a centralized platform for data analysis, resulting in more efficient decision-making processes."}
                 </p>
+              </div>
 
+              <div id="challenge">
                 <h2 className="text-2xl font-bold mb-4">Challenge</h2>
                 <p className="text-[#333333] mb-4">{project.challenge || "No challenge description available."}</p>
                 {project.challengeDetails && (
@@ -294,32 +345,12 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                     )}
                   </>
                 )}
+              </div>
 
+              <div id="solution">
                 <h2 className="text-2xl font-bold mb-4">Solution</h2>
                 <p className="text-[#333333] mb-8">{project.solution || "No solution description available."}</p>
                 {project.solutionDetails && <p className="text-[#333333] mb-8">{project.solutionDetails}</p>}
-              </div>
-
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Project Details</h2>
-                <ul className="space-y-4">
-                  <li>
-                    <strong className="block text-[#595959]">Client</strong>
-                    {project.client}
-                  </li>
-                  <li>
-                    <strong className="block text-[#595959]">Timeline</strong>
-                    {project.timeline}
-                  </li>
-                  <li>
-                    <strong className="block text-[#595959]">Role</strong>
-                    {project.role}
-                  </li>
-                  <li>
-                    <strong className="block text-[#595959]">Deliverables</strong>
-                    {project.deliverables}
-                  </li>
-                </ul>
               </div>
             </div>
 
