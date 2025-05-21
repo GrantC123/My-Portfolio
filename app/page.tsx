@@ -63,7 +63,7 @@ export default function Home() {
       </section>
 
       {/* Work Section */}
-      <section className="py-24 bg-purple-50" id="work">
+      <section className="py-24 bg-gray-50" id="work">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
             My work
