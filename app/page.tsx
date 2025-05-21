@@ -37,7 +37,7 @@ export default function Home() {
         <div className="container mx-auto px-4 flex-grow flex items-center">
           <div className="flex flex-col justify-between h-full">
             <h1 className="flex flex-col justify-between h-full">
-              <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16 font-light">
+              <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16 font-bold">
                 <span className="text-purple-300">I'm Grant</span>
                 <AnimatedText
                   text=" — Senior Product Designer and Creative Leader driving results through strategic design and team empowerment."
@@ -67,7 +67,6 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
             My work
-            <span className="w-3 h-3 rounded-full bg-purple-600" />
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             {projects.map((project, index) => (
@@ -111,7 +110,6 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
             Brands I've worked with
-            <span className="w-3 h-3 rounded-full bg-purple-600" />
           </h2>
           <LogoMarquee brands={brands} />
         </div>

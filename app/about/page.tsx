@@ -21,7 +21,7 @@ export default function About() {
     {
       title: "SERVANT LEADERSHIP",
       description:
-        "I embody a holistic approach to guiding and empowering others. By leading with empathy, serving the needs of my team, and prioritizing their growth and well-being, I foster a culture of support, collaboration, and inspiration. This approach transcends traditional management by emphasizing vision, empowerment, and nurturing individual growth, inspiring others to achieve their full potential and creating a lasting, positive impact within the",
+        "I embody a holistic approach to guiding and empowering others. By leading with empathy, serving the needs of my team, and prioritizing their growth and well-being, I foster a culture of support, collaboration, and inspiration. This approach transcends traditional management by emphasizing vision, empowerment, and nurturing individual growth, inspiring others to achieve their full potential and creating a lasting, positive impact within the company",
     },
   ]
 
@@ -42,11 +42,7 @@ export default function About() {
             <div>
               <h1 className="text-5xl font-bold mb-8">Get to Know Me</h1>
               <p className="text-lg text-[#595959] leading-relaxed">
-                I'm a designer living in Columbia South Carolina. I have over 10 years of experience in the design
-                industry. I started out as a graphic designer, but realized that I loved web design. I love seeing
-                people use my designs, versus looking at them. I am currently employed by Red Ventures working as a
-                Senior Product esigner, but work on freelance projects on the side. If you have a project you would like
-                to start, and like my work, send me a message! I would love to help you with your design needs.
+                I'm a designer living in Columbia South Carolina. I have over 10 years of experience in the design industry. I started out as a graphic designer, but realized that I loved web design. I love seeing people use my designs, versus looking at them. I am currently employed by Red Ventures working as a Senior Product esigner, but work on freelance projects on the side. If you have a project you would like to start, and like my work, send me a message! I would love to help you with your design needs.
               </p>
             </div>
             <div className="relative aspect-square w-3/4 mx-auto">
