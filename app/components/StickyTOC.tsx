@@ -117,7 +117,7 @@ export default function StickyTOC({ items, imageRef }: StickyTOCProps) {
             </div>
             <button
               onClick={() => setIsBottomSheetOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 bg-purple-50 text-purple-600 custom-rounded-lg hover:bg-purple-100 transition-colors"
             >
               <span className="text-sm font-medium">Sections</span>
               <Menu size={16} />

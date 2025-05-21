@@ -82,7 +82,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="absolute top-4 left-4">
-                      <span className="bg-[#151515] text-white px-4 py-2 rounded-lg text-sm font-medium tracking-[2px]">
+                      <span className="bg-[#151515] text-white px-4 py-2 custom-rounded-lg text-sm font-medium tracking-[2px]">
                         {project.category === "VISUAL DESIGN" ? "GALLERY" : "CASE STUDY"}
                       </span>
                     </div>
