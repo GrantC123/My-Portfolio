@@ -91,7 +91,7 @@ export const projects = [
     solutionDetails:
       "The Amex Design System includes a comprehensive component library, design tokens for colors, typography, and spacing, accessibility guidelines, and interactive documentation. The system was built to be technology-agnostic, allowing implementation across various platforms while maintaining visual consistency.",
     client: "American Express",
-    timeline: "3 years",
+    timeline: "4 years",
     role: "Senior Product Designer",
     deliverables: "Component Library, Style Guide, Documentation, Design Tokens",
   },
