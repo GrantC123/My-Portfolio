@@ -1,5 +1,7 @@
+import React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { Chip } from "@/components/ui/chip"
 
 interface Project {
   slug: string
@@ -29,9 +31,9 @@ export default function ProjectTile({ project }: ProjectTileProps) {
         <div className="flex flex-col gap-6 p-8">
           <div className="flex flex-col gap-5 w-full">
             <div className="flex justify-start">
-              <span className="font-bold text-base leading-5 text-zinc-400 tracking-[1px] uppercase">
+              <Chip variant="dark">
                 {project.category === "VISUAL DESIGN" ? "Visual Design" : "Product Design"}
-              </span>
+              </Chip>
             </div>
             <h3 className="font-display font-bold text-3xl leading-[36px] text-white">
               {project.slug === "bankrate-data-center" ? "Bankrate Data Center" : project.title}
@@ -54,16 +56,16 @@ export default function ProjectTile({ project }: ProjectTileProps) {
               src={project.image || "/placeholder.svg"}
               alt={project.title}
               fill
-              className="object-cover rounded-bl-2xl"
+              className="object-cover"
             />
           </div>
         </div>
         <div className="basis-0 grow flex flex-col justify-between items-end p-12 min-w-0">
           <div className="flex flex-col gap-5 w-full">
             <div className="flex justify-start">
-              <span className="font-bold text-base leading-5 text-zinc-400 tracking-[1px] uppercase">
+              <Chip variant="dark">
                 {project.category === "VISUAL DESIGN" ? "Visual Design" : "Product Design"}
-              </span>
+              </Chip>
             </div>
             <h3 className="font-display font-bold text-4xl leading-10 text-white">
               {project.slug === "bankrate-data-center" ? "Bankrate Data Center" : project.title}

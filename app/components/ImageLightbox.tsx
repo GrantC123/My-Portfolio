@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React from "react"
 import Image from "next/image"
 import { ArrowLeft, ArrowRight, X, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import {

@@ -1,12 +1,11 @@
 "use client"
 
+import React from "react"
 import Link from "next/link"
 import styles from "./Navigation.module.css"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
-import { useAuth } from "../contexts/AuthContext"
-import { Button } from "@/components/ui/button"
 
 function LinkedInIcon() {
   return (
@@ -21,15 +20,19 @@ function LinkedInIcon() {
   )
 }
 
-export default function Navigation() {
+interface NavigationProps {
+  showProgressBar?: boolean
+}
+
+export default function Navigation({ showProgressBar }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const { isAuthenticated, logout } = useAuth()
   const pathname = usePathname()
   const isProjectPage = pathname?.startsWith("/project/")
+  const shouldShowProgressBar = showProgressBar !== undefined ? showProgressBar : isProjectPage
 
   useEffect(() => {
-    if (!isProjectPage) return
+    if (!shouldShowProgressBar) return
 
     const handleScroll = () => {
       const windowHeight = window.innerHeight
@@ -44,15 +47,10 @@ export default function Navigation() {
     handleScroll() // Initial calculation
 
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [isProjectPage])
+  }, [shouldShowProgressBar])
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
-  }
-
-  const handleLogout = () => {
-    logout()
-    setIsMenuOpen(false)
   }
 
   return (
@@ -93,15 +91,6 @@ export default function Navigation() {
           >
             <LinkedInIcon />
           </Link>
-          {isAuthenticated && (
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-            >
-              Logout
-            </Button>
-          )}
         </div>
       </div>
 
@@ -140,24 +129,12 @@ export default function Navigation() {
               <LinkedInIcon className="mr-2" />
               LinkedIn
             </Link>
-            {isAuthenticated && (
-              <Button
-                onClick={() => {
-                  handleLogout()
-                  setIsMenuOpen(false)
-                }}
-                variant="ghost"
-                className="text-sm py-2 text-white hover:text-coral-300 text-left justify-start h-auto"
-              >
-                Logout
-              </Button>
-            )}
           </div>
         </div>
       )}
 
-      {/* Scroll Progress Bar - Only on project pages */}
-      {isProjectPage && (
+      {/* Scroll Progress Bar */}
+      {shouldShowProgressBar && (
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800">
           <div 
             className="h-full bg-coral-300 transition-all duration-150 ease-out"
