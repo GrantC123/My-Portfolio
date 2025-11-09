@@ -1,8 +1,8 @@
 import type React from "react"
-import { inter } from "./fonts"
+import { inter, syne } from "./fonts"
 import "./globals.css"
-import Navigation from "./components/Navigation"
-import Footer from "./components/Footer"
+import { AuthProvider } from "./contexts/AuthContext"
+import LayoutWrapper from "./components/LayoutWrapper"
 
 export default function RootLayout({
   children,
@@ -10,11 +10,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${syne.variable}`}>
       <body className={inter.className}>
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
+        <AuthProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </AuthProvider>
       </body>
     </html>
   )

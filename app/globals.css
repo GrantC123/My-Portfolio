@@ -2,9 +2,217 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Locomotive Scroll Styles */
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+/* Ensure navigation is always visible */
+nav {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+  height: auto;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-container] {
+  height: 100vh;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-section] {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  height: 100%;
+}
+
+.c-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11px;
+  height: 100%;
+  transform-origin: center right;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+.c-scrollbar:hover {
+  transform: scaleX(1.45);
+}
+.c-scrollbar:hover,
+.has-scroll-scrolling .c-scrollbar,
+.has-scroll-dragging .c-scrollbar {
+  opacity: 1;
+}
+[data-scroll-direction="horizontal"] .c-scrollbar {
+  width: 100%;
+  height: 11px;
+  top: auto;
+  bottom: 0;
+  transform: scaleY(1);
+}
+[data-scroll-direction="horizontal"] .c-scrollbar:hover {
+  transform: scaleY(1.45);
+}
+
+.c-scrollbar_thumb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.5;
+  width: 7px;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+.has-scroll-dragging .c-scrollbar_thumb {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+[data-scroll-direction="horizontal"] .c-scrollbar_thumb {
+  right: auto;
+  bottom: 0;
+}
+
+/* Custom Locomotive Scroll Animation Classes */
+[data-scroll] {
+  will-change: transform, opacity;
+}
+
+/* Initial state for hero text - visible on page load, then animated by Locomotive Scroll */
+.hero-text-initial {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+html.has-scroll-smooth .hero-text-initial,
+html:not(.has-scroll-smooth) .hero-text-initial {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide up and fade in - perfect for hero text */
+[data-scroll-slide-up] {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.has-scroll-smooth [data-scroll-slide-up] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade in from bottom */
+[data-scroll-fade-up] {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+[data-scroll-fade-up].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade in from top */
+[data-scroll-fade-down] {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+[data-scroll-fade-down].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade in from left */
+[data-scroll-fade-left] {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+[data-scroll-fade-left].is-inview {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Fade in from right */
+[data-scroll-fade-right] {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+[data-scroll-fade-right].is-inview {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale animation */
+[data-scroll-scale] {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+[data-scroll-scale].is-inview {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Rotate animation */
+[data-scroll-rotate] {
+  opacity: 0;
+  transform: rotate(-10deg);
+}
+
+[data-scroll-rotate].is-inview {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
 @layer base {
+  :root {
+    --background: 9 9 11; /* zinc-950 */
+    --foreground: 255 255 255; /* white */
+    --card: 39 39 42; /* zinc-800 */
+    --card-foreground: 255 255 255;
+    --border: 113 113 122; /* zinc-500 */
+    --radius: 0.5rem; /* 8px */
+  }
+  
   body {
     font-family: var(--font-inter);
+    background-color: #09090b; /* zinc-950 */
+    color: #ffffff;
   }
 }
 
@@ -70,3 +278,41 @@
   -webkit-border-radius: 0.5rem !important;
   -moz-border-radius: 0.5rem !important;
 }
+
+/* Override browser autofill styles to maintain dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #18181b inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 30px #18181b inset !important;
+  caret-color: #ffffff !important;
+}
+
+/* Ensure focus states use coral-300 */
+input:focus {
+  border-color: #00c6e5 !important;
+  outline: none !important;
+}
+
+input[type="email"]:-webkit-autofill,
+input[type="email"]:-webkit-autofill:hover,
+input[type="email"]:-webkit-autofill:focus,
+input[type="email"]:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #18181b inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 30px #18181b inset !important;
+  caret-color: #ffffff !important;
+}
+
+input[type="password"]:-webkit-autofill,
+input[type="password"]:-webkit-autofill:hover,
+input[type="password"]:-webkit-autofill:focus,
+input[type="password"]:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #18181b inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 30px #18181b inset !important;
+  caret-color: #ffffff !important;
+}
+

@@ -15,16 +15,16 @@ function LinkedInIcon() {
 
 const Footer = () => {
   return (
-    <footer className="border-t border-[#f1f1f1] py-8">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
-        <div className="text-sm text-[#595959] text-center md:text-left">grantcrowderdesign@gmail.com</div>
+    <footer className="border-t border-zinc-500 bg-zinc-950 py-8">
+      <div className="container mx-auto px-4 max-w-[1280px] flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+        <div className="text-sm text-white text-center md:text-left">grantcrowderdesign@gmail.com</div>
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-4">
-          <div className="text-sm text-[#595959]">©2025 Grant Crowder Design</div>
+          <div className="text-sm text-white">© 2025 Grant Crowder Design | Crafted with love</div>
           <Link
             href="https://www.linkedin.com/in/grantcrowder/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm hover:text-purple-600 transition-colors"
+            className="text-sm text-white hover:text-coral-300 transition-colors"
           >
             <LinkedInIcon />
           </Link>
