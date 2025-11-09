@@ -15,10 +15,6 @@ export default function Home() {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/640px-TPG.PGN-1hIGsdrTHkKSUxa3bJj4H0r3MdmYkJ.png",
     },
     {
-      name: "American Express",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/American_Express_logo_(2018).svg-ShBWQyM4NHuudpThqhE4IOxVcqLKYi.png",
-    },
-    {
       name: "TIME",
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Time_Magazine_logo.svg-S6g0Pvj7IFYH2S9Tjan6PzXECBYBTd.png",
     },

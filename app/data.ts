@@ -57,16 +57,16 @@ export const projects = [
     image: "/images/Design-system-header.jpg",
     slug: "design-system",
     overview:
-      "American Express is one of the world's most recognized financial service providers, known for its credit cards, charge cards, and traveler's cheques. With a global presence and millions of customers, maintaining a consistent brand experience across all digital touchpoints is crucial for customer trust and recognition. Red Ventures had a partnership with this company.",
+      "A leading global financial services company with a global presence and millions of customers, maintaining a consistent brand experience across all digital touchpoints is crucial for customer trust and recognition.",
     challenge:
-      "American Express needed to unify their design language across multiple digital platforms to improve brand consistency and development efficiency.",
+      "The client needed to unify their design language across multiple digital platforms to improve brand consistency and development efficiency.",
     challengeDetails:
-      "With dozens of digital products across web, mobile, and internal tools, American Express was facing inconsistent user experiences, redundant development efforts, and slow time-to-market for new features. Each team was creating their own components and design patterns, leading to a fragmented brand experience.",
+      "With dozens of digital products across web, mobile, and internal tools, the company was facing inconsistent user experiences, redundant development efforts, and slow time-to-market for new features. Each team was creating their own components and design patterns, leading to a fragmented brand experience.",
     solution:
       "We created a flexible and scalable design system with reusable components, clear guidelines, and extensive documentation, significantly reducing design and development time.",
     solutionDetails:
-      "The Amex Design System includes a comprehensive component library, design tokens for colors, typography, and spacing, accessibility guidelines, and interactive documentation. The system was built to be technology-agnostic, allowing implementation across various platforms while maintaining visual consistency.",
-    client: "American Express",
+      "The design system includes a comprehensive component library, design tokens for colors, typography, and spacing, accessibility guidelines, and interactive documentation. The system was built to be technology-agnostic, allowing implementation across various platforms while maintaining visual consistency.",
+    client: "Enterprise Financial Services Company",
     timeline: "4 years",
     role: "Senior Product Designer",
     deliverables: "Component Library, Style Guide, Documentation, Design Tokens",

@@ -62,7 +62,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   // Check if this is the Bankrate Data Center case study
   const isBankrateCaseStudy = project.slug === "bankrate-data-center"
   const isReviewTemplate = project.slug === "bankrate-review-template"
-  const isAmexDesignSystem = project.slug === "design-system"
+  const isDesignSystem = project.slug === "design-system"
   const isGalleryProject = project.slug === "editorial-imagery"
 
   // Bankrate-specific data
@@ -678,8 +678,8 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
     )
   }
 
-  // For Amex Design System case study
-  if (isAmexDesignSystem) {
+  // For Design System case study
+  if (isDesignSystem) {
     return (
       <div className="min-h-screen bg-white">
         {/* Hero Section with Breadcrumbs */}
@@ -750,7 +750,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   </h2>
                   <div className="space-y-6">
                     <p className="text-lg leading-[28px] text-zinc-400">
-                      I led the creation of a comprehensive design system for American Express, establishing a unified visual language and component library that would scale across multiple digital platforms. The system was designed to improve brand consistency, accelerate development velocity, and ensure accessibility standards across all products.
+                      I led the creation of a comprehensive design system for a global financial services company, establishing a unified visual language and component library that would scale across multiple digital platforms. The system was designed to improve brand consistency, accelerate development velocity, and ensure accessibility standards across all products.
                     </p>
                     <p className="text-lg leading-[28px] text-zinc-400">
                       Through extensive collaboration with design, engineering, and product teams, we built a flexible and scalable system that reduced design and development time while maintaining the high standards expected from a global financial services brand.
@@ -798,7 +798,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 Problem statement
               </h2>
               <p className="text-lg leading-[28px] text-zinc-400 mb-12">
-                American Express was facing significant challenges with design consistency across their digital ecosystem. With dozens of products spanning web, mobile, and internal tools, each team was creating their own components and design patterns. This fragmentation led to inconsistent user experiences, redundant development efforts, and slower time-to-market for new features. The lack of a unified design language also made it difficult to maintain brand integrity and accessibility standards at scale.
+                The client was facing significant challenges with design consistency across their digital ecosystem. With dozens of products spanning web, mobile, and internal tools, each team was creating their own components and design patterns. This fragmentation led to inconsistent user experiences, redundant development efforts, and slower time-to-market for new features. The lack of a unified design language also made it difficult to maintain brand integrity and accessibility standards at scale.
               </p>
 
               {/* Goals and KPIs */}

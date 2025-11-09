@@ -197,8 +197,8 @@ const projects = [
   },
   {
     category: "PRODUCT DESIGN",
-    title: "Amex Design System",
-    description: "A comprehensive design system for American Express, ensuring consistency across their digital products.",
+    title: "Design System",
+    description: "A comprehensive design system for an enterprise financial services company, ensuring consistency across their digital products.",
     image: "/placeholder.svg?height=600&width=1200",
     slug: "design-system",
   },
