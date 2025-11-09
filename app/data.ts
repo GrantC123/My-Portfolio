@@ -51,10 +51,10 @@ export const projects = [
   },
   {
     category: "PRODUCT DESIGN",
-    title: "Amex Design System",
+    title: "Design System for an Enterprise Financial Services Company",
     description:
-      "A comprehensive design system for American Express, ensuring consistency across their digital products.",
-    image: "/placeholder.svg?height=600&width=1200",
+      "A case study in building and documenting a scalable design system for a global client.",
+    image: "/images/Design-system-header.jpg",
     slug: "amex-design-system",
     overview:
       "American Express is one of the world's most recognized financial service providers, known for its credit cards, charge cards, and traveler's cheques. With a global presence and millions of customers, maintaining a consistent brand experience across all digital touchpoints is crucial for customer trust and recognition. Red Ventures had a partnership with this company.",
