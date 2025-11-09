@@ -35,9 +35,9 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-zinc-950 text-white">
       {/* Hero Section - Dark background */}
-      <section className="w-full bg-zinc-950 border-b border-zinc-500 pt-16 pb-[65px] md:py-24 px-6 md:px-36">
-        <div className="container mx-auto flex-grow flex items-center">
-          <div className="flex flex-col gap-6 w-full max-w-[1152px]">
+      <section className="w-full bg-zinc-950 border-b border-zinc-500 pt-16 pb-[65px] md:py-24">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-36 flex-grow flex items-center">
+          <div className="flex flex-col gap-6 w-full">
             <h1 className="font-display font-bold text-4xl md:text-[60px] leading-[40px] md:leading-[60px] text-white">
               <span className="text-coral-300">I'm Grant</span>
               <AnimatedText
@@ -63,8 +63,8 @@ export default function Home() {
 
       {/* Work Section */}
       <section className="py-20 md:py-20 bg-zinc-900" id="work">
-        <div className="container mx-auto px-6 md:px-36">
-          <div className="flex flex-col gap-12 max-w-[1152px]">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-36">
+          <div className="flex flex-col gap-12 w-full">
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white text-center">
               Featured Work
             </h2>
