@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { ArrowDown } from "lucide-react"
 import { projects, testimonials } from "./data"
 import AnimatedText from "./components/AnimatedText"
 import LogoMarquee from "./components/LogoMarquee"
@@ -36,9 +37,7 @@ export default function Home() {
             >
               <Link href="#work" className="flex items-center justify-center gap-2.5" aria-label="See my work">
                 <span>See my work</span>
-                <svg className="w-6 h-6 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                <ArrowDown className="w-6 h-6" />
               </Link>
             </Button>
           </div>
