@@ -5,7 +5,7 @@ export const projects = [
     description:
       "A comprehensive data management solution for Bankrate, streamlining financial data analysis and reporting.",
     image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bankrate-DC-Cover-7B6cx26SzmCuDaMgE8FUqZ8XyQoso5.png",
+      "/bankrate-data-center-hero.jpg",
     slug: "bankrate-data-center",
     overview:
       "Founded in 1976 as the Bank Rate Monitor, a print publisher for the banking industry, Bankrate has a long track record of helping people make smart financial decisions. Bankrate has maintained this reputation over four decades by prioritizing facts and experience over hype and hearsay, and quickly responding to economic trends that offer users a more relevant experience.",
@@ -32,7 +32,7 @@ export const projects = [
     title: "Bankrate Review Template",
     description:
       "A standardized review template system for Bankrate, enhancing content consistency and user experience across financial product reviews.",
-    image: "/placeholder.svg?key=7tibd",
+    image: "/bankrate-review-template-header.png",
     slug: "bankrate-review-template",
     overview:
       "Bankrate is a trusted source for financial product reviews, helping consumers make informed decisions about credit cards, loans, banking products, and more. With thousands of reviews across multiple financial verticals, maintaining consistency in presentation and user experience is crucial for brand integrity and user trust.",
@@ -75,8 +75,7 @@ export const projects = [
     category: "VISUAL DESIGN",
     title: "Editorial Imagery",
     description: "A series of striking editorial images for a leading fashion magazine's digital platform.",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Next-advisor-lady.jpg-hz9D3Emm39SGLvhk6v98MWLNdO2TsB.jpeg",
+    image: "/images/editorial/editorial-imagery-header.jpg",
     slug: "editorial-imagery",
     overview:
       "In the competitive world of digital fashion media, visual impact is everything. Our client, a leading fashion magazine, needed to refresh their visual identity to stand out in crowded social feeds and capture the attention of their target audience while maintaining their established brand voice.",
