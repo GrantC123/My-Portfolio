@@ -17,7 +17,7 @@ export default function ProjectTile({ project }: ProjectTileProps) {
   return (
     <Link href={`/project/${project.slug}`} className="block w-full">
       {/* Mobile: Stacked layout */}
-      <div className="md:hidden bg-zinc-800 border border-zinc-500 rounded-lg overflow-hidden flex flex-col hover:border-coral-300 hover:scale-[1.02] transition-all duration-300">
+      <div className="md:hidden bg-zinc-800 border border-zinc-500 rounded-lg overflow-hidden flex flex-col hover:scale-[1.02] transition-all duration-300">
         <div className="h-[232px] relative w-full">
           <Image
             src={project.image || "/placeholder.svg"}
@@ -47,7 +47,7 @@ export default function ProjectTile({ project }: ProjectTileProps) {
         </div>
       </div>
       {/* Desktop: Side-by-side layout */}
-      <div className="hidden md:flex bg-zinc-800 border border-zinc-500 rounded-lg h-[399px] overflow-hidden hover:border-coral-300 hover:scale-[1.02] transition-all duration-300">
+      <div className="hidden md:flex bg-zinc-800 border border-zinc-500 rounded-lg h-[399px] overflow-hidden hover:scale-[1.02] transition-all duration-300">
         <div className="basis-0 grow relative min-w-0">
           <div className="absolute inset-0">
             <Image

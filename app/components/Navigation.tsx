@@ -72,12 +72,13 @@ export default function Navigation() {
             <LinkedInIcon />
           </Link>
           {isAuthenticated && (
-            <button
+            <Button
               onClick={handleLogout}
-              className="border border-zinc-500 bg-transparent text-white hover:bg-zinc-800 hover:text-white rounded-md px-3 py-1 h-auto text-sm transition-colors"
+              variant="outline"
+              size="sm"
             >
               Logout
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -118,15 +119,16 @@ export default function Navigation() {
               LinkedIn
             </Link>
             {isAuthenticated && (
-              <button
+              <Button
                 onClick={() => {
                   handleLogout()
                   setIsMenuOpen(false)
                 }}
-                className="text-sm py-2 text-white hover:text-coral-300 transition-colors text-left"
+                variant="ghost"
+                className="text-sm py-2 text-white hover:text-coral-300 text-left justify-start h-auto"
               >
                 Logout
-              </button>
+              </Button>
             )}
           </div>
         </div>
