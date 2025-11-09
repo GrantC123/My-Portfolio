@@ -28,7 +28,7 @@ export default function ProjectTile({ project }: ProjectTileProps) {
         </div>
         <div className="flex flex-col gap-6 p-8">
           <div className="flex flex-col gap-5 w-full">
-            <div className="flex justify-center">
+            <div className="flex justify-start">
               <span className="font-bold text-base leading-5 text-zinc-400 tracking-[1px] uppercase">
                 {project.category === "VISUAL DESIGN" ? "Visual Design" : "Product Design"}
               </span>
@@ -60,7 +60,7 @@ export default function ProjectTile({ project }: ProjectTileProps) {
         </div>
         <div className="basis-0 grow flex flex-col justify-between items-end p-12 min-w-0">
           <div className="flex flex-col gap-5 w-full">
-            <div className="flex justify-center">
+            <div className="flex justify-start">
               <span className="font-bold text-base leading-5 text-zinc-400 tracking-[1px] uppercase">
                 {project.category === "VISUAL DESIGN" ? "Visual Design" : "Product Design"}
               </span>
