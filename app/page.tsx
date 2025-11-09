@@ -4,6 +4,8 @@ import { projects, testimonials } from "./data"
 import AnimatedText from "./components/AnimatedText"
 import LogoMarquee from "./components/LogoMarquee"
 import TestimonialsSection from "./components/TestimonialsSection"
+import ProjectTile from "./components/ProjectTile"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   const brands = [
@@ -31,87 +33,60 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#151515]">
-      {/* Hero Section - Full width background */}
-      <section className="w-full bg-purple-900 py-24">
-        <div className="container mx-auto px-4 flex-grow flex items-center">
-          <div className="flex flex-col justify-between h-full">
-            <h1 className="flex flex-col justify-between h-full">
-              <p className="text-[38.5px] md:text-[57.5px] leading-tight mt-8 mb-16 font-bold">
-                <span className="text-purple-300">I'm Grant</span>
-                <AnimatedText
-                  text=" — Senior Product Designer and Creative Leader driving results through strategic design and team empowerment."
-                  className="text-white"
-                />
-              </p>
-              <Link
-                href="#work"
-                className="group flex items-center self-start transition-transform hover:scale-105"
-                aria-label="View My Work"
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Button-erM9SRUcTOdDYna12TDDic8MpXB3Zq.svg"
-                  alt="View My Work"
-                  width={180}
-                  height={48}
-                  className="h-auto"
-                />
-              </Link>
+    <div className="min-h-screen flex flex-col bg-zinc-950 text-white">
+      {/* Hero Section - Dark background */}
+      <section className="w-full bg-zinc-950 border-b border-zinc-500 pt-16 pb-[65px] md:py-24">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-36 flex-grow flex items-center">
+          <div className="flex flex-col gap-6 w-full">
+            <h1 className="font-display font-bold text-4xl md:text-[60px] leading-[40px] md:leading-[60px] text-white">
+              <span className="text-coral-300">I'm Grant</span>
+              <AnimatedText
+                text=" — Senior Product Designer and Creative Leader driving results through strategic design and team empowerment."
+                className="text-white"
+              />
             </h1>
+            <Button
+              asChild
+              variant="primary"
+              className="rounded-lg px-6 py-4 h-12 w-full md:w-fit text-[15px] leading-[27px]"
+            >
+              <Link href="#work" className="flex items-center justify-center gap-2.5" aria-label="See my work">
+                <span>See my work</span>
+                <svg className="w-6 h-6 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Work Section */}
-      <section className="py-24 bg-gray-50" id="work">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
-            My work
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            {projects.map((project, index) => (
-              <Link href={`/project/${project.slug}`} key={index} className="block w-full">
-                <div className="bg-white rounded-3xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
-                  <div className="relative mb-4 flex-shrink-0">
-                    <div className="bg-[#f1f1f1] aspect-video relative rounded-2xl overflow-hidden">
-                      <Image
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-[#151515] text-white px-4 py-2 custom-rounded-lg text-sm font-medium tracking-[2px]">
-                        {project.category === "VISUAL DESIGN" ? "GALLERY" : "CASE STUDY"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col flex-grow">
-                    <div className="text-sm text-[#595959] mb-2">
-                      {project.slug === "bankrate-data-center" ? "WEBSITE DESIGN" : project.category}
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4">
-                      {project.slug === "bankrate-data-center"
-                        ? "Centralizing Bankrate's historical proprietary data into one Data Center."
-                        : project.title}
-                    </h3>
-                    <p className="text-[#333333] mb-6 flex-grow line-clamp-3">{project.description}</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
+      <section className="py-20 md:py-20 bg-zinc-900" id="work">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-36">
+          <div className="flex flex-col gap-12 w-full">
+            <h2 className="font-display font-bold text-[30px] leading-[36px] text-white text-center">
+              Featured Work
+            </h2>
+            <div className="flex flex-col gap-8">
+              {projects.map((project, index) => (
+                <ProjectTile key={index} project={project} />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Brands Section */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-16 flex items-center gap-4">
-            Brands I've worked with
-          </h2>
-          <LogoMarquee brands={brands} />
+      <section className="py-16 bg-zinc-900">
+        <div className="container mx-auto px-6 md:px-52">
+          <div className="flex flex-col gap-8 max-w-[1024px]">
+            <h2 className="font-display font-bold text-[30px] leading-[36px] text-white text-center">
+              <span className="block md:inline">Brands I've</span>{" "}
+              <span className="block md:inline">worked with</span>
+            </h2>
+            <LogoMarquee brands={brands} />
+          </div>
         </div>
       </section>
 

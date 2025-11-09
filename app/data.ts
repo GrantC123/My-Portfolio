@@ -5,7 +5,7 @@ export const projects = [
     description:
       "A comprehensive data management solution for Bankrate, streamlining financial data analysis and reporting.",
     image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bankrate-DC-Cover-7B6cx26SzmCuDaMgE8FUqZ8XyQoso5.png",
+      "/bankrate-data-center-hero.jpg",
     slug: "bankrate-data-center",
     overview:
       "Founded in 1976 as the Bank Rate Monitor, a print publisher for the banking industry, Bankrate has a long track record of helping people make smart financial decisions. Bankrate has maintained this reputation over four decades by prioritizing facts and experience over hype and hearsay, and quickly responding to economic trends that offer users a more relevant experience.",
@@ -32,7 +32,7 @@ export const projects = [
     title: "Bankrate Review Template",
     description:
       "A standardized review template system for Bankrate, enhancing content consistency and user experience across financial product reviews.",
-    image: "/placeholder.svg?key=7tibd",
+    image: "/bankrate-review-template-header.png",
     slug: "bankrate-review-template",
     overview:
       "Bankrate is a trusted source for financial product reviews, helping consumers make informed decisions about credit cards, loans, banking products, and more. With thousands of reviews across multiple financial verticals, maintaining consistency in presentation and user experience is crucial for brand integrity and user trust.",
@@ -48,30 +48,6 @@ export const projects = [
     timeline: "4 months",
     role: "Senior Product Designer",
     deliverables: "Component Library, Template System, Design Documentation, Interactive Prototypes",
-  },
-  {
-    category: "WEBSITE DESIGN",
-    title: "Allconnect Homepage Redesign",
-    description:
-      "A complete redesign of the Allconnect homepage to improve user engagement, conversion rates, and overall user experience for consumers seeking home service connections.",
-    image: "/utility-services-homepage.png",
-    slug: "allconnect-homepage-redesign",
-    overview:
-      "Allconnect is a free resource that simplifies how consumers shop for internet, TV, and other home services. The homepage serves as the primary entry point for users looking to compare and purchase these essential services, making its design and functionality critical to business success.",
-    challenge:
-      "The existing Allconnect homepage had become outdated and was underperforming in terms of user engagement and conversion metrics. It suffered from information overload, unclear user journeys, and a design that didn't effectively communicate the brand's value proposition.",
-    challengeDetails:
-      "Key challenges included improving the visual hierarchy to better guide users, simplifying the service selection process, optimizing for mobile users who made up an increasing percentage of traffic, and creating a more modern design that would build trust with potential customers.",
-    solution:
-      "We created a streamlined, user-centered homepage design that clearly communicates Allconnect's value proposition and guides users toward their specific service needs with minimal friction.",
-    solutionDetails:
-      "The redesigned homepage features a prominent hero section with a simplified service finder tool, clear benefit statements, social proof elements, and a content strategy that addresses common user questions. The mobile-first approach ensures a seamless experience across all devices, while the refreshed visual design aligns with current web standards while maintaining brand recognition.",
-    client: "Allconnect (Red Ventures)",
-    timeline: "3 months",
-    role: "Lead UX/UI Designer",
-    deliverables: "User Research, Wireframes, High-fidelity Designs, A/B Testing Plan",
-    outcome:
-      "Increased homepage conversion rate by 24% and reduced bounce rate by 15% within the first month after launch.",
   },
   {
     category: "PRODUCT DESIGN",
@@ -99,8 +75,7 @@ export const projects = [
     category: "VISUAL DESIGN",
     title: "Editorial Imagery",
     description: "A series of striking editorial images for a leading fashion magazine's digital platform.",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Next-advisor-lady.jpg-hz9D3Emm39SGLvhk6v98MWLNdO2TsB.jpeg",
+    image: "/images/editorial/editorial-imagery-header.jpg",
     slug: "editorial-imagery",
     overview:
       "In the competitive world of digital fashion media, visual impact is everything. Our client, a leading fashion magazine, needed to refresh their visual identity to stand out in crowded social feeds and capture the attention of their target audience while maintaining their established brand voice.",

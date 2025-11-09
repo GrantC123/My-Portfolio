@@ -4,6 +4,8 @@ import Link from "next/link"
 import styles from "./Navigation.module.css"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
+import { useAuth } from "../contexts/AuthContext"
+import { Button } from "@/components/ui/button"
 
 function LinkedInIcon() {
   return (
@@ -20,27 +22,33 @@ function LinkedInIcon() {
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { isAuthenticated, logout } = useAuth()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  const handleLogout = () => {
+    logout()
+    setIsMenuOpen(false)
+  }
+
   return (
-    <nav className="border-b border-[#f1f1f1]">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+    <nav className="border-b border-zinc-500 bg-zinc-950">
+      <div className="container mx-auto px-4 max-w-[1280px] py-4 flex justify-between items-center">
         <Link href="/">
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Grant%20Crowder%20Logo-ovgYoYejWF3N13GnmpP77JiW4hWGII.svg"
+            src="/header-logo.svg"
             alt="Grant Crowder Logo"
             width="160"
-            height="43"
+            height="27"
             className="h-auto"
           />
         </Link>
 
         {/* Mobile menu button */}
         <button
-          className="md:hidden focus:outline-none"
+          className="md:hidden focus:outline-none text-white"
           onClick={toggleMenu}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
@@ -48,48 +56,54 @@ export default function Navigation() {
         </button>
 
         {/* Desktop navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link href="/#work" className={`text-sm font-custom transition-colors ${styles.navLink}`}>
+        <div className="hidden md:flex items-center gap-4">
+          <Link href="/#work" className="text-sm text-white transition-colors hover:text-coral-300">
             Work
           </Link>
-          <Link href="/about" className={`text-sm font-custom transition-colors ${styles.navLink}`}>
+          <Link href="/about" className="text-sm text-white transition-colors hover:text-coral-300">
             About
-          </Link>
-          <Link href="/resume" className={`text-sm font-custom transition-colors ${styles.navLink}`}>
-            Resume
           </Link>
           <Link
             href="https://www.linkedin.com/in/grantcrowder/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm hover:text-purple-600 transition-colors"
+            className="text-sm text-white hover:text-coral-300 transition-colors"
           >
             <LinkedInIcon />
           </Link>
+          {isAuthenticated && (
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              size="sm"
+            >
+              Logout
+            </Button>
+          )}
         </div>
       </div>
 
       {/* Mobile navigation */}
       {isMenuOpen && (
-        <div className="md:hidden py-4 px-4 bg-white border-t border-[#f1f1f1] absolute w-full z-50">
+        <div className="md:hidden py-4 px-4 bg-zinc-950 border-t border-zinc-500 absolute w-full z-50">
           <div className="flex flex-col space-y-4">
             <Link
               href="/#work"
-              className="text-sm py-2 hover:text-purple-600 transition-colors"
+              className="text-sm py-2 text-white hover:text-coral-300 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Work
             </Link>
             <Link
               href="/about"
-              className="text-sm py-2 hover:text-purple-600 transition-colors"
+              className="text-sm py-2 text-white hover:text-coral-300 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link
               href="/resume"
-              className="text-sm py-2 hover:text-purple-600 transition-colors"
+              className="text-sm py-2 text-white hover:text-coral-300 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Resume
@@ -98,12 +112,24 @@ export default function Navigation() {
               href="https://www.linkedin.com/in/grantcrowder/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm py-2 hover:text-purple-600 transition-colors flex items-center"
+              className="text-sm py-2 text-white hover:text-coral-300 transition-colors flex items-center"
               onClick={() => setIsMenuOpen(false)}
             >
               <LinkedInIcon className="mr-2" />
               LinkedIn
             </Link>
+            {isAuthenticated && (
+              <Button
+                onClick={() => {
+                  handleLogout()
+                  setIsMenuOpen(false)
+                }}
+                variant="ghost"
+                className="text-sm py-2 text-white hover:text-coral-300 text-left justify-start h-auto"
+              >
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       )}

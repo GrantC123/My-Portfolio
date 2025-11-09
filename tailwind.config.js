@@ -57,14 +57,48 @@ module.exports = {
           800: "#15005D",
           900: "#030022",
         },
-        fontFamily: {
-          sans: ["var(--font-inter)"],
+        coral: {
+          50: "#F0FDFF",
+          100: "#CCFFFF",
+          200: "#53E5F8",
+          300: "#00C6E5",
+          400: "#009ECC",
+          500: "#006C99",
+          600: "#005480",
+          700: "#003859",
+          800: "#001C2E",
+          900: "#000915",
         },
+        zinc: {
+          400: "#9f9fa9",
+          500: "#71717b",
+          800: "#27272a",
+          900: "#18181b",
+          950: "#09090b",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+        display: ["var(--font-syne)"],
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0", opacity: "0" },
+          to: { height: "var(--radix-accordion-content-height)", opacity: "1" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)", opacity: "1" },
+          to: { height: "0", opacity: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.3s ease-out",
+        "accordion-up": "accordion-up 0.3s ease-in",
       },
     },
   },
