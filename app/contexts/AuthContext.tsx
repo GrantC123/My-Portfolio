@@ -2,13 +2,10 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import type { User } from "@supabase/supabase-js"
 
 interface AuthContextType {
   isAuthenticated: boolean
-  user: User | null
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
+  login: (password: string) => Promise<{ success: boolean; error?: string; identifier?: string }>
   logout: () => Promise<void>
   loading: boolean
 }
@@ -17,61 +14,42 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
-    // Check if user is authenticated on mount
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setIsAuthenticated(!!user)
+    // Check if user is authenticated on mount by checking cookie
+    const checkAuth = () => {
+      const authCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('site_access='))
+      
+      const isAuth = authCookie?.split('=')[1] === 'granted'
+      setIsAuthenticated(isAuth)
       setLoading(false)
     }
 
-    checkUser()
+    checkAuth()
+  }, [])
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setIsAuthenticated(!!session?.user)
-      setLoading(false)
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [supabase])
-
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (password: string): Promise<{ success: boolean; error?: string; identifier?: string }> => {
     try {
-      console.log('AuthContext: Attempting login...')
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
       })
 
-      console.log('AuthContext: Login response:', { hasData: !!data, hasError: !!error, hasUser: !!data?.user, hasSession: !!data?.session })
+      const data = await response.json()
 
-      if (error) {
-        console.error('AuthContext: Login error:', error)
-        return { success: false, error: error.message }
-      }
-
-      if (data.user && data.session) {
-        console.log('AuthContext: Login successful, setting user state')
-        setUser(data.user)
+      if (data.success) {
         setIsAuthenticated(true)
-        // The session should be automatically set in cookies by Supabase SSR
-        return { success: true }
+        return { success: true, identifier: data.identifier }
+      } else {
+        return { success: false, error: data.error || 'Authentication failed' }
       }
-
-      console.error('AuthContext: Login failed - no user or session')
-      return { success: false, error: "Login failed - no session created" }
     } catch (error) {
       console.error("AuthContext: Login exception:", error)
       return { success: false, error: "An unexpected error occurred" }
@@ -79,14 +57,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = async () => {
-    await supabase.auth.signOut()
-    setUser(null)
+    // Remove the cookie
+    document.cookie = 'site_access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     setIsAuthenticated(false)
     router.push("/login")
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   )

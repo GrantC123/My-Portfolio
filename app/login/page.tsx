@@ -5,16 +5,13 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "../contexts/AuthContext"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const { login, isAuthenticated, loading: authLoading } = useAuth()
   const router = useRouter()
-  const supabase = createClient()
 
   // Redirect if already authenticated (client-side check)
   useEffect(() => {
@@ -28,7 +25,7 @@ export default function LoginPage() {
     setError("")
     setLoading(true)
 
-    const result = await login(email, password)
+    const result = await login(password)
     
     if (result.success) {
       // Wait a moment for cookies to be set
@@ -38,7 +35,7 @@ export default function LoginPage() {
       window.location.href = "/"
       // Don't set loading to false here - we're redirecting
     } else {
-      setError(result.error || "Invalid email or password")
+      setError(result.error || "Incorrect password")
       setLoading(false)
     }
   }
@@ -61,32 +58,15 @@ export default function LoginPage() {
           {/* Heading */}
           <div className="text-center mb-8">
             <h1 className="font-display font-bold text-3xl md:text-4xl text-white mb-2">
-              Welcome back
+              Password Protected
             </h1>
             <p className="text-base text-zinc-400">
-              Sign in to your account to continue
+              Enter the site password to continue
             </p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Input */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-500 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-coral-300 transition-all autofill:bg-zinc-900 autofill:text-white"
-                placeholder="Enter your email"
-              />
-            </div>
-
             {/* Password Input */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
@@ -100,7 +80,8 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-zinc-900 border border-zinc-500 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-coral-300 transition-all autofill:bg-zinc-900 autofill:text-white"
-                placeholder="Enter your password"
+                placeholder="Enter site password"
+                autoFocus
               />
             </div>
 
@@ -119,7 +100,7 @@ export default function LoginPage() {
                 className="rounded-lg px-6 py-4 h-auto text-base leading-[27px] w-fit"
                 disabled={loading}
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? "Verifying..." : "Access Site"}
               </Button>
             </div>
           </form>
