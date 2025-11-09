@@ -55,7 +55,7 @@ export const projects = [
     description:
       "A case study in building and documenting a scalable design system for a global client.",
     image: "/images/Design-system-header.jpg",
-    slug: "amex-design-system",
+    slug: "design-system",
     overview:
       "American Express is one of the world's most recognized financial service providers, known for its credit cards, charge cards, and traveler's cheques. With a global presence and millions of customers, maintaining a consistent brand experience across all digital touchpoints is crucial for customer trust and recognition. Red Ventures had a partnership with this company.",
     challenge:

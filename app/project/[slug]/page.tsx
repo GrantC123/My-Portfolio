@@ -62,7 +62,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   // Check if this is the Bankrate Data Center case study
   const isBankrateCaseStudy = project.slug === "bankrate-data-center"
   const isReviewTemplate = project.slug === "bankrate-review-template"
-  const isAmexDesignSystem = project.slug === "amex-design-system"
+  const isAmexDesignSystem = project.slug === "design-system"
   const isGalleryProject = project.slug === "editorial-imagery"
 
   // Bankrate-specific data
