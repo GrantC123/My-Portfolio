@@ -9,23 +9,11 @@ import { Button } from "@/components/ui/button"
 
 export default function Home() {
   const brands = [
-    { name: "Bankrate", logo: "bankrate-logo" },
-    {
-      name: "The Points Guy",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/640px-TPG.PGN-1hIGsdrTHkKSUxa3bJj4H0r3MdmYkJ.png",
-    },
-    {
-      name: "TIME",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Time_Magazine_logo.svg-S6g0Pvj7IFYH2S9Tjan6PzXECBYBTd.png",
-    },
-    {
-      name: "Audi",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo_audi.jpg-CqrNCrtJjG7LkTgQIROG2YNXod38Mi.jpeg",
-    },
-    {
-      name: "USA Today",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/USA%20Today%20logo-rV3crsLS5Dbg3oxudkgoSdmeQFVwlR.png",
-    },
+    { name: "Allconnect", logo: "/logos/Allconnect.svg" },
+    { name: "The Points Guy", logo: "/logos/The Points Guy.svg" },
+    { name: "Bankrate", logo: "/logos/Bankrate.svg" },
+    { name: "Audi", logo: "/logos/Audi.svg" },
+    { name: "NextAdvisor", logo: "/logos/NextAdvisor.svg" },
   ]
 
   return (

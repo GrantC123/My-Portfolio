@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import styles from "./Navigation.module.css"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { Button } from "@/components/ui/button"
@@ -22,7 +23,28 @@ function LinkedInIcon() {
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const { isAuthenticated, logout } = useAuth()
+  const pathname = usePathname()
+  const isProjectPage = pathname?.startsWith("/project/")
+
+  useEffect(() => {
+    if (!isProjectPage) return
+
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const scrollableHeight = documentHeight - windowHeight
+      const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0
+      setScrollProgress(Math.min(100, Math.max(0, progress)))
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    handleScroll() // Initial calculation
+
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [isProjectPage])
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -34,7 +56,7 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="border-b border-zinc-500 bg-zinc-950">
+    <nav className="relative border-b border-zinc-500 bg-zinc-950">
       <div className="container mx-auto px-4 max-w-[1280px] py-4 flex justify-between items-center">
         <Link href="/">
           <img
@@ -131,6 +153,16 @@ export default function Navigation() {
               </Button>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Scroll Progress Bar - Only on project pages */}
+      {isProjectPage && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800">
+          <div 
+            className="h-full bg-coral-300 transition-all duration-150 ease-out"
+            style={{ width: `${scrollProgress}%` }}
+          />
         </div>
       )}
     </nav>
