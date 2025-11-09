@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator"
 import { Card } from "@/components/ui/card"
 import ProjectTile from "../../components/ProjectTile"
 import ImageLightbox from "../../components/ImageLightbox"
+import EditorialGallery from "../../components/EditorialGallery"
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = projects.find((p) => p.slug === params.slug)
@@ -989,18 +990,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
   // For Editorial Imagery gallery project - Visual Design case study
   if (isGalleryProject) {
-    // Gallery images with different sizes for masonry layout
-    // Hero image is first, then gallery images
-    const galleryImages = [
-      "/editorial-imagery-header.jpg",
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Next-advisor-lady.jpg-hz9D3Emm39SGLvhk6v98MWLNdO2TsB.jpeg",
-      "/images/1-in-3-Americans-say-the-state-of-the-US-economy-is-harming-their-mental-health.jpg",
-      "/images/5-common-types-of-bank-account-fraud-and-how-to-protect-yourself.jpg",
-      "/co-creation-image-1.png",
-      "/co-creation-image-2.png",
-      "/co-creation-image-3.png",
-      // Add more images as needed
-    ]
+    // This will be handled by the MasonryGrid component with dynamic loading
 
     return (
       <div className="min-h-screen bg-zinc-950">
@@ -1049,15 +1039,9 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
         {/* Hero Image */}
         <section className="w-full bg-zinc-950">
-          <div 
-            className="relative w-full h-[880px] cursor-pointer"
-            onClick={() => {
-              setCurrentImageIndex(0)
-              setIsLightboxOpen(true)
-            }}
-          >
+          <div className="relative w-full h-[880px]">
             <Image
-              src="/editorial-imagery-header.jpg"
+              src="/images/editorial/editorial-imagery-header.jpg"
               alt={project.title}
               fill
               className="object-cover"
@@ -1108,219 +1092,12 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </div>
         </section>
 
-        {/* Masonry Gallery Section */}
+        {/* Dynamic Masonry Gallery Section */}
         <section className="bg-zinc-950 py-16">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="flex flex-wrap gap-4">
-              {/* First Row - Two columns with one tall image on right */}
-              <div className="flex gap-4 w-full">
-                <div className="flex flex-col gap-4 flex-1">
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg"
-                    onClick={() => {
-                      setCurrentImageIndex(1)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[468px] w-full">
-                      <Image
-                        src={galleryImages[1] || galleryImages[0]}
-                        alt="Gallery image 1"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg"
-                    onClick={() => {
-                      setCurrentImageIndex(3)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[468px] w-full">
-                      <Image
-                        src={galleryImages[3] || galleryImages[0]}
-                        alt="Gallery image 3"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg h-full"
-                    onClick={() => {
-                      setCurrentImageIndex(2)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[953px] w-full">
-                      <Image
-                        src={galleryImages[2] || galleryImages[0]}
-                        alt="Gallery image 2"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Second Row - Three columns with one tall image in middle */}
-              <div className="flex gap-4 w-full">
-                <div className="flex flex-col gap-4 flex-1">
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg"
-                    onClick={() => {
-                      setCurrentImageIndex(4)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[468px] w-full">
-                      <Image
-                        src={galleryImages[4] || galleryImages[0]}
-                        alt="Gallery image 4"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg"
-                    onClick={() => {
-                      setCurrentImageIndex(6)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[468px] w-full">
-                      <Image
-                        src={galleryImages[6] || galleryImages[0]}
-                        alt="Gallery image 6"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg h-full"
-                    onClick={() => {
-                      setCurrentImageIndex(5)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[953px] w-full">
-                      <Image
-                        src={galleryImages[5] || galleryImages[0]}
-                        alt="Gallery image 5"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4 flex-1">
-                  <div
-                    className="group cursor-pointer overflow-hidden rounded-lg"
-                    onClick={() => {
-                      setCurrentImageIndex(7)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="relative h-[468px] w-full">
-                      <Image
-                        src={galleryImages[7] || galleryImages[0]}
-                        alt="Gallery image 7"
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div
-                      className="group cursor-pointer overflow-hidden rounded-lg flex-1"
-                      onClick={() => {
-                        setCurrentImageIndex(8)
-                        setIsLightboxOpen(true)
-                      }}
-                    >
-                      <div className="relative h-[468px] w-full">
-                        <Image
-                          src={galleryImages[8] || galleryImages[0]}
-                          alt="Gallery image 8"
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                      </div>
-                    </div>
-                    <div
-                      className="group cursor-pointer overflow-hidden rounded-lg flex-1"
-                      onClick={() => {
-                        setCurrentImageIndex(9)
-                        setIsLightboxOpen(true)
-                      }}
-                    >
-                      <div className="relative h-[468px] w-full">
-                        <Image
-                          src={galleryImages[9] || galleryImages[0]}
-                          alt="Gallery image 9"
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Third Row - Full width images */}
-              <div className="flex flex-wrap gap-4 w-full">
-                {galleryImages.slice(9).map((imageSrc, index) => (
-                  <div
-                    key={index + 9}
-                    className="group cursor-pointer overflow-hidden rounded-lg"
-                    onClick={() => {
-                      setCurrentImageIndex(index + 9)
-                      setIsLightboxOpen(true)
-                    }}
-                    style={{ flex: '1 1 calc(50% - 8px)', minWidth: '300px' }}
-                  >
-                    <div className="relative h-[468px] w-full">
-                      <Image
-                        src={imageSrc}
-                        alt={`Gallery image ${index + 10}`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <EditorialGallery />
           </div>
         </section>
-
-        {/* ImageLightbox Component */}
-        <ImageLightbox
-          images={galleryImages}
-          isOpen={isLightboxOpen}
-          onClose={() => setIsLightboxOpen(false)}
-          currentIndex={currentImageIndex}
-          onIndexChange={setCurrentImageIndex}
-        />
 
         {/* More Projects Section */}
         <section className="bg-zinc-900 py-16 border-t border-zinc-500">
