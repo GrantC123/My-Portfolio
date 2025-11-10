@@ -111,25 +111,46 @@ export async function getFeaturedProjects(): Promise<Project[]> {
                        props.category?.select?.name || 
                        'PRODUCT DESIGN'
       
-      // Extract featured image
+      // Extract featured image - use same logic as extractPageMetadata
+      // Prioritize "Hero Image URL" property as that's what's used in the database
       let image = ''
-      // Try Files property first
-      if (props['Featured Image']?.files && props['Featured Image'].files.length > 0) {
-        image = props['Featured Image'].files[0].file?.url || props['Featured Image'].files[0].external?.url || ''
+      
+      // Try Files property first (if image is uploaded to Notion)
+      const featuredImageFiles = props['Featured Image'] || props['FeaturedImage'] || props['Hero Image'] || props['HeroImage']
+      if (featuredImageFiles && featuredImageFiles.type === 'files' && featuredImageFiles.files && featuredImageFiles.files.length > 0) {
+        image = featuredImageFiles.files[0].file?.url || featuredImageFiles.files[0].external?.url || ''
       }
-      // Try Text/Rich text property (for relative paths)
-      else if (props['Hero Image Path'] || props['Hero Image'] || props['Featured Image Path'] || props['Hero Image URL']) {
-        const pathProp = props['Hero Image Path'] || props['Hero Image'] || props['Featured Image Path'] || props['Hero Image URL']
-        if (pathProp && (pathProp.type === 'rich_text' || pathProp.type === 'title')) {
-          const pathText = pathProp.rich_text?.map((t: any) => t.plain_text).join('') || ''
-          if (pathText && (pathText.startsWith('/') || pathText.startsWith('http'))) {
-            image = pathText.trim()
+      
+      // Try Text/Rich text property (for relative paths like /images/editorial/...)
+      // Prioritize "Hero Image URL" since that's what's used in the database
+      if (!image) {
+        const textPathProps = [
+          props['Hero Image URL'], // Prioritize this one first
+          props['Hero Image Path'],
+          props['Hero Image'],
+          props['Featured Image Path'],
+        ].filter(Boolean)
+        
+        for (const pathProp of textPathProps) {
+          if (pathProp && (pathProp.type === 'rich_text' || pathProp.type === 'title')) {
+            const pathText = pathProp.rich_text?.map((t: any) => t.plain_text).join('') || 
+                            pathProp.title?.map((t: any) => t.plain_text).join('') || ''
+            if (pathText && (pathText.startsWith('/') || pathText.startsWith('http'))) {
+              image = pathText.trim()
+              break
+            }
           }
         }
       }
-      // Try URL property
-      else if (props['Featured Image']?.url || props['Hero Image URL']?.url) {
-        image = props['Featured Image']?.url || props['Hero Image URL']?.url || ''
+      
+      // If still no image found, try URL property (for absolute URLs like https://...)
+      if (!image) {
+        const urlProp = props['Hero Image URL'] || props['Featured Image'] || props['FeaturedImage'] || props['Image']
+        if (urlProp && urlProp.type === 'url' && urlProp.url) {
+          image = urlProp.url
+        } else if (urlProp && urlProp.url) {
+          image = urlProp.url
+        }
       }
       
       return {
