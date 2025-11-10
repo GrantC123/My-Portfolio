@@ -48,7 +48,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
           ],
         },
       }),
-      cache: 'no-store',
+      cache: 'force-cache', // Cache at build time for static generation
     })
     
     let pages: any[] = []
@@ -66,7 +66,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({}),
-        cache: 'no-store',
+        cache: 'force-cache', // Cache at build time for static generation
       })
       
       if (allPagesResponse.ok) {

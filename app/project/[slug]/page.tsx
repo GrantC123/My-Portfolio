@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import EditorialGallery from "../../components/EditorialGallery"
 import ProjectTile from "../../components/ProjectTile"
+import ReviewTemplateImages from "./ReviewTemplateImages"
 
 // Fetch all Notion project slugs at build time for static generation
 export async function generateStaticParams() {
@@ -488,24 +489,13 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           </div>
         </section>
 
-        {/* Hero Image - Clickable for Lightbox */}
-        <section className="w-full">
-          <div 
-            className="relative w-full aspect-[1920/1080] cursor-pointer"
-            onClick={() => {
-              setCurrentImageIndex(0)
-              setIsLightboxOpen(true)
-            }}
-          >
-            <Image
-              src={reviewTemplateImage}
-              alt={project.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </section>
+        {/* Hero Image and Co-creation Images with Lightbox */}
+        <ReviewTemplateImages
+          heroImage={reviewTemplateImage}
+          heroAlt={project.title}
+          coCreationImages={coCreationImages}
+          allImages={coCreationImages}
+        />
 
         {/* Project Summary Section */}
         <section className="bg-zinc-950 py-16">
@@ -605,62 +595,6 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           </div>
         </section>
 
-        {/* Co-creation Session Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                Co-creation session
-              </h2>
-              <div className="space-y-6 mb-8">
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  We began the project with a one-hour, cross-functional co-creation workshop, bringing together design, UX research, SEO, editorial, and engineering to surface high-impact opportunities and set a unified project direction. I facilitated the session to ensure every discipline had a voice, mapping pain points, open questions, and feature ideas that directly shaped our next steps.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  Artifacts from this session included:
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  Potential Opportunities: Identified and prioritized critical areas for improvement and innovation.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  "I Wonder": Open questions and ideas tracked to guide ongoing discovery.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  "State of the Union": screenshots showing review templates from each vertical
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  This early collaboration drove alignment, secured stakeholder buy-in, and ensured that our prototypes and feature priorities were grounded in real user and business needs.
-                </p>
-              </div>
-
-              {/* Image Grid - Clickable for Lightbox */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                {coCreationImages.map((imageSrc, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col gap-2 cursor-pointer group"
-                    onClick={() => {
-                      // Find the index in the full reviewTemplateImages array (skip hero image at index 0)
-                      setCurrentImageIndex(index + 1)
-                      setIsLightboxOpen(true)
-                    }}
-                  >
-                    <div className="aspect-square relative bg-zinc-800 rounded-lg overflow-hidden">
-                      <Image
-                        src={imageSrc}
-                        alt={`Co-creation session image ${index + 1}`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Competitive Research Section */}
         <section className="bg-zinc-950 py-16">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
@@ -698,43 +632,17 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           </div>
         </section>
 
-        {/* ImageLightbox Component */}
-        <ImageLightbox
-          images={reviewTemplateImages}
-          isOpen={isLightboxOpen}
-          onClose={() => setIsLightboxOpen(false)}
-          currentIndex={currentImageIndex}
-          onIndexChange={setCurrentImageIndex}
-        />
-
         {/* More Projects Section */}
         <section className="bg-zinc-900 py-16 border-t border-zinc-500">
           <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
             <div className="flex flex-col gap-8 max-w-[1152px]">
-              {currentPreviewProjects.map((previewProject, index) => (
-                <ProjectTile key={index} project={previewProject} />
-              ))}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                onClick={handlePrevious}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show previous projects"
-              >
-                <ArrowLeft size={16} />
-                <span>Previous</span>
-              </button>
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show next projects"
-              >
-                <span>Next</span>
-                <ArrowRight size={16} />
-              </button>
+              {projects
+                .filter((p) => p.slug !== project.slug)
+                .slice(0, 2)
+                .map((previewProject, index) => (
+                  <ProjectTile key={previewProject.slug || index} project={previewProject} />
+                ))}
             </div>
           </div>
         </section>
@@ -1023,29 +931,12 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
             <div className="flex flex-col gap-8 max-w-[1152px]">
-              {currentPreviewProjects.map((previewProject, index) => (
-                <ProjectTile key={index} project={previewProject} />
-              ))}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                onClick={handlePrevious}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show previous projects"
-              >
-                <ArrowLeft size={16} />
-                <span>Previous</span>
-              </button>
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show next projects"
-              >
-                <span>Next</span>
-                <ArrowRight size={16} />
-              </button>
+              {projects
+                .filter((p) => p.slug !== project.slug)
+                .slice(0, 2)
+                .map((previewProject, index) => (
+                  <ProjectTile key={previewProject.slug || index} project={previewProject} />
+                ))}
             </div>
           </div>
         </section>
