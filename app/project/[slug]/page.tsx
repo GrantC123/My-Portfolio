@@ -1,11 +1,9 @@
-"use client"
-
-import type React from "react"
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft, ArrowRight, X } from "lucide-react"
+import { getNotionClient } from "@/lib/notion/client"
+import { fetchAllBlocks } from "@/lib/notion/fetch-blocks"
 import { projects } from "../../data"
+import NotionPageContent from "./NotionPageContent"
+import Link from "next/link"
+import Image from "next/image"
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -15,46 +13,66 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
-import { Card } from "@/components/ui/card"
-import ProjectTile from "../../components/ProjectTile"
-import ImageLightbox from "../../components/ImageLightbox"
 import EditorialGallery from "../../components/EditorialGallery"
+import ProjectTile from "../../components/ProjectTile"
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = projects.find((p) => p.slug === params.slug)
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
-  // Get all projects except the current one
-  const otherProjects = projects.filter((p) => p.slug !== params.slug)
-  const [previewStartIndex, setPreviewStartIndex] = useState(0)
-  const previewCount = Math.min(2, otherProjects.length)
-  const currentPreviewProjects = otherProjects.slice(previewStartIndex, previewStartIndex + previewCount)
-
-  if (currentPreviewProjects.length < previewCount && otherProjects.length > 0) {
-    const remaining = previewCount - currentPreviewProjects.length
-    const wrappedProjects = otherProjects.slice(0, remaining)
-    currentPreviewProjects.push(...wrappedProjects)
+export default async function ProjectPage({ params }: { params: { slug: string } }) {
+  // Try to fetch from Notion first (server-side)
+  let notionPageData: { page: any; blocks: any[] } | null = null
+  
+  const notion = getNotionClient()
+  if (notion && process.env.NOTION_PROJECTS_DB_ID) {
+    try {
+      // Query database by slug
+      const databaseId = process.env.NOTION_PROJECTS_DB_ID || ''
+      const apiKey = process.env.NOTION_API_KEY || ''
+      
+      const queryResponse = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Notion-Version': '2022-06-28',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filter: {
+            property: 'Slug',
+            rich_text: {
+              equals: params.slug,
+            },
+          },
+        }),
+        cache: 'no-store', // Always fetch fresh data
+      })
+      
+      if (queryResponse.ok) {
+        const queryData = await queryResponse.json()
+        const pages = queryData.results || []
+        
+        if (pages.length > 0) {
+          const page = pages[0]
+          const pageId = 'id' in page ? page.id : ''
+          
+          if (pageId) {
+            // Fetch all blocks (including nested children for columns)
+            const allBlocks = await fetchAllBlocks(notion, pageId)
+            notionPageData = { page, blocks: allBlocks }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching Notion page:', err)
+      // Fall through to static project data
+    }
   }
 
-  const handlePrevious = () => {
-    setPreviewStartIndex((prevIndex) => {
-      const newIndex = prevIndex - 1
-      return newIndex < 0 ? otherProjects.length - 1 : newIndex
-    })
+  // If Notion page found, render it
+  if (notionPageData && 'id' in notionPageData.page) {
+    return <NotionPageContent page={notionPageData.page} blocks={notionPageData.blocks} slug={params.slug} />
   }
 
-  const handleNext = () => {
-    setPreviewStartIndex((prevIndex) => {
-      const newIndex = prevIndex + 1
-      return newIndex >= otherProjects.length ? 0 : newIndex
-    })
-  }
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [params.slug])
-
+  // Fallback to static project data
+  const project = projects.find(p => p.slug === params.slug)
   if (!project) {
     return <div>Project not found</div>
   }
@@ -332,29 +350,12 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
             <div className="flex flex-col gap-8 max-w-[1152px]">
-              {currentPreviewProjects.map((previewProject, index) => (
-                <ProjectTile key={index} project={previewProject} />
-              ))}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                onClick={handlePrevious}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show previous projects"
-              >
-                <ArrowLeft size={16} />
-                <span>Previous</span>
-              </button>
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show next projects"
-              >
-                <span>Next</span>
-                <ArrowRight size={16} />
-              </button>
+              {projects
+                .filter((p) => p.slug !== project.slug)
+                .slice(0, 2)
+                .map((previewProject, index) => (
+                  <ProjectTile key={previewProject.slug || index} project={previewProject} />
+                ))}
             </div>
           </div>
         </section>
@@ -719,7 +720,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             {/* Hero Title */}
             <div className="py-20 md:py-30">
               <h1 className="font-display font-bold text-5xl md:text-6xl leading-[48px] md:leading-[60px] text-white w-full">
-                Building a unified design system to scale consistency across digital products
+                Creating a design system to streamline workflows and unlock speed
               </h1>
             </div>
           </div>
@@ -750,10 +751,13 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   </h2>
                   <div className="space-y-6">
                     <p className="text-lg leading-[28px] text-zinc-400">
-                      I led the creation of a comprehensive design system for a global financial services company, establishing a unified visual language and component library that would scale across multiple digital platforms. The system was designed to improve brand consistency, accelerate development velocity, and ensure accessibility standards across all products.
+                      During my time at Red Ventures, I joined a partnership with a global finance company (name redacted for privacy) to create paid search and media experiences, managing thousands of landing pages. Many of these pages lacked design files and had inconsistent components and layouts.
                     </p>
                     <p className="text-lg leading-[28px] text-zinc-400">
-                      Through extensive collaboration with design, engineering, and product teams, we built a flexible and scalable system that reduced design and development time while maintaining the high standards expected from a global financial services brand.
+                      We relied on a single Sketch file with a basic style guide that included colors, text styles, and branded assets. However, our landing pages were fragmented, with no reusable elements beyond buttons. Many components used on the site were absent from our Sketch files, forcing us to rely on images or recreate elements for each project. With only 1.5 designers on the team, we were consistently overloaded and working long hours, highlighting the urgent need for a design system.
+                    </p>
+                    <p className="text-lg leading-[28px] text-zinc-400">
+                      Certain details have been omitted or altered to respect client confidentiality.
                     </p>
                   </div>
                 </div>
@@ -762,27 +766,27 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 <div className="flex-1 flex flex-col gap-6">
                   <div>
                     <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Role</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">{project.role}</p>
+                    <p className="text-lg leading-[28px] text-zinc-400">Lead Product Designer</p>
                   </div>
                   <Separator className="bg-zinc-600" />
                   <div>
                     <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Timeline</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">{project.timeline}</p>
+                    <p className="text-lg leading-[28px] text-zinc-400">June 2021 - May 2024</p>
                   </div>
                   <Separator className="bg-zinc-600" />
                   <div>
                     <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Tools</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Figma, Storybook, Confluence, Design Tokens</p>
+                    <p className="text-lg leading-[28px] text-zinc-400">Sketch, Figma</p>
                   </div>
                   <Separator className="bg-zinc-600" />
                   <div>
                     <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Deliverables</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">{project.deliverables}</p>
+                    <p className="text-lg leading-[28px] text-zinc-400">Wireframes, High-fidelity Prototypes</p>
                   </div>
                   <Separator className="bg-zinc-600" />
                   <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Outcomes</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Reduced design time by 40%, improved component reusability, unified brand experience</p>
+                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Outcome</h4>
+                    <p className="text-lg leading-[28px] text-zinc-400">Increased project scale and consistency on projects by 45% YoY</p>
                   </div>
                 </div>
               </div>
@@ -790,168 +794,166 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </div>
         </section>
 
-        {/* Problem Statement Section */}
+        {/* Impact Section */}
         <section className="bg-zinc-950 py-16">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
             <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                Problem statement
+              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6 text-center">
+                Impact
               </h2>
-              <p className="text-lg leading-[28px] text-zinc-400 mb-12">
-                The client was facing significant challenges with design consistency across their digital ecosystem. With dozens of products spanning web, mobile, and internal tools, each team was creating their own components and design patterns. This fragmentation led to inconsistent user experiences, redundant development efforts, and slower time-to-market for new features. The lack of a unified design language also made it difficult to maintain brand integrity and accessibility standards at scale.
+              <p className="text-lg leading-[40px] text-zinc-400 text-center">
+                We observed a notable boost in team cohesion and a reduction in isolated components, alongside a quicker pace in early design iterations. The governance framework I implemented fostered collaboration among designers, providing early insights into the evolving system across the product. This clarity grew as we onboarded a dedicated front-end engineer and began integrating the visual system into our codebase.
               </p>
-
-              {/* Goals and KPIs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                {/* Goals */}
-                <div>
-                  <h3 className="font-display font-bold text-3xl leading-[36px] text-white mb-6 mt-12">Goals</h3>
-                  <ol className="list-decimal list-inside space-y-4 pl-4">
-                    <li className="text-lg leading-[28px] text-zinc-400">
-                      Establish a unified design language that maintains brand consistency across all digital touchpoints
-                    </li>
-                    <li className="text-lg leading-[28px] text-zinc-400">
-                      Accelerate design and development velocity through reusable components and clear guidelines
-                    </li>
-                    <li className="text-lg leading-[28px] text-zinc-400">
-                      Ensure accessibility compliance and improve user experience quality across all products
-                    </li>
-                    <li className="text-lg leading-[28px] text-zinc-400">
-                      Create a scalable system that can evolve with changing business needs and design trends
-                    </li>
-                  </ol>
-                </div>
-
-                {/* KPIs */}
-                <div>
-                  <h3 className="font-display font-bold text-3xl leading-[36px] text-white mb-6 mt-12">KPI's</h3>
-                  <ol className="list-decimal list-inside space-y-4 pl-4">
-                    <li className="text-lg leading-[28px] text-zinc-400">Design time reduction</li>
-                    <li className="text-lg leading-[28px] text-zinc-400">Component reusability rate</li>
-                    <li className="text-lg leading-[28px] text-zinc-400">Design system adoption across teams</li>
-                    <li className="text-lg leading-[28px] text-zinc-400">Accessibility compliance score</li>
-                    <li className="text-lg leading-[28px] text-zinc-400">Time-to-market for new features</li>
-                  </ol>
-                </div>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* Design Process Section */}
+        <Separator className="bg-zinc-600" />
+
+        {/* Initial Approach Section */}
         <section className="bg-zinc-950 py-16">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
             <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                Design process
+              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
+                Initial approach
               </h2>
-              <div className="space-y-6 mb-8">
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  The design system creation process began with comprehensive research and discovery. We audited existing components across all products, identified common patterns, and documented inconsistencies. Through stakeholder interviews and user research, we gathered requirements and established design principles that would guide the system.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  The next phase involved creating design tokens for colors, typography, spacing, and other foundational elements. We then built a comprehensive component library, starting with the most commonly used components and progressively expanding to cover edge cases and specialized use cases.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  Throughout the process, we maintained close collaboration with engineering teams to ensure technical feasibility and created extensive documentation to support adoption across the organization.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Component Library Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                Component library
-              </h2>
-              <div className="space-y-6 mb-8">
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  The design system includes a comprehensive library of reusable components, each designed with flexibility and accessibility in mind. Components range from basic elements like buttons and inputs to complex patterns like data tables and navigation systems.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  Each component includes multiple variants to support different use cases, comprehensive documentation with usage guidelines, and code examples for multiple frameworks. The library is built to be technology-agnostic, allowing teams to implement components using their preferred stack while maintaining visual consistency.
-                </p>
-              </div>
-
-              {/* Component Categories */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                {[
-                  "Form Elements",
-                  "Navigation Components",
-                  "Data Display",
-                  "Feedback Components",
-                  "Layout Components",
-                  "Content Components"
-                ].map((category, index) => (
-                  <Card key={index} className="bg-zinc-800 border-zinc-600 p-6">
-                    <h3 className="font-display font-bold text-xl text-white mb-2">{category}</h3>
-                    <p className="text-zinc-400 text-sm">
-                      A collection of related components designed to work together seamlessly
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Approach</h3>
+                  <div className="space-y-6 text-lg leading-[28px] text-zinc-400">
+                    <p>
+                      One of my first initiatives was to educate our team on the concept of <span className="font-bold text-white">atomic design patterns</span> and the importance of thinking about our site in a modular way. By adopting atomic design, we aimed to reduce redundant work on components and free up time to focus on larger, more strategic ideas. I developed and presented a deck to introduce these foundational concepts to the team.
                     </p>
-                  </Card>
-                ))}
+                    <p>
+                      Recognizing the limitations of Sketch, we transitioned our workflow to Figma to leverage its advanced design system capabilities and component management. In collaboration with my lead designer, I began to consolidate and standardize foundational components such as badges and buttons, addressing existing inconsistencies.
+                    </p>
+                    <p>
+                      While our global finance partner had their own design language system in Sketch, it was not actively utilized. Our short-term strategy involved using some of their base-level components as a starting point, without integrating their full technology stack. A critical early discovery was the presence of accessibility gaps within the existing financial site, particularly regarding focus states, which we prioritized for improvement.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Scaling the system</h3>
+                  <div className="space-y-6 text-lg leading-[28px] text-zinc-400">
+                    <p>
+                      As the project evolved, we systematically integrated and adapted elements from the partner's design system, always ensuring adherence to accessibility standards. We were in the business of creative testing, so there had to be boundaries of innovation, versus systematizing too much which led to stale creative. When my design lead was promoted, I was appointed <span className="font-bold text-white">owner of the design system</span>, dedicating approximately 50% of my time to its strategic development and refinement.
+                    </p>
+                    <p>During this period, I significantly scaled our design system by:</p>
+                    <ul className="list-disc list-inside space-y-2 pl-4">
+                      <li>Creating a structured file architecture, including dedicated files for <span className="font-bold text-white">foundations, components, and patterns</span>.</li>
+                      <li>Injecting critical contextual guidelines directly into the system, drawing from past learnings and best practices.</li>
+                      <li>Increasing resources dedicated to the system's growth; after my promotion to Creative Manager, I delegated ongoing maintenance and development tasks to an associate product designer.</li>
+                    </ul>
+                    <p>
+                      I provided <span className="font-bold text-white">quarterly updates</span> to stakeholders, detailing the design system's progress and its impact on our efficiency and product quality. A key innovation within our system was the strategic use of <span className="font-bold text-white">slot components</span>, which provided unparalleled flexibility and scalability for our thousands of landing pages.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Design Tokens Section */}
+        <Separator className="bg-zinc-600" />
+
+        {/* Planning Section */}
         <section className="bg-zinc-950 py-16">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
             <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                Design tokens
+              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
+                Planning
               </h2>
-              <div className="space-y-6 mb-8">
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  Design tokens serve as the foundation of the design system, providing a single source of truth for design decisions. We established tokens for colors, typography, spacing, shadows, borders, and animations.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  The token system supports theming and allows for easy updates across all products. By centralizing these values, we ensure consistency and make it simple to maintain and evolve the design language over time.
-                </p>
-              </div>
-
-              {/* Token Categories */}
-              <ul className="space-y-4 pl-6">
-                {[
-                  "Color palette with semantic naming",
-                  "Typography scale with responsive sizing",
-                  "Spacing system based on 8px grid",
-                  "Elevation and shadow tokens",
-                  "Border radius and width tokens",
-                  "Animation timing and easing functions"
-                ].map((token, index) => (
-                  <li key={index} className="text-lg leading-[28px] text-zinc-400 flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-2 flex-shrink-0" />
-                    {token}
-                  </li>
-                ))}
+              <ul className="space-y-4 text-lg leading-[28px] text-zinc-400 list-disc list-inside pl-4">
+                <li>
+                  I did design system planning{' '}
+                  <a href="https://docs.google.com/spreadsheets/d/1QOXI3udhMqHdm9CFhmvRglpQGdl_DqOG2gM2N04dg4s/edit?gid=1093953848#gid=1093953848" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
+                    here
+                  </a>
+                </li>
+                <li>I would also put the design system on a roadmap here.</li>
               </ul>
-            </div>
-          </div>
-        </section>
 
-        {/* Documentation Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                Documentation and guidelines
-              </h2>
-              <div className="space-y-6 mb-8">
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  Comprehensive documentation was essential for successful adoption of the design system. We created detailed guidelines covering design principles, component usage, accessibility standards, and best practices.
-                </p>
-                <p className="text-lg leading-[28px] text-zinc-400">
-                  The documentation includes interactive examples, code snippets, design specifications, and accessibility guidelines. We also established a contribution process that allows teams to propose new components or modifications, ensuring the system continues to evolve with the needs of the organization.
-                </p>
+              {/* Image Placeholders */}
+              <div className="grid grid-cols-3 gap-8 mt-12">
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+              </div>
+              <div className="grid grid-cols-3 gap-8 mt-8">
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+              </div>
+              <div className="grid grid-cols-3 gap-8 mt-8">
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
+                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
               </div>
             </div>
           </div>
         </section>
+
+        <Separator className="bg-zinc-600" />
+
+        {/* Establishing Governance Section */}
+        <section className="bg-zinc-950 py-16">
+          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
+            <div className="max-w-[768px] mx-auto">
+              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
+                Establishing a system of governance
+              </h2>
+              <ul className="space-y-4 text-lg leading-[28px] text-zinc-400 list-disc list-inside pl-4 mb-8">
+                <li>Created a system of governance [show documentation]</li>
+                <li>As new designers joined, I would train them</li>
+                <li>
+                  I created a contribution process{' '}
+                  <a href="https://www.figma.com/design/iY3OfoFWBDk604YycqJsl4/-LIBRARY--Design-System---Foundations?node-id=12957-10089&t=qSjwdLFycOTMRuDU-1" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
+                    here
+                  </a>
+                  , a{' '}
+                  <a href="https://www.figma.com/design/iY3OfoFWBDk604YycqJsl4/-LIBRARY--Design-System---Foundations?node-id=12957-9989&t=qSjwdLFycOTMRuDU-1" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
+                    contribution companion
+                  </a>
+                </li>
+                <li>
+                  I would also fit the contribution flow into the quarterly planning document{' '}
+                  <a href="https://docs.google.com/spreadsheets/d/1QOXI3udhMqHdm9CFhmvRglpQGdl_DqOG2gM2N04dg4s/edit?gid=1093953848#gid=1093953848" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
+                    here
+                  </a>
+                </li>
+              </ul>
+
+              {/* Image Placeholders */}
+              <div className="flex gap-4 mt-8">
+                <div className="flex-1 aspect-[4096/3158] bg-zinc-800 rounded-lg"></div>
+                <div className="w-[296px] h-[455px] bg-zinc-800 rounded-lg"></div>
+              </div>
+              <div className="mt-8">
+                <div className="aspect-[1015/568] bg-zinc-800 rounded-lg"></div>
+              </div>
+              <div className="mt-8">
+                <div className="aspect-[1016/1019] bg-zinc-800 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Separator className="bg-zinc-600" />
+
+        {/* Key Results Section */}
+        <section className="bg-zinc-950 py-16">
+          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
+            <div className="max-w-[768px] mx-auto">
+              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
+                Key results
+              </h2>
+              <p className="text-lg leading-[30px] text-zinc-400">
+                The launch of the centralized data hub led to a 30% increase in backlinks within three months, an 18% rise in average time on page, and improved organic search rankings for key financial data terms. Journalists and partners reported a significantly easier experience finding and citing Bankrate's data.
+              </p>
+            </div>
+          </div>
+        </section>
+
 
         {/* More Projects Section */}
         <section className="bg-zinc-900 py-16 border-t border-zinc-500">
@@ -1104,29 +1106,12 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
             <div className="flex flex-col gap-8 max-w-[1152px]">
-              {currentPreviewProjects.map((previewProject, index) => (
-                <ProjectTile key={index} project={previewProject} />
-              ))}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                onClick={handlePrevious}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show previous projects"
-              >
-                <ArrowLeft size={16} />
-                <span>Previous</span>
-              </button>
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-                aria-label="Show next projects"
-              >
-                <span>Next</span>
-                <ArrowRight size={16} />
-              </button>
+              {projects
+                .filter((p) => p.slug !== project.slug)
+                .slice(0, 2)
+                .map((previewProject, index) => (
+                  <ProjectTile key={previewProject.slug || index} project={previewProject} />
+                ))}
             </div>
           </div>
         </section>

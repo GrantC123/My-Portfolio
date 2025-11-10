@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Chip } from "@/components/ui/chip"
 
-interface Project {
+export interface Project {
   slug: string
   title: string
   description: string

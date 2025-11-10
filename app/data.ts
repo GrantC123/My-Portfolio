@@ -1,56 +1,6 @@
 export const projects = [
   {
     category: "PRODUCT DESIGN",
-    title: "Bankrate Data Center",
-    description:
-      "A comprehensive data management solution for Bankrate, streamlining financial data analysis and reporting.",
-    image:
-      "/bankrate-data-center-hero.jpg",
-    slug: "bankrate-data-center",
-    overview:
-      "Founded in 1976 as the Bank Rate Monitor, a print publisher for the banking industry, Bankrate has a long track record of helping people make smart financial decisions. Bankrate has maintained this reputation over four decades by prioritizing facts and experience over hype and hearsay, and quickly responding to economic trends that offer users a more relevant experience.",
-    challenge:
-      "Bankrate needed a centralized system to manage vast amounts of financial data, ensuring accuracy and ease of access for both internal teams and clients.",
-    challengeDetails:
-      "Bankrate has a wealth of underutilized proprietary data. We want to increase the likelihood of journalists and content creators backlinking to Bankrate. As part of the emerging strategies work ABT wants to include five different charts on the Bankrate Data Center page. The charts will help to illustrate different data points related to the Credit Cards vertical.",
-    challengeList: [
-      "Proprietary Survey Data: This will be a chart showing the trend of three different data points from Bankrate surveys",
-      "Product Rate Trend: This will be a chart showing the average credit card interest rate over time",
-      "Proprietary Index: Using a combination of partner provided credit card data this chart will illustrate the current Credit Card 'Borrowing Landscape as a index score (methodology TBD)",
-    ],
-    solution:
-      "We developed a robust data center with intuitive interfaces, advanced search capabilities, and real-time data visualization tools, significantly improving data management efficiency.",
-    solutionDetails:
-      "The first iteration of this work will focus on data related to the Credit Cards vertical. The intention will be to have a similar suite of charts for all of the verticals.",
-    client: "Bankrate",
-    timeline: "6 months",
-    role: "Senior Product Designer",
-    deliverables: "Wireframes, High-fidelity Prototypes",
-  },
-  {
-    category: "PRODUCT DESIGN",
-    title: "Bankrate Review Template",
-    description:
-      "A standardized review template system for Bankrate, enhancing content consistency and user experience across financial product reviews.",
-    image: "/bankrate-review-template-header.png",
-    slug: "bankrate-review-template",
-    overview:
-      "Bankrate is a trusted source for financial product reviews, helping consumers make informed decisions about credit cards, loans, banking products, and more. With thousands of reviews across multiple financial verticals, maintaining consistency in presentation and user experience is crucial for brand integrity and user trust.",
-    challenge:
-      "Bankrate needed a standardized yet flexible review template system that could accommodate different financial products while maintaining brand consistency and improving user engagement.",
-    challengeDetails:
-      "The existing review system had evolved organically over time, resulting in inconsistent user experiences across different product categories. Key challenges included varying information architecture, inconsistent visual presentation, and difficulty in comparing similar products. Additionally, the templates needed to support complex data visualization, user-generated content, and responsive design across all devices.",
-    solution:
-      "We designed a comprehensive review template system with modular components that could be configured for different financial products while maintaining a consistent user experience and brand identity.",
-    solutionDetails:
-      "The template system includes standardized sections for product overviews, feature comparisons, expert analysis, and user reviews. Each section was designed with flexibility in mind, allowing content teams to customize the presentation based on the specific financial product while adhering to established design patterns. The system also includes interactive elements like calculators, comparison tools, and filtering options to enhance user engagement.",
-    client: "Bankrate",
-    timeline: "4 months",
-    role: "Senior Product Designer",
-    deliverables: "Component Library, Template System, Design Documentation, Interactive Prototypes",
-  },
-  {
-    category: "PRODUCT DESIGN",
     title: "Design System for an Enterprise Financial Services Company",
     description:
       "A case study in building and documenting a scalable design system for a global client.",

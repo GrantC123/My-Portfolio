@@ -7,8 +7,12 @@ import LogoMarquee from "./components/LogoMarquee"
 import TestimonialsSection from "./components/TestimonialsSection"
 import ProjectTile from "./components/ProjectTile"
 import { Button } from "@/components/ui/button"
+import FeaturedProjects from "./components/FeaturedProjects"
+import { getFeaturedProjects } from "@/lib/notion/get-featured-projects"
 
-export default function Home() {
+export default async function Home() {
+  // Fetch featured projects from Notion server-side
+  const notionProjects = await getFeaturedProjects()
   const brands = [
     { name: "Allconnect", logo: "/logos/Allconnect.svg" },
     { name: "The Points Guy", logo: "/logos/The Points Guy.svg" },
@@ -51,11 +55,7 @@ export default function Home() {
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white text-center">
               Featured Work
             </h2>
-            <div className="flex flex-col gap-8">
-              {projects.map((project, index) => (
-                <ProjectTile key={index} project={project} />
-              ))}
-            </div>
+            <FeaturedProjects notionProjects={notionProjects} staticProjects={projects} />
           </div>
         </div>
       </section>
