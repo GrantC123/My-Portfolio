@@ -16,6 +16,69 @@ import { Separator } from "@/components/ui/separator"
 import EditorialGallery from "../../components/EditorialGallery"
 import ProjectTile from "../../components/ProjectTile"
 
+// Fetch all Notion project slugs at build time for static generation
+export async function generateStaticParams() {
+  const params: { slug: string }[] = []
+  
+  // Add static project slugs
+  try {
+    const { projects } = await import('../../data')
+    projects.forEach(project => {
+      if (project.slug) {
+        params.push({ slug: project.slug })
+      }
+    })
+  } catch (error) {
+    console.error('Error loading static projects:', error)
+  }
+  
+  // Fetch all Notion project slugs at build time
+  if (process.env.NOTION_API_KEY && process.env.NOTION_PROJECTS_DB_ID) {
+    try {
+      const databaseId = process.env.NOTION_PROJECTS_DB_ID
+      const apiKey = process.env.NOTION_API_KEY
+      
+      const response = await fetch(
+        `https://api.notion.com/v1/databases/${databaseId}/query`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Notion-Version': '2022-06-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}), // No filter - get all pages
+          cache: 'force-cache', // Cache at build time for static generation
+        }
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        const pages = data.results || []
+        
+        pages.forEach((page: any) => {
+          if (page.properties?.Slug?.rich_text?.[0]?.plain_text) {
+            const slug = page.properties.Slug.rich_text[0].plain_text
+            // Only add if not already in params (avoid duplicates with static projects)
+            if (!params.find(p => p.slug === slug)) {
+              params.push({ slug })
+            }
+          }
+        })
+      }
+    } catch (error) {
+      // Silently fail - Notion projects will be generated on-demand if build fails
+      console.warn('Could not fetch Notion slugs at build time:', error)
+    }
+  }
+  
+  return params
+}
+
+// Enable ISR - pages are pre-generated at build time, but revalidate every hour in production
+// This gives you the best of both worlds: instant static pages + automatic updates
+export const revalidate = 3600 // Revalidate every hour (optional - can remove for fully static)
+
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
   // Try to fetch from Notion first (server-side)
   let notionPageData: { page: any; blocks: any[] } | null = null
@@ -42,7 +105,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             },
           },
         }),
-        cache: 'no-store', // Always fetch fresh data
+        cache: 'force-cache', // Cache at build time for static generation
       })
       
       if (queryResponse.ok) {
