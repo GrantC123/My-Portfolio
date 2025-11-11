@@ -326,6 +326,8 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
           if (url.hostname === 'localhost' || 
               url.hostname.includes('vercel.app') || 
               url.hostname.includes('vercel.com') ||
+              url.hostname === 'grantcrowderdesign.com' ||
+              url.hostname === 'www.grantcrowderdesign.com' ||
               process.env.NEXT_PUBLIC_SITE_URL?.includes(url.hostname)) {
             // Extract just the pathname (e.g., /images/editorial/image.jpg)
             imageUrl = url.pathname
