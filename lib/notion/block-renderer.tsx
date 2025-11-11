@@ -427,17 +427,39 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
     case 'column_list':
       // Column list contains column blocks
       const columnBlocks = (block as any).children || []
+      const columnListFullWidth = (block as any).__fullWidth || false
+      
+      // Check if any column contains images (for full-width detection)
+      const hasImages = columnBlocks.some((col: NotionBlock) => {
+        const children = (col as any).children || []
+        return children.some((child: NotionBlock) => child.type === 'image')
+      })
+      
       return (
-        <div key={id} className="flex flex-col md:flex-row gap-4 my-8">
-          {columnBlocks.map((columnBlock: NotionBlock, colIndex: number) => {
-            const columnChildren = (columnBlock as any).children || []
-            return (
-              <div key={columnBlock.id || colIndex} className="flex-1">
-                {/* Use renderNotionBlocks to properly group list items inside columns */}
-                {renderNotionBlocks(columnChildren, allImages, onImageClick)}
-              </div>
-            )
-          })}
+        <div 
+          key={id} 
+          className="flex flex-col md:flex-row gap-4 my-8"
+          style={columnListFullWidth ? {
+            width: '100vw',
+            position: 'relative',
+            left: '50%',
+            right: '50%',
+            marginLeft: '-50vw',
+            marginRight: '-50vw'
+          } : {}}
+        >
+          <div className={`w-full flex flex-col md:flex-row gap-4 ${columnListFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
+            {columnBlocks.map((columnBlock: NotionBlock, colIndex: number) => {
+              const columnChildren = (columnBlock as any).children || []
+              return (
+                <div key={columnBlock.id || colIndex} className="flex-1">
+                  {/* Use renderNotionBlocks to properly group list items inside columns */}
+                  {/* Pass insideColumnList=true so images inside don't get individually full-width */}
+                  {renderNotionBlocks(columnChildren, allImages, onImageClick, true)}
+                </div>
+              )
+            })}
+          </div>
         </div>
       )
 
@@ -469,7 +491,8 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
 export function renderNotionBlocks(
   blocks: NotionBlock[],
   allImages: string[] = [],
-  onImageClick?: (index: number) => void
+  onImageClick?: (index: number) => void,
+  insideColumnList: boolean = false
 ): React.ReactNode {
   const elements: React.ReactNode[] = []
   let currentList: NotionBlock[] = []
@@ -559,8 +582,7 @@ export function renderNotionBlocks(
           const firstItem = currentList[0]
           const firstItemType = firstItem?.type
           const hasNumberedProp = (firstItem as any)?.numbered_list_item !== undefined
-          const prevIsNumbered = listType === 'numbered' || 
-                                firstItemType === 'numbered_list_item' || 
+          const prevIsNumbered = firstItemType === 'numbered_list_item' || 
                                 firstItemType === 'numberedList' ||
                                 hasNumberedProp
           
@@ -636,14 +658,47 @@ export function renderNotionBlocks(
     }
 
     // Render the block
-    // If in full-width mode and it's an image, mark it as full-width
+    // If in full-width mode and it's an image or column_list with images, mark it as full-width
     // Otherwise, render normally (lists and text stay in narrow container)
-    if (isFullWidth && block.type === 'image') {
-      // Mark image as full-width
-      ;(block as any).__fullWidth = true
-      const rendered = renderNotionBlock(block, allImages, onImageClick)
-      if (rendered) {
-        elements.push(rendered)
+    // Note: Images inside a column_list should not be individually full-width
+    if (isFullWidth) {
+      if (block.type === 'image' && !insideColumnList) {
+        // Mark image as full-width (but not if inside a column_list)
+        ;(block as any).__fullWidth = true
+        const rendered = renderNotionBlock(block, allImages, onImageClick)
+        if (rendered) {
+          elements.push(rendered)
+        }
+      } else if (block.type === 'column_list') {
+        // Check if column_list contains images
+        const columnBlocks = (block as any).children || []
+        const hasImages = columnBlocks.some((col: NotionBlock) => {
+          const children = (col as any).children || []
+          return children.some((child: NotionBlock) => child.type === 'image')
+        })
+        
+        if (hasImages) {
+          // Mark column_list as full-width
+          ;(block as any).__fullWidth = true
+        }
+        
+        // Render column_list (it will handle rendering its children with insideColumnList=true)
+        const rendered = renderNotionBlock(block, allImages, onImageClick)
+        if (rendered) {
+          elements.push(rendered)
+        }
+      } else if (block.type === 'image' && insideColumnList) {
+        // Image inside column_list - render normally without full-width
+        const rendered = renderNotionBlock(block, allImages, onImageClick)
+        if (rendered) {
+          elements.push(rendered)
+        }
+      } else {
+        // Render normally (in narrow container)
+        const rendered = renderNotionBlock(block, allImages, onImageClick)
+        if (rendered) {
+          elements.push(rendered)
+        }
       }
     } else {
       // Render normally (in narrow container)
