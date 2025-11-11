@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import { normalizeImageUrl } from './image-url-utils'
 
 export interface NotionBlock {
   id: string
@@ -311,31 +312,9 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
 
     case 'image':
       // Support both Notion-hosted images and local images (relative paths)
-      let imageUrl = block.image?.file?.url || block.image?.external?.url || ''
-      
-      // If external URL is a relative path (starts with /), use it directly
-      // This allows using local images from /public/images folder
-      if (block.image?.external?.url && block.image.external.url.startsWith('/')) {
-        imageUrl = block.image.external.url
-      }
-      // If it's a full URL pointing to localhost or our domain, extract the path
-      else if (block.image?.external?.url && typeof block.image.external.url === 'string') {
-        try {
-          const url = new URL(block.image.external.url)
-          // Check if it's localhost or our production domain (Vercel or custom domain)
-          if (url.hostname === 'localhost' || 
-              url.hostname.includes('vercel.app') || 
-              url.hostname.includes('vercel.com') ||
-              url.hostname === 'grantcrowderdesign.com' ||
-              url.hostname === 'www.grantcrowderdesign.com' ||
-              process.env.NEXT_PUBLIC_SITE_URL?.includes(url.hostname)) {
-            // Extract just the pathname (e.g., /images/editorial/image.jpg)
-            imageUrl = url.pathname
-          }
-        } catch (e) {
-          // If URL parsing fails, use the original URL
-        }
-      }
+      // Use shared normalization function to ensure consistent URL matching
+      const rawImageUrl = block.image?.file?.url || block.image?.external?.url || ''
+      const imageUrl = normalizeImageUrl(rawImageUrl)
       
       if (!imageUrl) return null
       

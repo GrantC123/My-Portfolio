@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { renderNotionBlocks, type NotionBlock } from "@/lib/notion/block-renderer"
 import { extractPageMetadata } from "@/lib/notion/page-properties"
 import { collectAllImages } from "@/lib/notion/collect-images"
+import { normalizeImageUrl } from "@/lib/notion/image-url-utils"
 import ImageLightbox from "../../components/ImageLightbox"
 import Image from "next/image"
 import { Separator } from "@/components/ui/separator"
@@ -45,15 +46,21 @@ export default function NotionPageContent({ page, blocks, slug }: NotionPageCont
   const breadcrumbText = slug ? formatSlug(slug) : pageTitle
 
   // Collect all images for lightbox (including featured image and nested images in columns)
+  // Normalize all URLs to ensure consistent matching between collection and rendering
   const allImages: string[] = []
   if (metadata.featuredImage) {
-    allImages.push(metadata.featuredImage)
+    const normalizedFeaturedImage = normalizeImageUrl(metadata.featuredImage)
+    if (normalizedFeaturedImage && !allImages.includes(normalizedFeaturedImage)) {
+      allImages.push(normalizedFeaturedImage)
+    }
   }
   // Recursively collect all images from blocks (including nested ones in columns)
+  // Note: collectAllImages already normalizes URLs, but we normalize again here for extra safety
   const blockImages = collectAllImages(blocks)
   blockImages.forEach((imageUrl) => {
-    if (!allImages.includes(imageUrl)) {
-      allImages.push(imageUrl)
+    const normalizedUrl = normalizeImageUrl(imageUrl)
+    if (normalizedUrl && !allImages.includes(normalizedUrl)) {
+      allImages.push(normalizedUrl)
     }
   })
 
