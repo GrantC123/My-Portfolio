@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { normalizeImageUrl } from './image-url-utils'
+import * as LucideIcons from 'lucide-react'
 
 export interface NotionBlock {
   id: string
@@ -385,23 +386,171 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
     case 'callout':
       const calloutText = block.callout?.rich_text?.map((text: any) => text.plain_text).join('') || ''
       const icon = block.callout?.icon
+      const emoji = icon?.emoji || '💡'
+      const calloutChildren = (block as any).children || []
+      const hasChildren = calloutChildren.length > 0
       
       // Check if this is a full-width marker (hidden callout used as a marker)
       const isFullWidthMarker = calloutText.toUpperCase().includes('FULLWIDTH') || 
                                 calloutText.toUpperCase().includes('FULL WIDTH') ||
                                 calloutText.toUpperCase().includes('FULL-WIDTH') ||
-                                icon?.emoji === '📐' || 
-                                icon?.emoji === '🖼️'
+                                emoji === '📐' || 
+                                emoji === '🖼️'
       
       // If it's a marker, return null (it won't be rendered, just used to mark sections)
       if (isFullWidthMarker) {
         return null
       }
       
+      // Try to get Lucide icon name from callout text (format: "icon:IconName" or "icon: icon-name")
+      let lucideIconName: string | null = null
+      const iconMatch = calloutText.match(/icon:\s*([A-Za-z0-9-]+)/i)
+      if (iconMatch && iconMatch[1]) {
+        // Convert kebab-case to PascalCase (e.g., "arrow-right" -> "ArrowRight")
+        lucideIconName = iconMatch[1]
+          .split('-')
+          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join('')
+      }
+      
+      // Get Lucide icon component if name is found
+      let LucideIcon: React.ComponentType<{ className?: string; size?: number }> | null = null
+      if (lucideIconName && lucideIconName in LucideIcons) {
+        LucideIcon = (LucideIcons as any)[lucideIconName] as React.ComponentType<{ className?: string; size?: number }>
+      }
+      
+      // Determine callout style based on emoji (emoji is used for styling, not display)
+      // Available emoji styles:
+      // 💡 - Default/Info (zinc-800)
+      // ⚠️ - Warning (amber)
+      // ✅ - Success (green)
+      // ❌ - Error/Danger (red)
+      // 💬 - Quote/Testimonial (blue)
+      // 📌 - Important/Highlight (purple)
+      // 🎯 - Goal/Objective (indigo)
+      // 📝 - Note (zinc/gray)
+      // 🔍 - Insight/Research (teal)
+      // You can wrap any blocks inside a callout by adding them as children in Notion
+      // To use a Lucide icon, add "icon:IconName" to the callout text (e.g., "icon:Lightbulb")
+      const getCalloutStyle = (emoji: string) => {
+        switch (emoji) {
+          case '💡': // Default/Info
+            return {
+              bg: 'bg-zinc-800',
+              border: 'border-zinc-500',
+              text: 'text-zinc-300',
+              iconBg: 'bg-zinc-700'
+            }
+          case '⚠️': // Warning
+            return {
+              bg: 'bg-amber-50',
+              border: 'border-amber-200',
+              text: 'text-amber-900',
+              iconBg: 'bg-amber-100'
+            }
+          case '✅': // Success
+            return {
+              bg: 'bg-green-50',
+              border: 'border-green-200',
+              text: 'text-green-900',
+              iconBg: 'bg-green-100'
+            }
+          case '❌': // Error/Danger
+            return {
+              bg: 'bg-red-50',
+              border: 'border-red-200',
+              text: 'text-red-900',
+              iconBg: 'bg-red-100'
+            }
+          case '💬': // Quote/Testimonial
+            return {
+              bg: 'bg-blue-50',
+              border: 'border-blue-200',
+              text: 'text-blue-900',
+              iconBg: 'bg-blue-100'
+            }
+          case '📌': // Important/Highlight
+            return {
+              bg: 'bg-purple-50',
+              border: 'border-purple-200',
+              text: 'text-purple-900',
+              iconBg: 'bg-purple-100'
+            }
+          case '🎯': // Goal/Objective
+            return {
+              bg: 'bg-indigo-50',
+              border: 'border-indigo-200',
+              text: 'text-indigo-900',
+              iconBg: 'bg-indigo-100'
+            }
+          case '📝': // Note
+            return {
+              bg: 'bg-zinc-50',
+              border: 'border-zinc-200',
+              text: 'text-zinc-800',
+              iconBg: 'bg-zinc-100'
+            }
+          case '🔍': // Insight/Research
+            return {
+              bg: 'bg-teal-50',
+              border: 'border-teal-200',
+              text: 'text-teal-900',
+              iconBg: 'bg-teal-100'
+            }
+          default: // Default style
+            return {
+              bg: 'bg-coral-50',
+              border: 'border-coral-200',
+              text: 'text-zinc-800',
+              iconBg: 'bg-coral-100'
+            }
+        }
+      }
+      
+      const style = getCalloutStyle(emoji)
+      
+      // Remove icon:IconName from displayed text
+      const displayText = lucideIconName 
+        ? calloutText.replace(/icon:\s*[A-Za-z0-9-]+/i, '').trim()
+        : calloutText
+      
+      // Check if callout is inside a column_list by checking parent context
+      // We'll use a data attribute to detect this, but for now, make callouts stretch when in columns
       return (
-        <div key={id} className="bg-coral-50 border border-coral-200 rounded-lg p-4 my-6">
-          {icon && <span className="mr-2">{icon.emoji || '💡'}</span>}
-          <span className="text-zinc-800">{calloutText}</span>
+        <div key={id} className={`${style.bg} ${style.border} border rounded-lg p-4 my-6 h-full flex flex-col`}>
+          <div className="flex flex-col flex-1">
+            {LucideIcon && (
+              <div className={`${style.iconBg} rounded-full p-2 w-fit mb-4 flex items-center justify-center`}>
+                <LucideIcon className={style.text} size={20} />
+              </div>
+            )}
+            <div className="flex-1">
+              {displayText && (
+                <div className={`${style.text} mb-2`}>
+                  {block.callout?.rich_text?.map((text: any, idx: number) => {
+                    // Skip text that matches icon: pattern
+                    if (lucideIconName && /icon:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
+                      return null
+                    }
+                    
+                    const annotations = text.annotations || {}
+                    let content: React.ReactNode = text.plain_text
+                    
+                    if (annotations.bold) content = <strong key={idx}>{content}</strong>
+                    if (annotations.italic) content = <em key={idx}>{content}</em>
+                    if (annotations.code) content = <code key={idx} className="bg-zinc-200 px-1 rounded">{content}</code>
+                    
+                    return <span key={idx}>{content}</span>
+                  })}
+                </div>
+              )}
+              {hasChildren && (
+                <div className="mt-3 space-y-2">
+                  {renderNotionBlocks(calloutChildren, allImages, onImageClick)}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )
 
@@ -429,11 +578,11 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
             marginRight: '-50vw'
           } : {}}
         >
-          <div className={`w-full flex flex-col md:flex-row gap-4 ${columnListFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
+          <div className={`w-full flex flex-col md:flex-row gap-4 items-stretch ${columnListFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
             {columnBlocks.map((columnBlock: NotionBlock, colIndex: number) => {
               const columnChildren = (columnBlock as any).children || []
               return (
-                <div key={columnBlock.id || colIndex} className="flex-1">
+                <div key={columnBlock.id || colIndex} className="flex-1 flex flex-col">
                   {/* Use renderNotionBlocks to properly group list items inside columns */}
                   {/* Pass insideColumnList=true so images inside don't get individually full-width */}
                   {renderNotionBlocks(columnChildren, allImages, onImageClick, true)}
@@ -478,7 +627,7 @@ export function renderNotionBlocks(
   const elements: React.ReactNode[] = []
   let currentList: NotionBlock[] = []
   let listType: 'bulleted' | 'numbered' | null = null
-  let isFullWidth = false // Only affects images
+  let isFullWidth = false // Affects all blocks when enabled
 
   function isFullWidthMarker(block: NotionBlock): boolean {
     if (block.type === 'callout') {
@@ -493,8 +642,27 @@ export function renderNotionBlocks(
     return false
   }
 
-  // Removed flushFullWidthSection - we don't need it anymore
-  // Full-width mode now only affects images, which are rendered inline
+  // Helper function to wrap a block in full-width container
+  function wrapFullWidth(element: React.ReactNode, key: string): React.ReactNode {
+    if (!element) return null
+    return (
+      <div
+        key={key}
+        style={{
+          width: '100vw',
+          position: 'relative',
+          left: '50%',
+          right: '50%',
+          marginLeft: '-50vw',
+          marginRight: '-50vw'
+        }}
+      >
+        <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
+          {element}
+        </div>
+      </div>
+    )
+  }
 
   blocks.forEach((block, index) => {
     // Skip column blocks - they're handled by column_list
@@ -510,24 +678,37 @@ export function renderNotionBlocks(
         const firstItemType = currentList[0]?.type
         const isNumberedList = listType === 'numbered' || firstItemType === 'numbered_list_item'
         
+        let listElement: React.ReactNode
         if (listType === 'bulleted' || (!isNumberedList && firstItemType === 'bulleted_list_item')) {
-          elements.push(
+          listElement = (
             <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
               {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
             </ul>
           )
         } else if (isNumberedList) {
-            elements.push(
-              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
-                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
-              </ol>
-            )
+          listElement = (
+            <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+              {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+            </ol>
+          )
+        } else {
+          listElement = null
         }
+        
+        // Wrap list in full-width if currently in full-width mode
+        if (listElement) {
+          if (isFullWidth) {
+            elements.push(wrapFullWidth(listElement, `list-fullwidth-${index}`))
+          } else {
+            elements.push(listElement)
+          }
+        }
+        
         currentList = []
         listType = null
       }
       
-      // Toggle full-width mode (only affects images)
+      // Toggle full-width mode (affects all blocks)
       isFullWidth = !isFullWidth
       return // Don't render the marker itself
     }
@@ -536,11 +717,17 @@ export function renderNotionBlocks(
     if (block.type === 'bulleted_list_item') {
       if (listType !== 'bulleted') {
         if (currentList.length > 0) {
-          elements.push(
+          const listElement = (
             <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
               {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
             </ul>
           )
+          // Wrap list in full-width if in full-width mode
+          if (isFullWidth) {
+            elements.push(wrapFullWidth(listElement, `list-fullwidth-${index}`))
+          } else {
+            elements.push(listElement)
+          }
         }
         currentList = []
         listType = 'bulleted'
@@ -568,17 +755,29 @@ export function renderNotionBlocks(
                                 hasNumberedProp
           
           if (listType === 'bulleted' || (!prevIsNumbered && (firstItemType === 'bulleted_list_item' || (firstItem as any)?.bulleted_list_item !== undefined))) {
-            elements.push(
+            const listElement = (
               <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
                 {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
               </ul>
             )
+            // Wrap list in full-width if in full-width mode
+            if (isFullWidth) {
+              elements.push(wrapFullWidth(listElement, `list-fullwidth-${index}`))
+            } else {
+              elements.push(listElement)
+            }
           } else if (prevIsNumbered) {
-            elements.push(
+            const listElement = (
               <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
                 {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
               </ol>
             )
+            // Wrap list in full-width if in full-width mode
+            if (isFullWidth) {
+              elements.push(wrapFullWidth(listElement, `list-fullwidth-${index}`))
+            } else {
+              elements.push(listElement)
+            }
           }
         }
         currentList = []
@@ -589,7 +788,6 @@ export function renderNotionBlocks(
     }
 
     // Flush current list if we hit a non-list block
-    // Lists always render in narrow container, even in full-width mode
     if (currentList.length > 0) {
       // Determine list type by checking the first item's type and properties as a safeguard
       const firstItem = currentList[0]
@@ -600,18 +798,20 @@ export function renderNotionBlocks(
                             firstItemType === 'numberedList' ||
                             hasNumberedProperty
       
+      let listElement: React.ReactNode
+      
       if (listType === 'bulleted' || (!isNumberedList && (firstItemType === 'bulleted_list_item' || (firstItem as any)?.bulleted_list_item !== undefined))) {
-        elements.push(
+        listElement = (
           <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
             {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
           </ul>
         )
       } else if (isNumberedList) {
-            elements.push(
-              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
-                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
-              </ol>
-            )
+        listElement = (
+          <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+            {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+          </ol>
+        )
       } else {
         // Fallback: if we can't determine the type, check if ANY item is numbered
         const hasAnyNumbered = currentList.some(b => 
@@ -620,31 +820,39 @@ export function renderNotionBlocks(
           (b as any).numbered_list_item !== undefined
         )
         if (hasAnyNumbered) {
-            elements.push(
-              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
-                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
-              </ol>
-            )
+          listElement = (
+            <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+              {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+            </ol>
+          )
         } else {
           // Default to bulleted if we can't determine
-          elements.push(
+          listElement = (
             <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
               {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
             </ul>
           )
         }
       }
+      
+      // Wrap list in full-width if in full-width mode
+      if (isFullWidth) {
+        elements.push(wrapFullWidth(listElement, `list-fullwidth-${index}`))
+      } else {
+        elements.push(listElement)
+      }
+      
       currentList = []
       listType = null
     }
 
     // Render the block
-    // If in full-width mode and it's an image or column_list with images, mark it as full-width
-    // Otherwise, render normally (lists and text stay in narrow container)
+    // If in full-width mode, wrap all blocks in full-width container
     // Note: Images inside a column_list should not be individually full-width
     if (isFullWidth) {
+      // Special handling for images - they have their own full-width logic
       if (block.type === 'image' && !insideColumnList) {
-        // Mark image as full-width (but not if inside a column_list)
+        // Mark image as full-width (it handles its own styling)
         ;(block as any).__fullWidth = true
         const rendered = renderNotionBlock(block, allImages, onImageClick)
         if (rendered) {
@@ -659,14 +867,18 @@ export function renderNotionBlocks(
         })
         
         if (hasImages) {
-          // Mark column_list as full-width
+          // Mark column_list as full-width (it handles its own styling)
           ;(block as any).__fullWidth = true
-        }
-        
-        // Render column_list (it will handle rendering its children with insideColumnList=true)
-        const rendered = renderNotionBlock(block, allImages, onImageClick)
-        if (rendered) {
-          elements.push(rendered)
+          const rendered = renderNotionBlock(block, allImages, onImageClick)
+          if (rendered) {
+            elements.push(rendered)
+          }
+        } else {
+          // Wrap column_list in full-width container when in full-width mode
+          const rendered = renderNotionBlock(block, allImages, onImageClick)
+          if (rendered) {
+            elements.push(wrapFullWidth(rendered, `fullwidth-${block.id || index}`))
+          }
         }
       } else if (block.type === 'image' && insideColumnList) {
         // Image inside column_list - render normally without full-width
@@ -675,10 +887,10 @@ export function renderNotionBlocks(
           elements.push(rendered)
         }
       } else {
-        // Render normally (in narrow container)
+        // Wrap all other blocks in full-width container
         const rendered = renderNotionBlock(block, allImages, onImageClick)
         if (rendered) {
-          elements.push(rendered)
+          elements.push(wrapFullWidth(rendered, `fullwidth-${block.id || index}`))
         }
       }
     } else {
@@ -701,14 +913,16 @@ export function renderNotionBlocks(
                           firstItemType === 'numberedList' ||
                           hasNumberedProperty
     
+    let listElement: React.ReactNode
+    
     if (listType === 'bulleted' || (!isNumberedList && (firstItemType === 'bulleted_list_item' || (firstItem as any)?.bulleted_list_item !== undefined))) {
-      elements.push(
+      listElement = (
         <ul key="list-final" className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
           {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
         </ul>
       )
     } else if (isNumberedList) {
-      elements.push(
+      listElement = (
         <ol key="list-final" className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
           {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
         </ol>
@@ -721,19 +935,26 @@ export function renderNotionBlocks(
         (b as any).numbered_list_item !== undefined
       )
       if (hasAnyNumbered) {
-        elements.push(
+        listElement = (
           <ol key="list-final" className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
             {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
           </ol>
         )
       } else {
         // Default to bulleted if we can't determine
-        elements.push(
+        listElement = (
           <ul key="list-final" className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
             {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
           </ul>
         )
       }
+    }
+    
+    // Wrap list in full-width if in full-width mode
+    if (isFullWidth) {
+      elements.push(wrapFullWidth(listElement, 'list-final-fullwidth'))
+    } else {
+      elements.push(listElement)
     }
   }
 
