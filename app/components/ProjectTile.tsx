@@ -22,7 +22,7 @@ export default function ProjectTile({ project }: ProjectTileProps) {
       <div className="md:hidden bg-zinc-800 border border-zinc-500 rounded-lg overflow-hidden flex flex-col hover:scale-[1.02] transition-all duration-300">
         <div className="h-[232px] relative w-full">
           <Image
-            src={project.image || "/placeholder.svg"}
+            src={project.image || "/images/placeholder.svg"}
             alt={project.title}
             fill
             className="object-cover"
@@ -53,7 +53,7 @@ export default function ProjectTile({ project }: ProjectTileProps) {
         <div className="basis-0 grow relative min-w-0">
           <div className="absolute inset-0">
             <Image
-              src={project.image || "/placeholder.svg"}
+              src={project.image || "/images/placeholder.svg"}
               alt={project.title}
               fill
               className="object-cover"

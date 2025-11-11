@@ -52,7 +52,7 @@ export const Default: Story = {
       slug: 'design-system',
       title: 'Design System for an Enterprise Financial Services Company',
       description: 'A case study in building and documenting a scalable design system for a global client.',
-      image: '/images/Design-system-header.jpg',
+      image: '/images/design-system/Design-system-header.jpg',
       category: 'PRODUCT DESIGN',
     },
   },

@@ -125,7 +125,7 @@ NOTION_PROJECTS_DB_ID=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
    - **Slug**: "notion-test"
    - **Category**: "PRODUCT DESIGN"
    - **Description**: "A test page powered by Notion CMS"
-   - **Hero Image URL**: "/bankrate-review-template-header.png" (or full URL)
+   - **Hero Image URL**: "/images/review-template/bankrate-review-template-header.png" (or full URL)
    - **Hero Title**: "Designing modular review templates that scale across verticals"
    - **Summary Text 1**: "I had the opportunity to lead the end-to-end redesign..."
    - **Summary Text 2**: "Partner logos have been redacted for confidentiality."
@@ -152,7 +152,7 @@ NOTION_PROJECTS_DB_ID=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
 ## Image URLs
 
 You can use:
-- **Relative paths**: `/bankrate-review-template-header.png` (for images in your `public` folder)
+- **Relative paths**: `/images/review-template/bankrate-review-template-header.png` (for images in your `public/images` folder)
 - **Full URLs**: `https://example.com/image.jpg` (for external images)
 - **Notion-hosted images**: Notion images need to be exported/shared publicly first, or you can upload to your own hosting
 

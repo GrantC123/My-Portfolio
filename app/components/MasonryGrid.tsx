@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import Image from "next/image"
 import ImageLightbox from "./ImageLightbox"
 
@@ -39,9 +39,14 @@ const generateTileSizes = (count: number) => {
 export default function MasonryGrid({ images, heroImage }: MasonryGridProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [tileSizes, setTileSizes] = useState<{ aspectRatio: string }[]>([])
+  const [isMounted, setIsMounted] = useState(false)
   
-  // Generate randomized tile sizes once when images change
-  const tileSizes = useMemo(() => generateTileSizes(images.length), [images.length])
+  // Only generate tile sizes on the client side after mount to avoid hydration mismatch
+  useEffect(() => {
+    setIsMounted(true)
+    setTileSizes(generateTileSizes(images.length))
+  }, [images.length])
 
   // Memoize the combined images array - this is what we'll use for the lightbox
   const allImages = useMemo(() => {
@@ -59,11 +64,14 @@ export default function MasonryGrid({ images, heroImage }: MasonryGridProps) {
     }
   }
 
+  // Use default aspect ratio until mounted to avoid hydration mismatch
+  const defaultAspectRatio = '4/3'
+  
   return (
     <>
       <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4">
         {images.map((imageSrc, index) => {
-          const tileSize = tileSizes[index]
+          const tileSize = isMounted && tileSizes[index] ? tileSizes[index] : { aspectRatio: defaultAspectRatio }
           
           return (
             <div

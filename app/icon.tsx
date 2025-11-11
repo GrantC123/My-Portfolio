@@ -24,7 +24,7 @@ export default async function Icon() {
       }}
     >
       <img
-        src={Buffer.from(imageData).toString("base64") || "/placeholder.svg"}
+        src={Buffer.from(imageData).toString("base64") || "/images/placeholder.svg"}
         alt="GC Logo"
         style={{
           width: "100%",

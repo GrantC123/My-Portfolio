@@ -15,9 +15,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const mockImages = [
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
 ]
 
 // Wrapper component to handle state
@@ -56,7 +56,7 @@ export const Default: Story = {
 export const SingleImage: Story = {
   render: (args) => <ImageLightboxWrapper {...args} />,
   args: {
-    images: ['/placeholder.jpg'],
+    images: ['/images/placeholder.jpg'],
     isOpen: false,
     currentIndex: 0,
   },

@@ -15,14 +15,14 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const mockImages = [
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
-  '/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
+  '/images/placeholder.jpg',
 ]
 
 export const Default: Story = {
@@ -34,7 +34,7 @@ export const Default: Story = {
 export const WithHeroImage: Story = {
   args: {
     images: mockImages,
-    heroImage: '/placeholder.jpg',
+    heroImage: '/images/placeholder.jpg',
   },
 }
 

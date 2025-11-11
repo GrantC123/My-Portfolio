@@ -63,7 +63,7 @@ export default function Portfolio() {
           </div>
           <div className="relative">
             <Image
-              src="/placeholder.svg?height=400&width=400"
+              src="/images/placeholder.svg?height=400&width=400"
               alt="Profile"
               width={400}
               height={400}
@@ -88,7 +88,7 @@ export default function Portfolio() {
                     <div className="relative">
                       <div className="bg-[#f1f1f1] aspect-video relative rounded-2xl overflow-hidden">
                         <Image
-                          src={project.image || "/placeholder.svg"}
+                          src={project.image || "/images/placeholder.svg"}
                           alt={project.title}
                           fill
                           className="object-cover"
@@ -133,7 +133,7 @@ export default function Portfolio() {
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-[#f1f1f1] rounded-full overflow-hidden">
                       <Image
-                        src="/placeholder.svg?height=48&width=48"
+                        src="/images/placeholder.svg?height=48&width=48"
                         alt={testimonial.author}
                         width={48}
                         height={48}
@@ -192,28 +192,28 @@ const projects = [
     category: "PRODUCT DESIGN",
     title: "Bankrate Data Center",
     description: "A comprehensive data management solution for Bankrate, streamlining financial data analysis and reporting.",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/placeholder.svg?height=600&width=1200",
     slug: "bankrate-data-center",
   },
   {
     category: "PRODUCT DESIGN",
     title: "Design System",
     description: "A comprehensive design system for an enterprise financial services company, ensuring consistency across their digital products.",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/placeholder.svg?height=600&width=1200",
     slug: "design-system",
   },
   {
     category: "PRODUCT DESIGN",
     title: "Consumer JO",
     description: "A user-friendly journey orchestration tool for creating personalized customer experiences.",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/placeholder.svg?height=600&width=1200",
     slug: "consumer-jo",
   },
   {
     category: "VISUAL DESIGN",
     title: "Editorial Imagery",
     description: "A series of striking editorial images for a leading fashion magazine's digital platform.",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/placeholder.svg?height=600&width=1200",
     slug: "editorial-imagery",
   }
 ]

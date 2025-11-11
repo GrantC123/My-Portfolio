@@ -44,7 +44,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
                     <div className="border-t border-zinc-500 pt-6 flex items-center gap-4">
                       <div className="w-12 h-12 bg-zinc-700 rounded-full overflow-hidden flex-shrink-0">
                         <Image
-                          src="/placeholder.svg?height=48&width=48"
+                          src="/images/placeholder.svg?height=48&width=48"
                           alt={testimonial.author}
                           width={48}
                           height={48}

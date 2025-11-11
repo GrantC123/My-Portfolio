@@ -47,7 +47,7 @@ export default function LoginPage() {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <Image
-              src="/header-logo.svg"
+              src="/images/header-logo.svg"
               alt="Grant Crowder Logo"
               width={160}
               height={27}

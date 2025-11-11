@@ -112,7 +112,7 @@ export default function About() {
               </div>
               <div className="relative w-full md:w-[576px] h-[640px] rounded-xl overflow-hidden">
                 <Image
-                  src="/grant-headshot.jpg"
+                  src="/images/about-page/grant-headshot.jpg"
                   alt="Grant Crowder headshot"
                   fill
                   sizes="(max-width: 768px) 100vw, 576px"
@@ -226,7 +226,7 @@ export default function About() {
               </div>
               <div className="relative w-full md:w-[592px] h-[312px] rounded-lg overflow-hidden">
                 <Image
-                  src="/creative-spark-4.png"
+                  src="/images/about-page/creative-spark-4.png"
                   alt="Creative Spark Conference - Navigating Creative Career Paths"
                   fill
                   sizes="(max-width: 768px) 100vw, 592px"

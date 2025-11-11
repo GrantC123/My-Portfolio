@@ -105,7 +105,7 @@ export default function NotionTestPage() {
           slug: "notion-test",
           category: "PRODUCT DESIGN",
           description: "A test page powered by Notion CMS",
-          heroImageUrl: "/bankrate-review-template-header.png",
+          heroImageUrl: "/images/review-template/bankrate-review-template-header.png",
           heroTitle: "Designing modular review templates that scale across verticals",
           summary: [
             "This is a test page to demonstrate Notion CMS integration. Content is fetched from Notion and rendered with your existing styled components.",
@@ -135,7 +135,7 @@ export default function NotionTestPage() {
             "Product name and rating",
             "Pros and cons",
           ],
-          allImages: ["/bankrate-review-template-header.png"],
+          allImages: ["/images/review-template/bankrate-review-template-header.png"],
         })
       } finally {
         setLoading(false)

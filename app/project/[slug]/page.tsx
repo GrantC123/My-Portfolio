@@ -144,12 +144,11 @@ export default async function ProjectPage({ params }: { params: { slug: string }
   // Check if this is the Bankrate Data Center case study
   const isBankrateCaseStudy = project.slug === "bankrate-data-center"
   const isReviewTemplate = project.slug === "bankrate-review-template"
-  const isDesignSystem = project.slug === "design-system"
   const isGalleryProject = project.slug === "editorial-imagery"
 
   // Bankrate-specific data
-  const bankrateImage = "/bankrate-data-center-hero.jpg"
-  const reviewTemplateImage = "/bankrate-review-template-header.png"
+  const bankrateImage = "/images/data-center/bankrate-data-center-hero.jpg"
+  const reviewTemplateImage = "/images/review-template/bankrate-review-template-header.png"
   
   // For Bankrate case study, use the new template
   if (isBankrateCaseStudy) {
@@ -431,17 +430,17 @@ export default async function ProjectPage({ params }: { params: { slug: string }
   if (isReviewTemplate) {
     // Images for lightbox
     const reviewTemplateImages = [
-      "/bankrate-review-template-header.png",
-      "/images/co-creation/image5.png",
-      "/images/co-creation/image6.png",
-      "/images/co-creation/image7.png",
+      "/images/review-template/bankrate-review-template-header.png",
+      "/images/review-template/co-creation/image5.png",
+      "/images/review-template/co-creation/image6.png",
+      "/images/review-template/co-creation/image7.png",
     ]
     
     // Co-creation session images
     const coCreationImages = [
-      "/images/co-creation/image5.png",
-      "/images/co-creation/image6.png",
-      "/images/co-creation/image7.png",
+      "/images/review-template/co-creation/image5.png",
+      "/images/review-template/co-creation/image6.png",
+      "/images/review-template/co-creation/image7.png",
     ]
     
     return (
@@ -631,300 +630,6 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             </div>
           </div>
         </section>
-
-        {/* More Projects Section */}
-        <section className="bg-zinc-900 py-16 border-t border-zinc-500">
-          <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
-            <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
-            <div className="flex flex-col gap-8 max-w-[1152px]">
-              {projects
-                .filter((p) => p.slug !== project.slug)
-                .slice(0, 2)
-                .map((previewProject, index) => (
-                  <ProjectTile key={previewProject.slug || index} project={previewProject} />
-                ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    )
-  }
-
-  // For Design System case study
-  if (isDesignSystem) {
-    return (
-      <div className="min-h-screen bg-white">
-        {/* Hero Section with Breadcrumbs */}
-        <section className="bg-zinc-950 border-b border-zinc-500">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            {/* Breadcrumbs */}
-            <div className="pt-16 pb-4">
-              <Breadcrumb>
-                <BreadcrumbList className="text-zinc-400">
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="/" className="text-zinc-400 hover:text-white underline">
-                        Home
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="text-zinc-600">
-                    <span>/</span>
-                  </BreadcrumbSeparator>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="/#work" className="text-zinc-400 hover:text-white underline">
-                        Work
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="text-zinc-600">
-                    <span>/</span>
-                  </BreadcrumbSeparator>
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="text-white">{project.title}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-
-            {/* Hero Title */}
-            <div className="py-20 md:py-30">
-              <h1 className="font-display font-bold text-5xl md:text-6xl leading-[48px] md:leading-[60px] text-white w-full">
-                Creating a design system to streamline workflows and unlock speed
-              </h1>
-            </div>
-          </div>
-        </section>
-
-        {/* Hero Image */}
-        <section className="w-full">
-          <div className="relative w-full aspect-[1920/1080]">
-            <Image
-              src={project.image || "/placeholder.svg"}
-              alt={project.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </section>
-
-        {/* Project Summary Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <div className="flex flex-col md:flex-row gap-10">
-                {/* Left: Description */}
-                <div className="flex-1">
-                  <h2 className="font-display font-bold text-4xl leading-[40px] text-white mb-6">
-                    Project Summary
-                  </h2>
-                  <div className="space-y-6">
-                    <p className="text-lg leading-[28px] text-zinc-400">
-                      During my time at Red Ventures, I joined a partnership with a global finance company (name redacted for privacy) to create paid search and media experiences, managing thousands of landing pages. Many of these pages lacked design files and had inconsistent components and layouts.
-                    </p>
-                    <p className="text-lg leading-[28px] text-zinc-400">
-                      We relied on a single Sketch file with a basic style guide that included colors, text styles, and branded assets. However, our landing pages were fragmented, with no reusable elements beyond buttons. Many components used on the site were absent from our Sketch files, forcing us to rely on images or recreate elements for each project. With only 1.5 designers on the team, we were consistently overloaded and working long hours, highlighting the urgent need for a design system.
-                    </p>
-                    <p className="text-lg leading-[28px] text-zinc-400">
-                      Certain details have been omitted or altered to respect client confidentiality.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: Project Details */}
-                <div className="flex-1 flex flex-col gap-6">
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Role</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Lead Product Designer</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Timeline</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">June 2021 - May 2024</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Tools</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Sketch, Figma</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Deliverables</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Wireframes, High-fidelity Prototypes</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Outcome</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Increased project scale and consistency on projects by 45% YoY</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Impact Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6 text-center">
-                Impact
-              </h2>
-              <p className="text-lg leading-[40px] text-zinc-400 text-center">
-                We observed a notable boost in team cohesion and a reduction in isolated components, alongside a quicker pace in early design iterations. The governance framework I implemented fostered collaboration among designers, providing early insights into the evolving system across the product. This clarity grew as we onboarded a dedicated front-end engineer and began integrating the visual system into our codebase.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-zinc-600" />
-
-        {/* Initial Approach Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
-                Initial approach
-              </h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Approach</h3>
-                  <div className="space-y-6 text-lg leading-[28px] text-zinc-400">
-                    <p>
-                      One of my first initiatives was to educate our team on the concept of <span className="font-bold text-white">atomic design patterns</span> and the importance of thinking about our site in a modular way. By adopting atomic design, we aimed to reduce redundant work on components and free up time to focus on larger, more strategic ideas. I developed and presented a deck to introduce these foundational concepts to the team.
-                    </p>
-                    <p>
-                      Recognizing the limitations of Sketch, we transitioned our workflow to Figma to leverage its advanced design system capabilities and component management. In collaboration with my lead designer, I began to consolidate and standardize foundational components such as badges and buttons, addressing existing inconsistencies.
-                    </p>
-                    <p>
-                      While our global finance partner had their own design language system in Sketch, it was not actively utilized. Our short-term strategy involved using some of their base-level components as a starting point, without integrating their full technology stack. A critical early discovery was the presence of accessibility gaps within the existing financial site, particularly regarding focus states, which we prioritized for improvement.
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Scaling the system</h3>
-                  <div className="space-y-6 text-lg leading-[28px] text-zinc-400">
-                    <p>
-                      As the project evolved, we systematically integrated and adapted elements from the partner's design system, always ensuring adherence to accessibility standards. We were in the business of creative testing, so there had to be boundaries of innovation, versus systematizing too much which led to stale creative. When my design lead was promoted, I was appointed <span className="font-bold text-white">owner of the design system</span>, dedicating approximately 50% of my time to its strategic development and refinement.
-                    </p>
-                    <p>During this period, I significantly scaled our design system by:</p>
-                    <ul className="list-disc list-inside space-y-2 pl-4">
-                      <li>Creating a structured file architecture, including dedicated files for <span className="font-bold text-white">foundations, components, and patterns</span>.</li>
-                      <li>Injecting critical contextual guidelines directly into the system, drawing from past learnings and best practices.</li>
-                      <li>Increasing resources dedicated to the system's growth; after my promotion to Creative Manager, I delegated ongoing maintenance and development tasks to an associate product designer.</li>
-                    </ul>
-                    <p>
-                      I provided <span className="font-bold text-white">quarterly updates</span> to stakeholders, detailing the design system's progress and its impact on our efficiency and product quality. A key innovation within our system was the strategic use of <span className="font-bold text-white">slot components</span>, which provided unparalleled flexibility and scalability for our thousands of landing pages.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-zinc-600" />
-
-        {/* Planning Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
-                Planning
-              </h2>
-              <ul className="space-y-4 text-lg leading-[28px] text-zinc-400 list-disc list-inside pl-4">
-                <li>
-                  I did design system planning{' '}
-                  <a href="https://docs.google.com/spreadsheets/d/1QOXI3udhMqHdm9CFhmvRglpQGdl_DqOG2gM2N04dg4s/edit?gid=1093953848#gid=1093953848" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
-                    here
-                  </a>
-                </li>
-                <li>I would also put the design system on a roadmap here.</li>
-              </ul>
-
-              {/* Image Placeholders */}
-              <div className="grid grid-cols-3 gap-8 mt-12">
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-              </div>
-              <div className="grid grid-cols-3 gap-8 mt-8">
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-              </div>
-              <div className="grid grid-cols-3 gap-8 mt-8">
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-                <div className="aspect-video bg-zinc-800 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-zinc-600" />
-
-        {/* Establishing Governance Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
-                Establishing a system of governance
-              </h2>
-              <ul className="space-y-4 text-lg leading-[28px] text-zinc-400 list-disc list-inside pl-4 mb-8">
-                <li>Created a system of governance [show documentation]</li>
-                <li>As new designers joined, I would train them</li>
-                <li>
-                  I created a contribution process{' '}
-                  <a href="https://www.figma.com/design/iY3OfoFWBDk604YycqJsl4/-LIBRARY--Design-System---Foundations?node-id=12957-10089&t=qSjwdLFycOTMRuDU-1" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
-                    here
-                  </a>
-                  , a{' '}
-                  <a href="https://www.figma.com/design/iY3OfoFWBDk604YycqJsl4/-LIBRARY--Design-System---Foundations?node-id=12957-9989&t=qSjwdLFycOTMRuDU-1" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
-                    contribution companion
-                  </a>
-                </li>
-                <li>
-                  I would also fit the contribution flow into the quarterly planning document{' '}
-                  <a href="https://docs.google.com/spreadsheets/d/1QOXI3udhMqHdm9CFhmvRglpQGdl_DqOG2gM2N04dg4s/edit?gid=1093953848#gid=1093953848" target="_blank" rel="noopener noreferrer" className="text-coral-300 hover:text-coral-200 underline">
-                    here
-                  </a>
-                </li>
-              </ul>
-
-              {/* Image Placeholders */}
-              <div className="flex gap-4 mt-8">
-                <div className="flex-1 aspect-[4096/3158] bg-zinc-800 rounded-lg"></div>
-                <div className="w-[296px] h-[455px] bg-zinc-800 rounded-lg"></div>
-              </div>
-              <div className="mt-8">
-                <div className="aspect-[1015/568] bg-zinc-800 rounded-lg"></div>
-              </div>
-              <div className="mt-8">
-                <div className="aspect-[1016/1019] bg-zinc-800 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-zinc-600" />
-
-        {/* Key Results Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
-                Key results
-              </h2>
-              <p className="text-lg leading-[30px] text-zinc-400">
-                The launch of the centralized data hub led to a 30% increase in backlinks within three months, an 18% rise in average time on page, and improved organic search rankings for key financial data terms. Journalists and partners reported a significantly easier experience finding and citing Bankrate's data.
-              </p>
-            </div>
-          </div>
-        </section>
-
 
         {/* More Projects Section */}
         <section className="bg-zinc-900 py-16 border-t border-zinc-500">

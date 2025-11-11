@@ -215,8 +215,8 @@ export default function NotionPageContent({ page, blocks, slug }: NotionPageCont
       <section className="bg-zinc-950 py-16">
         <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
           <div className="max-w-[768px] mx-auto">
-            {renderNotionBlocks(
-              blocks.filter((block: any) => {
+            {(() => {
+              const filteredBlocks = blocks.filter((block: any) => {
                 // Skip first image if used as featured image
                 if (block.type === 'image' && metadata.featuredImage) {
                   const imageUrl = block.image?.file?.url || block.image?.external?.url
@@ -225,13 +225,17 @@ export default function NotionPageContent({ page, blocks, slug }: NotionPageCont
                   }
                 }
                 return true
-              }),
-              allImages,
-              (index) => {
-                setCurrentImageIndex(index)
-                setIsLightboxOpen(true)
-              }
-            )}
+              })
+              
+              return renderNotionBlocks(
+                filteredBlocks,
+                allImages,
+                (index) => {
+                  setCurrentImageIndex(index)
+                  setIsLightboxOpen(true)
+                }
+              )
+            })()}
           </div>
         </div>
       </section>

@@ -58,7 +58,7 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
       <div className="container mx-auto px-4 max-w-[1280px] py-4 flex justify-between items-center">
         <Link href="/">
           <img
-            src="/header-logo.svg"
+            src="/images/header-logo.svg"
             alt="Grant Crowder Logo"
             width="160"
             height="27"

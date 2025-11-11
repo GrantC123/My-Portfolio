@@ -61,18 +61,251 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
 
     case 'bulleted_list_item':
       const bulletText = block.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+      const bulletChildren = (block as any).children || []
+      const hasBulletChildren = bulletChildren.length > 0
+      
+      // Render nested children (group list items together)
+      let nestedContent: React.ReactNode = null
+      if (hasBulletChildren) {
+        const nestedElements: React.ReactNode[] = []
+        let currentNestedList: NotionBlock[] = []
+        let nestedListType: 'bulleted' | 'numbered' | null = null
+        
+        bulletChildren.forEach((childBlock: NotionBlock) => {
+          if (childBlock.type === 'bulleted_list_item') {
+            if (nestedListType !== 'bulleted') {
+              if (currentNestedList.length > 0) {
+                nestedElements.push(
+                  nestedListType === 'numbered' ? (
+                    <ol key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-2 list-outside pl-8" style={{ listStyleType: 'lower-alpha' }}>
+                      {currentNestedList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+                    </ol>
+                  ) : null
+                )
+              }
+              currentNestedList = []
+              nestedListType = 'bulleted'
+            }
+            currentNestedList.push(childBlock)
+          } else if (childBlock.type === 'numbered_list_item') {
+            if (nestedListType !== 'numbered') {
+              if (currentNestedList.length > 0) {
+                nestedElements.push(
+                  nestedListType === 'bulleted' ? (
+                    <ul key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-1 list-outside pl-8" style={{ listStyleType: 'circle' }}>
+                      {currentNestedList.map((b: NotionBlock) => {
+                        // For nested bulleted lists, render without the custom bullet styling
+                        const nestedBulletText = b.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+                        return (
+                          <li key={b.id} className="text-lg leading-[28px] text-zinc-400">
+                            {nestedBulletText}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  ) : null
+                )
+              }
+              currentNestedList = []
+              nestedListType = 'numbered'
+            }
+            currentNestedList.push(childBlock)
+          } else {
+            // Flush current list
+            if (currentNestedList.length > 0) {
+              nestedElements.push(
+                nestedListType === 'bulleted' ? (
+                  <ul key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-1 list-outside pl-8" style={{ listStyleType: 'circle' }}>
+                    {currentNestedList.map((b: NotionBlock) => {
+                      // For nested bulleted lists, render without the custom bullet styling
+                      const nestedBulletText = b.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+                      return (
+                        <li key={b.id} className="text-lg leading-[28px] text-zinc-400">
+                          {nestedBulletText}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (
+                  <ol key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-2 list-outside pl-8" style={{ listStyleType: 'lower-alpha' }}>
+                    {currentNestedList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+                  </ol>
+                )
+              )
+              currentNestedList = []
+              nestedListType = null
+            }
+            nestedElements.push(renderNotionBlock(childBlock, allImages, onImageClick))
+          }
+        })
+        
+        // Flush remaining list
+        if (currentNestedList.length > 0) {
+          nestedElements.push(
+            nestedListType === 'bulleted' ? (
+              <ul key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-1 list-outside pl-8" style={{ listStyleType: 'circle' }}>
+                {currentNestedList.map((b: NotionBlock) => {
+                  // For nested bulleted lists, render without the custom bullet styling
+                  const nestedBulletText = b.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+                  return (
+                    <li key={b.id} className="text-lg leading-[28px] text-zinc-400">
+                      {nestedBulletText}
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <ol key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-2 list-outside pl-8" style={{ listStyleType: 'lower-alpha' }}>
+                {currentNestedList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ol>
+            )
+          )
+        }
+        
+        nestedContent = nestedElements.length > 0 ? <div className="mt-2">{nestedElements}</div> : null
+      }
+      
       return (
-        <li key={id} className="text-lg leading-[28px] text-zinc-400 flex items-start gap-3 mb-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-2 flex-shrink-0" />
-          {bulletText}
+        <li key={id} className="text-lg leading-[28px] text-zinc-400 mb-2" style={{ listStyle: 'none' }}>
+          <div className="flex items-start gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-2 flex-shrink-0" />
+            <div className="flex-1">
+              {bulletText}
+              {nestedContent}
+            </div>
+          </div>
         </li>
       )
 
     case 'numbered_list_item':
-      const numberedText = block.numbered_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+    case 'numberedList':
+      // Handle both 'numbered_list_item' and potential variations
+      const numberedListData = block.numbered_list_item || (block as any).numberedList || {}
+      const numberedRichText = numberedListData?.rich_text || []
+      const numberedChildren = (block as any).children || []
+      const hasNumberedChildren = numberedChildren.length > 0
+      
+      // Render nested children (group list items together)
+      let numberedNestedContent: React.ReactNode = null
+      if (hasNumberedChildren) {
+        const nestedElements: React.ReactNode[] = []
+        let currentNestedList: NotionBlock[] = []
+        let nestedListType: 'bulleted' | 'numbered' | null = null
+        
+        numberedChildren.forEach((childBlock: NotionBlock) => {
+          if (childBlock.type === 'bulleted_list_item') {
+            if (nestedListType !== 'bulleted') {
+              if (currentNestedList.length > 0) {
+                nestedElements.push(
+                  nestedListType === 'numbered' ? (
+                    <ol key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-2 list-outside pl-8" style={{ listStyleType: 'lower-alpha' }}>
+                      {currentNestedList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+                    </ol>
+                  ) : null
+                )
+              }
+              currentNestedList = []
+              nestedListType = 'bulleted'
+            }
+            currentNestedList.push(childBlock)
+          } else if (childBlock.type === 'numbered_list_item') {
+            if (nestedListType !== 'numbered') {
+              if (currentNestedList.length > 0) {
+                nestedElements.push(
+                  nestedListType === 'bulleted' ? (
+                    <ul key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-1 list-outside pl-8" style={{ listStyleType: 'circle' }}>
+                      {currentNestedList.map((b: NotionBlock) => {
+                        // For nested bulleted lists, render without the custom bullet styling
+                        const nestedBulletText = b.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+                        return (
+                          <li key={b.id} className="text-lg leading-[28px] text-zinc-400">
+                            {nestedBulletText}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  ) : null
+                )
+              }
+              currentNestedList = []
+              nestedListType = 'numbered'
+            }
+            currentNestedList.push(childBlock)
+          } else {
+            // Flush current list
+            if (currentNestedList.length > 0) {
+              nestedElements.push(
+                nestedListType === 'bulleted' ? (
+                  <ul key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-1 list-outside pl-8" style={{ listStyleType: 'circle' }}>
+                    {currentNestedList.map((b: NotionBlock) => {
+                      // For nested bulleted lists, render without the custom bullet styling
+                      const nestedBulletText = b.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+                      return (
+                        <li key={b.id} className="text-lg leading-[28px] text-zinc-400">
+                          {nestedBulletText}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (
+                  <ol key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-2 list-outside pl-8" style={{ listStyleType: 'lower-alpha' }}>
+                    {currentNestedList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+                  </ol>
+                )
+              )
+              currentNestedList = []
+              nestedListType = null
+            }
+            nestedElements.push(renderNotionBlock(childBlock, allImages, onImageClick))
+          }
+        })
+        
+        // Flush remaining list
+        if (currentNestedList.length > 0) {
+          nestedElements.push(
+            nestedListType === 'bulleted' ? (
+              <ul key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-1 list-outside pl-8" style={{ listStyleType: 'circle' }}>
+                {currentNestedList.map((b: NotionBlock) => {
+                  // For nested bulleted lists, render without the custom bullet styling
+                  const nestedBulletText = b.bulleted_list_item?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+                  return (
+                    <li key={b.id} className="text-lg leading-[28px] text-zinc-400">
+                      {nestedBulletText}
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <ol key={`nested-${nestedElements.length}`} className="mt-2 ml-12 space-y-2 list-outside pl-8" style={{ listStyleType: 'lower-alpha' }}>
+                {currentNestedList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ol>
+            )
+          )
+        }
+        
+        numberedNestedContent = nestedElements.length > 0 ? <div className="mt-2">{nestedElements}</div> : null
+      }
+      
+      // Render rich text with formatting (bold, italic, etc.)
+      const numberedTextContent = numberedRichText.length > 0 ? (
+        numberedRichText.map((text: any, idx: number) => {
+          const annotations = text.annotations || {}
+          let content: React.ReactNode = text.plain_text
+          
+          if (annotations.bold) content = <strong key={idx}>{content}</strong>
+          if (annotations.italic) content = <em key={idx}>{content}</em>
+          if (annotations.code) content = <code key={idx} className="bg-zinc-800 px-1 rounded">{content}</code>
+          
+          return <span key={idx}>{content}</span>
+        })
+      ) : null
+      
       return (
         <li key={id} className="text-lg leading-[28px] text-zinc-400 mb-2">
-          {numberedText}
+          <div>
+            {numberedTextContent}
+            {numberedNestedContent}
+          </div>
         </li>
       )
 
@@ -200,9 +433,8 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
             const columnChildren = (columnBlock as any).children || []
             return (
               <div key={columnBlock.id || colIndex} className="flex-1">
-                {columnChildren.map((childBlock: NotionBlock) => 
-                  renderNotionBlock(childBlock, allImages, onImageClick)
-                )}
+                {/* Use renderNotionBlocks to properly group list items inside columns */}
+                {renderNotionBlocks(columnChildren, allImages, onImageClick)}
               </div>
             )
           })}
@@ -266,22 +498,26 @@ export function renderNotionBlocks(
       return
     }
 
+
     // Check for full-width markers
     if (isFullWidthMarker(block)) {
       // Flush any regular content before switching to full-width
       if (currentList.length > 0) {
-        if (listType === 'bulleted') {
+        const firstItemType = currentList[0]?.type
+        const isNumberedList = listType === 'numbered' || firstItemType === 'numbered_list_item'
+        
+        if (listType === 'bulleted' || (!isNumberedList && firstItemType === 'bulleted_list_item')) {
           elements.push(
-            <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6">
+            <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
               {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
             </ul>
           )
-        } else {
-          elements.push(
-            <ol key={`list-${index}`} className="list-decimal list-inside space-y-2 pl-6 mb-6">
-              {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
-            </ol>
-          )
+        } else if (isNumberedList) {
+            elements.push(
+              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ol>
+            )
         }
         currentList = []
         listType = null
@@ -297,7 +533,7 @@ export function renderNotionBlocks(
       if (listType !== 'bulleted') {
         if (currentList.length > 0) {
           elements.push(
-            <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6">
+            <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
               {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
             </ul>
           )
@@ -309,14 +545,38 @@ export function renderNotionBlocks(
       return
     }
 
-    if (block.type === 'numbered_list_item') {
+    // Check for numbered list items (case-insensitive and handle variations)
+    // Check the type field first, then check for the numbered_list_item property
+    const hasNumberedProperty = (block as any).numbered_list_item !== undefined
+    const isNumberedListItem = block.type === 'numbered_list_item' || 
+                               block.type === 'numberedList' ||
+                               hasNumberedProperty
+    
+    if (isNumberedListItem) {
       if (listType !== 'numbered') {
+        // Flush previous list if it exists
         if (currentList.length > 0) {
-          elements.push(
-            <ol key={`list-${index}`} className="list-decimal list-inside space-y-2 pl-6 mb-6">
-              {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
-            </ol>
-          )
+          const firstItem = currentList[0]
+          const firstItemType = firstItem?.type
+          const hasNumberedProp = (firstItem as any)?.numbered_list_item !== undefined
+          const prevIsNumbered = listType === 'numbered' || 
+                                firstItemType === 'numbered_list_item' || 
+                                firstItemType === 'numberedList' ||
+                                hasNumberedProp
+          
+          if (listType === 'bulleted' || (!prevIsNumbered && (firstItemType === 'bulleted_list_item' || (firstItem as any)?.bulleted_list_item !== undefined))) {
+            elements.push(
+              <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
+                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ul>
+            )
+          } else if (prevIsNumbered) {
+            elements.push(
+              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ol>
+            )
+          }
         }
         currentList = []
         listType = 'numbered'
@@ -328,18 +588,48 @@ export function renderNotionBlocks(
     // Flush current list if we hit a non-list block
     // Lists always render in narrow container, even in full-width mode
     if (currentList.length > 0) {
-      if (listType === 'bulleted') {
+      // Determine list type by checking the first item's type and properties as a safeguard
+      const firstItem = currentList[0]
+      const firstItemType = firstItem?.type
+      const hasNumberedProperty = (firstItem as any)?.numbered_list_item !== undefined
+      const isNumberedList = listType === 'numbered' || 
+                            firstItemType === 'numbered_list_item' || 
+                            firstItemType === 'numberedList' ||
+                            hasNumberedProperty
+      
+      if (listType === 'bulleted' || (!isNumberedList && (firstItemType === 'bulleted_list_item' || (firstItem as any)?.bulleted_list_item !== undefined))) {
         elements.push(
-          <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6">
+          <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
             {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
           </ul>
         )
+      } else if (isNumberedList) {
+            elements.push(
+              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ol>
+            )
       } else {
-        elements.push(
-          <ol key={`list-${index}`} className="list-decimal list-inside space-y-2 pl-6 mb-6">
-            {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
-          </ol>
+        // Fallback: if we can't determine the type, check if ANY item is numbered
+        const hasAnyNumbered = currentList.some(b => 
+          b.type === 'numbered_list_item' || 
+          b.type === 'numberedList' ||
+          (b as any).numbered_list_item !== undefined
         )
+        if (hasAnyNumbered) {
+            elements.push(
+              <ol key={`list-${index}`} className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+                {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+              </ol>
+            )
+        } else {
+          // Default to bulleted if we can't determine
+          elements.push(
+            <ul key={`list-${index}`} className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
+              {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+            </ul>
+          )
+        }
       }
       currentList = []
       listType = null
@@ -366,18 +656,48 @@ export function renderNotionBlocks(
 
   // Flush any remaining list items
   if (currentList.length > 0) {
-    if (listType === 'bulleted') {
+    // Determine list type by checking the first item's type and properties as a safeguard
+    const firstItem = currentList[0]
+    const firstItemType = firstItem?.type
+    const hasNumberedProperty = (firstItem as any)?.numbered_list_item !== undefined
+    const isNumberedList = listType === 'numbered' || 
+                          firstItemType === 'numbered_list_item' || 
+                          firstItemType === 'numberedList' ||
+                          hasNumberedProperty
+    
+    if (listType === 'bulleted' || (!isNumberedList && (firstItemType === 'bulleted_list_item' || (firstItem as any)?.bulleted_list_item !== undefined))) {
       elements.push(
-        <ul key="list-final" className="space-y-2 pl-6 mb-6">
+        <ul key="list-final" className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
           {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
         </ul>
       )
-    } else {
+    } else if (isNumberedList) {
       elements.push(
-        <ol key="list-final" className="list-decimal list-inside space-y-2 pl-6 mb-6">
+        <ol key="list-final" className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
           {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
         </ol>
       )
+    } else {
+      // Fallback: if we can't determine the type, check if ANY item is numbered
+      const hasAnyNumbered = currentList.some(b => 
+        b.type === 'numbered_list_item' || 
+        b.type === 'numberedList' ||
+        (b as any).numbered_list_item !== undefined
+      )
+      if (hasAnyNumbered) {
+        elements.push(
+          <ol key="list-final" className="list-decimal list-outside pl-6 space-y-2 mb-6" style={{ listStyleType: 'decimal' }}>
+            {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+          </ol>
+        )
+      } else {
+        // Default to bulleted if we can't determine
+        elements.push(
+          <ul key="list-final" className="space-y-2 pl-6 mb-6" style={{ listStyle: 'none' }}>
+            {currentList.map(b => renderNotionBlock(b, allImages, onImageClick))}
+          </ul>
+        )
+      }
     }
   }
 
