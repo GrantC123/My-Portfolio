@@ -7,14 +7,37 @@ import { useState } from "react"
 export default function PasswordProtect({ onAccessGranted }: { onAccessGranted: () => void }) {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password === process.env.NEXT_PUBLIC_SITE_PASSWORD) {
-      localStorage.setItem("site_access", "granted")
-      onAccessGranted()
-    } else {
-      setError("Incorrect password")
+    setError("")
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        // Wait a moment for cookies to be set
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        // Reload the page to ensure middleware picks up the cookie
+        window.location.href = "/"
+      } else {
+        setError(data.error || "Incorrect password")
+        setLoading(false)
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      setError("An unexpected error occurred. Please try again.")
+      setLoading(false)
     }
   }
 
@@ -55,10 +78,11 @@ export default function PasswordProtect({ onAccessGranted }: { onAccessGranted: 
           <div>
             <button
               type="submit"
-              className="password-button !rounded-lg group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              disabled={loading}
+              className="password-button !rounded-lg group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ borderRadius: "0.5rem !important" }}
             >
-              Access Site
+              {loading ? "Verifying..." : "Access Site"}
             </button>
           </div>
         </form>

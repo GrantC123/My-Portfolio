@@ -14,6 +14,16 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient()
 
+    // Check if Supabase is configured
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+      console.error('Supabase not configured: NEXT_PUBLIC_SUPABASE_URL is missing or using placeholder')
+      return NextResponse.json(
+        { success: false, error: 'Server configuration error. Please contact the site administrator.' },
+        { status: 500 }
+      )
+    }
+
     // Check if password exists in site_passwords table
     const { data: passwordRecord, error: passwordError } = await supabase
       .from('site_passwords')
@@ -21,7 +31,22 @@ export async function POST(request: NextRequest) {
       .eq('password', password)
       .single()
 
-    if (passwordError || !passwordRecord) {
+    if (passwordError) {
+      console.error('Supabase query error:', passwordError)
+      // Check if it's a connection/table issue
+      if (passwordError.code === 'PGRST116' || passwordError.message?.includes('relation') || passwordError.message?.includes('does not exist')) {
+        return NextResponse.json(
+          { success: false, error: 'Database not configured. Please contact the site administrator.' },
+          { status: 500 }
+        )
+      }
+      return NextResponse.json(
+        { success: false, error: 'Incorrect password' },
+        { status: 401 }
+      )
+    }
+
+    if (!passwordRecord) {
       return NextResponse.json(
         { success: false, error: 'Incorrect password' },
         { status: 401 }
