@@ -214,6 +214,17 @@ html.has-scroll-smooth [data-scroll-slide-up] {
     background-color: #09090b; /* zinc-950 */
     color: #ffffff;
   }
+  
+  /* Custom text selection/highlight color */
+  ::selection {
+    background-color: #006C99; /* coral-500 */
+    color: #ffffff;
+  }
+  
+  ::-moz-selection {
+    background-color: #006C99; /* coral-500 */
+    color: #ffffff;
+  }
 }
 
 /* Custom button styles to ensure rounded corners */
