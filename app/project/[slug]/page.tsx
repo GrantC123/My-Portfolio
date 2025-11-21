@@ -106,7 +106,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             },
           },
         }),
-        cache: 'force-cache', // Cache at build time for static generation
+        next: { revalidate: 3600 }, // Revalidate every hour, but allow fresh fetches during revalidation
       })
       
       if (queryResponse.ok) {
