@@ -27,20 +27,23 @@ export async function fetchAllBlocks(
     
     const blocks = response.results || []
     
-    // For each block, fetch its children if it has any
-    for (const block of blocks) {
-      // Create a copy of the block to avoid mutating the original
-      const blockWithChildren = { ...block }
-      
-      // Check if block has children (columns, toggles, etc.)
-      if ('has_children' in block && block.has_children) {
-        const childBlocks = await fetchAllBlocks(notion, block.id, depth + 1)
-        // Store children in the block for easier access
-        ;(blockWithChildren as any).children = childBlocks
-      }
-      
-      allBlocks.push(blockWithChildren)
-    }
+    // Fetch children for all blocks in parallel (much faster)
+    const blocksWithChildren = await Promise.all(
+      blocks.map(async (block) => {
+        const blockWithChildren = { ...block }
+        
+        // Check if block has children (columns, toggles, etc.)
+        if ('has_children' in block && block.has_children) {
+          const childBlocks = await fetchAllBlocks(notion, block.id, depth + 1)
+          // Store children in the block for easier access
+          ;(blockWithChildren as any).children = childBlocks
+        }
+        
+        return blockWithChildren
+      })
+    )
+    
+    allBlocks.push(...blocksWithChildren)
     
     hasMore = response.has_more
     startCursor = response.next_cursor || undefined

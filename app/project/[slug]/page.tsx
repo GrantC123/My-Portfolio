@@ -107,7 +107,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           },
         }),
         next: { 
-          revalidate: 0, // Always respect tag invalidation
+          revalidate: 60, // Cache for 60 seconds, but tags can invalidate immediately
           tags: ['notion-projects', `notion-project-${params.slug}`]
         },
       })
