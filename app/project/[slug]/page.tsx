@@ -76,9 +76,9 @@ export async function generateStaticParams() {
   return params
 }
 
-// Enable ISR - pages are pre-generated at build time, but revalidate every hour in production
-// This gives you the best of both worlds: instant static pages + automatic updates
-export const revalidate = 3600 // Revalidate every hour (optional - can remove for fully static)
+// Enable ISR - pages are pre-generated at build time
+// Revalidation is controlled via cache tags and on-demand revalidation
+// export const revalidate = 3600 // Removed to allow tag-based revalidation
 
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
   // Try to fetch from Notion first (server-side)
@@ -107,7 +107,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           },
         }),
         next: { 
-          revalidate: 3600,
+          revalidate: 0, // Always respect tag invalidation
           tags: ['notion-projects', `notion-project-${params.slug}`]
         },
       })

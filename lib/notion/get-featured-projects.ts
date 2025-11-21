@@ -49,7 +49,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
         },
       }),
       next: { 
-        revalidate: 3600,
+        revalidate: 0, // Always respect tag invalidation
         tags: ['notion-projects', 'notion-featured-projects']
       },
     })
@@ -70,7 +70,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
         },
         body: JSON.stringify({}),
         next: { 
-        revalidate: 3600,
+        revalidate: 0, // Always respect tag invalidation
         tags: ['notion-projects', 'notion-featured-projects']
       },
       })
