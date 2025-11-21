@@ -106,7 +106,10 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             },
           },
         }),
-        next: { revalidate: 3600 }, // Revalidate every hour, but allow fresh fetches during revalidation
+        next: { 
+          revalidate: 3600,
+          tags: ['notion-projects', `notion-project-${params.slug}`]
+        },
       })
       
       if (queryResponse.ok) {

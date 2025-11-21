@@ -48,7 +48,10 @@ export async function getFeaturedProjects(): Promise<Project[]> {
           ],
         },
       }),
-      cache: 'force-cache', // Cache at build time for static generation
+      next: { 
+        revalidate: 3600,
+        tags: ['notion-projects', 'notion-featured-projects']
+      },
     })
     
     let pages: any[] = []
@@ -66,7 +69,10 @@ export async function getFeaturedProjects(): Promise<Project[]> {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({}),
-        cache: 'force-cache', // Cache at build time for static generation
+        next: { 
+        revalidate: 3600,
+        tags: ['notion-projects', 'notion-featured-projects']
+      },
       })
       
       if (allPagesResponse.ok) {

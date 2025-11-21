@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,9 @@ export async function POST(request: NextRequest) {
     const revalidateAll = body.revalidateAll === true
 
     if (revalidateAll || !slug) {
-      // Revalidate all project pages and homepage
+      // Revalidate all project pages and homepage using both tags and paths
+      revalidateTag('notion-projects')
+      revalidateTag('notion-featured-projects')
       revalidatePath('/project', 'page')
       revalidatePath('/', 'page')
       
@@ -32,7 +34,9 @@ export async function POST(request: NextRequest) {
         now: Date.now()
       })
     } else {
-      // Revalidate specific project page
+      // Revalidate specific project page using both tag and path
+      revalidateTag(`notion-project-${slug}`)
+      revalidateTag('notion-projects')
       revalidatePath(`/project/${slug}`, 'page')
       // Also revalidate homepage in case featured projects changed
       revalidatePath('/', 'page')
