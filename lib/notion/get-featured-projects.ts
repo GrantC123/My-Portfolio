@@ -49,7 +49,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
         },
       }),
       next: { 
-        revalidate: 60, // Cache for 60 seconds, but tags can invalidate immediately
+        revalidate: 3600, // Match page-level revalidate for ISR
         tags: ['notion-projects', 'notion-featured-projects']
       },
     })
@@ -70,7 +70,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
         },
         body: JSON.stringify({}),
         next: { 
-        revalidate: 60, // Cache for 60 seconds, but tags can invalidate immediately
+        revalidate: 3600, // Match page-level revalidate for ISR
         tags: ['notion-projects', 'notion-featured-projects']
       },
       })
