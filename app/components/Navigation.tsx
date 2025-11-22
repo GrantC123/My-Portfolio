@@ -102,7 +102,7 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
             : '-translate-y-full max-h-0 opacity-0 pointer-events-none overflow-hidden'
         }`}
       >
-        <div className="py-4 px-4 bg-zinc-900 border-t border-zinc-500 shadow-lg">
+        <div className="py-4 px-4 bg-zinc-800 border-t border-b border-zinc-500 shadow-lg">
           <div className="flex flex-col space-y-4">
             <Link
               href="/#work"
@@ -122,7 +122,7 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
               href="https://www.linkedin.com/in/grantcrowder/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-lg py-2 text-white hover:text-coral-300 transition-colors flex items-center gap-1"
+              className="text-lg py-2 text-white hover:text-coral-300 transition-colors flex items-center gap-2"
               onClick={() => setIsMenuOpen(false)}
             >
               <LinkedInIcon />
