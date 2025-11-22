@@ -470,23 +470,42 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       if (buttonUrl) {
         const leadingIconMatch = calloutText.match(/icon:leading:\s*([A-Za-z0-9-]+)/i)
         if (leadingIconMatch && leadingIconMatch[1]) {
-          const leadingIconName = leadingIconMatch[1]
+          const iconNameRaw = leadingIconMatch[1]
+          // Convert kebab-case to PascalCase (e.g., "arrow-right" -> "ArrowRight")
+          // Also handle if already PascalCase (e.g., "ArrowRight" -> "ArrowRight")
+          const leadingIconName = iconNameRaw
             .split('-')
             .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join('')
+          
           if (leadingIconName in LucideIcons) {
             buttonLeadingIcon = (LucideIcons as any)[leadingIconName] as React.ComponentType<{ className?: string; size?: number }>
+          } else if (process.env.NODE_ENV === 'development') {
+            console.log('[Button Icon Debug] Leading icon not found:', {
+              raw: iconNameRaw,
+              converted: leadingIconName,
+              available: Object.keys(LucideIcons).filter(k => k.toLowerCase().includes(iconNameRaw.toLowerCase())).slice(0, 5)
+            })
           }
         }
         
         const trailingIconMatch = calloutText.match(/icon:trailing:\s*([A-Za-z0-9-]+)/i)
         if (trailingIconMatch && trailingIconMatch[1]) {
-          const trailingIconName = trailingIconMatch[1]
+          const iconNameRaw = trailingIconMatch[1]
+          // Convert kebab-case to PascalCase
+          const trailingIconName = iconNameRaw
             .split('-')
             .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join('')
+          
           if (trailingIconName in LucideIcons) {
             buttonTrailingIcon = (LucideIcons as any)[trailingIconName] as React.ComponentType<{ className?: string; size?: number }>
+          } else if (process.env.NODE_ENV === 'development') {
+            console.log('[Button Icon Debug] Trailing icon not found:', {
+              raw: iconNameRaw,
+              converted: trailingIconName,
+              available: Object.keys(LucideIcons).filter(k => k.toLowerCase().includes(iconNameRaw.toLowerCase())).slice(0, 5)
+            })
           }
         }
       }
@@ -588,9 +607,11 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       }
       if (buttonUrl) {
         displayText = displayText.replace(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i, '').trim()
-        // Remove button icon patterns
-        displayText = displayText.replace(/icon:leading:\s*[A-Za-z0-9-]+/i, '').trim()
-        displayText = displayText.replace(/icon:trailing:\s*[A-Za-z0-9-]+/i, '').trim()
+        // Remove button icon patterns - match the full pattern including the colon
+        displayText = displayText.replace(/icon:leading:\s*[A-Za-z0-9-]+/gi, '').trim()
+        displayText = displayText.replace(/icon:trailing:\s*[A-Za-z0-9-]+/gi, '').trim()
+        // Also remove any leftover colon patterns (e.g., ":ArrowRight" if pattern was partially matched)
+        displayText = displayText.replace(/^:\s*[A-Za-z0-9-]+\s*/i, '').trim()
       }
       
       // Extract icon components for button rendering (React requires capitalized component names)
