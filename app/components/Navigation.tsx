@@ -106,14 +106,14 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
           <div className="flex flex-col space-y-4">
             <Link
               href="/#work"
-              className="text-sm py-2 text-white hover:text-coral-300 transition-colors"
+              className="text-lg py-2 text-white hover:text-coral-300 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Work
             </Link>
             <Link
               href="/about"
-              className="text-sm py-2 text-white hover:text-coral-300 transition-colors"
+              className="text-lg py-2 text-white hover:text-coral-300 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About
@@ -122,7 +122,7 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
               href="https://www.linkedin.com/in/grantcrowder/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm py-2 text-white hover:text-coral-300 transition-colors flex items-center gap-1"
+              className="text-lg py-2 text-white hover:text-coral-300 transition-colors flex items-center gap-1"
               onClick={() => setIsMenuOpen(false)}
             >
               <LinkedInIcon />
