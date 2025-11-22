@@ -21,15 +21,16 @@ export async function POST(request: NextRequest) {
     const revalidateAll = body.revalidateAll === true
 
     if (revalidateAll || !slug) {
-      // Revalidate all project pages and homepage using both tags and paths
+      // Revalidate all project pages, homepage, and about page using both tags and paths
       revalidateTag('notion-projects')
       revalidateTag('notion-featured-projects')
       revalidatePath('/project', 'page')
       revalidatePath('/', 'page')
+      revalidatePath('/about', 'page')
       
       return NextResponse.json({ 
         revalidated: true,
-        paths: ['/project', '/'],
+        paths: ['/project', '/', '/about'],
         message: 'All pages revalidated',
         now: Date.now()
       })
