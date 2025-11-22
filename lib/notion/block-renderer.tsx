@@ -317,15 +317,23 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       // Support both Notion-hosted images and local images (relative paths)
       // Use shared normalization function to ensure consistent URL matching
       const rawImageUrl = block.image?.file?.url || block.image?.external?.url || ''
-      const imageUrl = normalizeImageUrl(rawImageUrl)
+      const normalizedUrl = normalizeImageUrl(rawImageUrl)
       
-      if (!imageUrl) return null
+      if (!normalizedUrl && !rawImageUrl) return null
       
-      const imageIndex = allImages.indexOf(imageUrl)
+      // Use normalized URL if it's a relative path, otherwise use the raw URL
+      // This handles both local images (/images/...) and Notion-hosted images (https://...)
+      const displayUrl = normalizedUrl.startsWith('/') ? normalizedUrl : rawImageUrl
+      
+      // Find image index for lightbox - match on normalized URL
+      const imageIndex = allImages.findIndex(img => {
+        const normalizedImg = normalizeImageUrl(img)
+        return normalizedImg === normalizedUrl || img === normalizedUrl || img === rawImageUrl || normalizedImg === rawImageUrl
+      })
       const hasClickHandler = imageIndex >= 0 && onImageClick
       
       // Determine if image is local (relative path) or external (Notion-hosted)
-      const isLocalImage = imageUrl.startsWith('/')
+      const isLocalImage = displayUrl.startsWith('/')
       
       // Check if this image should be full-width (check if we're in full-width mode)
       // We'll pass this as a prop through the renderer
@@ -347,11 +355,11 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         >
           <div className={`relative w-full aspect-video bg-zinc-800 rounded-lg overflow-hidden ${shouldBeFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
             <Image
-              src={imageUrl}
+              src={displayUrl}
               alt={block.image?.caption?.[0]?.plain_text || 'Image'}
               fill
               className={`object-cover transition-transform duration-500 ${hasClickHandler ? 'group-hover:scale-105' : ''}`}
-              unoptimized={imageUrl.startsWith('http') ? false : true}
+              unoptimized={isLocalImage ? true : false}
             />
             {hasClickHandler && (
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />

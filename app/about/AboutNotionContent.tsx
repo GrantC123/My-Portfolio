@@ -44,18 +44,19 @@ export default function AboutNotionContent({ page, blocks, allImages }: AboutNot
     <div className="min-h-screen bg-zinc-950 text-white">
       <main>
         {/* Hero Section with Featured Image */}
-        {featuredImage && (
+        {featuredImage && typeof featuredImage === 'string' && (
           <section className="pt-16 pb-16 bg-zinc-950">
             <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
               <div className="max-w-[768px] mx-auto">
                 <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-zinc-900">
                   <Image
-                    src={normalizeImageUrl(featuredImage) || featuredImage}
+                    src={featuredImage}
                     alt={pageTitle}
                     fill
                     sizes="(max-width: 768px) 100vw, 768px"
                     className="object-contain object-top rounded-xl cursor-pointer"
                     priority
+                    unoptimized={featuredImage.startsWith('http') ? false : true}
                     onClick={() => handleImageClick(featuredImage)}
                   />
                 </div>

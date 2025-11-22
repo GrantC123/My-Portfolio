@@ -1,10 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "hebbkx1anhila5yf.public.blob.vercel-storage.com",
-      "v0.blob.com",
-      // Add any other domains you're loading images from
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.notion.so',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hebbkx1anhila5yf.public.blob.vercel-storage.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'v0.blob.com',
+      },
     ],
     unoptimized: true,
   },
