@@ -1,10 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React from "react"
 import { renderNotionBlocks, type NotionBlock } from "@/lib/notion/block-renderer"
 import { extractPageMetadata } from "@/lib/notion/page-properties"
-import { normalizeImageUrl } from "@/lib/notion/image-url-utils"
-import ImageLightbox from "../components/ImageLightbox"
 import Image from "next/image"
 
 interface AboutNotionContentProps {
@@ -14,31 +12,9 @@ interface AboutNotionContentProps {
 }
 
 export default function AboutNotionContent({ page, blocks, allImages }: AboutNotionContentProps) {
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
   const metadata = extractPageMetadata(page, blocks)
   const pageTitle = metadata.title || "About"
   const featuredImage = metadata.featuredImage
-
-  const handleImageClick = (imageUrl: string) => {
-    const normalizedUrl = normalizeImageUrl(imageUrl)
-    const imageIndex = allImages.findIndex(
-      (img) => normalizeImageUrl(img) === normalizedUrl
-    )
-    if (imageIndex >= 0) {
-      setCurrentImageIndex(imageIndex)
-      setIsLightboxOpen(true)
-    }
-  }
-
-  const handleClose = () => {
-    setIsLightboxOpen(false)
-  }
-
-  const handleIndexChange = (index: number) => {
-    setCurrentImageIndex(index)
-  }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -54,10 +30,9 @@ export default function AboutNotionContent({ page, blocks, allImages }: AboutNot
                     alt={pageTitle}
                     fill
                     sizes="(max-width: 768px) 100vw, 768px"
-                    className="object-contain object-top rounded-xl cursor-pointer"
+                    className="object-contain object-top rounded-xl"
                     priority
                     unoptimized={featuredImage.startsWith('http') ? false : true}
-                    onClick={() => handleImageClick(featuredImage)}
                   />
                 </div>
               </div>
@@ -84,10 +59,7 @@ export default function AboutNotionContent({ page, blocks, allImages }: AboutNot
                   return renderNotionBlocks(
                     filteredBlocks,
                     allImages,
-                    (index: number) => {
-                      setCurrentImageIndex(index)
-                      setIsLightboxOpen(true)
-                    }
+                    undefined // Disable lightbox - no click handler
                   )
                 })()}
             </div>
@@ -95,16 +67,7 @@ export default function AboutNotionContent({ page, blocks, allImages }: AboutNot
         </section>
       </main>
 
-      {/* Image Lightbox */}
-      {allImages.length > 0 && (
-        <ImageLightbox
-          images={allImages}
-          isOpen={isLightboxOpen}
-          currentIndex={currentImageIndex}
-          onClose={handleClose}
-          onIndexChange={handleIndexChange}
-        />
-      )}
+      {/* Image Lightbox - Disabled */}
     </div>
   )
 }
