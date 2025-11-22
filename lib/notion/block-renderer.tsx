@@ -416,8 +416,8 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         // If it's a number, use it directly as a Tailwind spacing value (e.g., "spacer:16" = h-16)
         let spacerClass = spacerClasses[spacerSize] || `h-${spacerSize}`
         
-        // Return a spacer div (hidden, just for spacing)
-        return <div key={id} className={spacerClass} aria-hidden="true" />
+        // Return a spacer div (invisible but takes up space)
+        return <div key={id} className={`w-full ${spacerClass}`} aria-hidden="true" />
       }
       
       // Check if this is a full-width marker (hidden callout used as a marker)
