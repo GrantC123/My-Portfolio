@@ -1,7 +1,9 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { normalizeImageUrl } from './image-url-utils'
 import * as LucideIcons from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export interface NotionBlock {
   id: string
@@ -419,6 +421,76 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         LucideIcon = (LucideIcons as any)[lucideIconName] as React.ComponentType<{ className?: string; size?: number }>
       }
       
+      // Check for button link pattern (format: "button:https://example.com" or "link:https://example.com")
+      // Can optionally include variant: "button:https://example.com variant:primary" or "button:https://example.com variant:secondary"
+      // Can optionally include icons: "icon:leading:ArrowRight" or "icon:trailing:ArrowRight"
+      let buttonUrl: string | null = null
+      let buttonVariant: 'primary' | 'secondary' = 'primary'
+      
+      // Extract URLs from link annotations as fallback
+      const richTextLinks: string[] = []
+      block.callout?.rich_text?.forEach((text: any) => {
+        if (text.href) {
+          richTextLinks.push(text.href)
+        }
+      })
+      
+      // Improved regex that handles URLs with or without spaces after the colon
+      // Pattern: button: or link: followed by optional space, then URL (stops at space or end), then optional variant
+      // The URL pattern now explicitly handles http/https/mailto/relative paths
+      // Made more flexible to handle various URL formats and spacing
+      const buttonMatch = calloutText.match(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i)
+      
+      if (buttonMatch && buttonMatch[1]) {
+        buttonUrl = buttonMatch[1]
+        if (buttonMatch[2]) {
+          buttonVariant = buttonMatch[2].toLowerCase() as 'primary' | 'secondary'
+        }
+      } else if (richTextLinks.length > 0 && (calloutText.toLowerCase().includes('button:') || calloutText.toLowerCase().includes('link:'))) {
+        // Fallback: if pattern doesn't match but we have a link annotation and button/link keyword, use the first link
+        buttonUrl = richTextLinks[0]
+      }
+      
+      // Debug logging in development
+      if (process.env.NODE_ENV === 'development' && (calloutText.toLowerCase().includes('button:') || calloutText.toLowerCase().includes('link:'))) {
+        if (!buttonUrl) {
+          console.log('[Button Debug] Pattern not matched:', {
+            calloutText,
+            buttonMatch,
+            richTextLinks,
+            hasButtonKeyword: calloutText.toLowerCase().includes('button:') || calloutText.toLowerCase().includes('link:')
+          })
+        }
+      }
+      
+      // Check for button icon patterns (format: "icon:leading:IconName" or "icon:trailing:IconName")
+      let buttonLeadingIcon: React.ComponentType<{ className?: string; size?: number }> | null = null
+      let buttonTrailingIcon: React.ComponentType<{ className?: string; size?: number }> | null = null
+      
+      if (buttonUrl) {
+        const leadingIconMatch = calloutText.match(/icon:leading:\s*([A-Za-z0-9-]+)/i)
+        if (leadingIconMatch && leadingIconMatch[1]) {
+          const leadingIconName = leadingIconMatch[1]
+            .split('-')
+            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join('')
+          if (leadingIconName in LucideIcons) {
+            buttonLeadingIcon = (LucideIcons as any)[leadingIconName] as React.ComponentType<{ className?: string; size?: number }>
+          }
+        }
+        
+        const trailingIconMatch = calloutText.match(/icon:trailing:\s*([A-Za-z0-9-]+)/i)
+        if (trailingIconMatch && trailingIconMatch[1]) {
+          const trailingIconName = trailingIconMatch[1]
+            .split('-')
+            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join('')
+          if (trailingIconName in LucideIcons) {
+            buttonTrailingIcon = (LucideIcons as any)[trailingIconName] as React.ComponentType<{ className?: string; size?: number }>
+          }
+        }
+      }
+      
       // Determine callout style based on emoji (emoji is used for styling, not display)
       // Available emoji styles:
       // 💡 - Default/Info (zinc-800)
@@ -509,10 +581,21 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       
       const style = getCalloutStyle(emoji)
       
-      // Remove icon:IconName from displayed text
-      const displayText = lucideIconName 
-        ? calloutText.replace(/icon:\s*[A-Za-z0-9-]+/i, '').trim()
-        : calloutText
+      // Remove icon:IconName and button: patterns from displayed text
+      let displayText = calloutText
+      if (lucideIconName) {
+        displayText = displayText.replace(/icon:\s*[A-Za-z0-9-]+/i, '').trim()
+      }
+      if (buttonUrl) {
+        displayText = displayText.replace(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i, '').trim()
+        // Remove button icon patterns
+        displayText = displayText.replace(/icon:leading:\s*[A-Za-z0-9-]+/i, '').trim()
+        displayText = displayText.replace(/icon:trailing:\s*[A-Za-z0-9-]+/i, '').trim()
+      }
+      
+      // Extract icon components for button rendering (React requires capitalized component names)
+      const LeadingIcon = buttonLeadingIcon
+      const TrailingIcon = buttonTrailingIcon
       
       // Check if callout is inside a column_list by checking parent context
       // We'll use a data attribute to detect this, but for now, make callouts stretch when in columns
@@ -525,11 +608,20 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
               </div>
             )}
             <div className="flex-1">
-              {displayText && (
+              {displayText && !buttonUrl && (
                 <div className={`${style.text} mb-2`}>
                   {block.callout?.rich_text?.map((text: any, idx: number) => {
-                    // Skip text that matches icon: pattern
+                    // Skip text that matches icon: or button: patterns
                     if (lucideIconName && /icon:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
+                      return null
+                    }
+                    if (buttonUrl && /(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i.test(text.plain_text)) {
+                      return null
+                    }
+                    if (buttonUrl && /icon:leading:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
+                      return null
+                    }
+                    if (buttonUrl && /icon:trailing:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
                       return null
                     }
                     
@@ -542,6 +634,25 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
                     
                     return <span key={idx}>{content}</span>
                   })}
+                </div>
+              )}
+              {buttonUrl && (
+                <div className="mt-4">
+                  <Button 
+                    asChild 
+                    variant={buttonVariant}
+                    className="w-fit"
+                  >
+                    <Link 
+                      href={buttonUrl} 
+                      target={buttonUrl.startsWith('http') ? '_blank' : undefined} 
+                      rel={buttonUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    >
+                      {LeadingIcon && <LeadingIcon className="size-4" />}
+                      {displayText || 'Visit Link'}
+                      {TrailingIcon && <TrailingIcon className="size-4" />}
+                    </Link>
+                  </Button>
                 </div>
               )}
               {hasChildren && (
