@@ -431,9 +431,11 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       
       // Check for button link pattern (format: "button:https://example.com" or "link:https://example.com")
       // Can optionally include variant: "button:https://example.com variant:primary" or "button:https://example.com variant:secondary"
+      // Can optionally include size: "button:https://example.com size:sm" or "button:https://example.com size:lg"
       // Can optionally include icons: "icon:leading:ArrowRight" or "icon:trailing:ArrowRight"
       let buttonUrl: string | null = null
       let buttonVariant: 'primary' | 'secondary' = 'primary'
+      let buttonSize: 'sm' | 'default' | 'lg' | 'icon' = 'default'
       
       // Extract URLs from link annotations as fallback
       const richTextLinks: string[] = []
@@ -444,19 +446,30 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       })
       
       // Improved regex that handles URLs with or without spaces after the colon
-      // Pattern: button: or link: followed by optional space, then URL (stops at space or end), then optional variant
+      // Pattern: button: or link: followed by optional space, then URL (stops at space or end), then optional variant and size
       // The URL pattern now explicitly handles http/https/mailto/relative paths
       // Made more flexible to handle various URL formats and spacing
-      const buttonMatch = calloutText.match(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i)
+      const buttonMatch = calloutText.match(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?(?:\s+size:\s*(sm|default|lg|icon))?/i)
       
       if (buttonMatch && buttonMatch[1]) {
         buttonUrl = buttonMatch[1]
         if (buttonMatch[2]) {
           buttonVariant = buttonMatch[2].toLowerCase() as 'primary' | 'secondary'
         }
+        if (buttonMatch[3]) {
+          buttonSize = buttonMatch[3].toLowerCase() as 'sm' | 'default' | 'lg' | 'icon'
+        }
       } else if (richTextLinks.length > 0 && (calloutText.toLowerCase().includes('button:') || calloutText.toLowerCase().includes('link:'))) {
         // Fallback: if pattern doesn't match but we have a link annotation and button/link keyword, use the first link
         buttonUrl = richTextLinks[0]
+      }
+      
+      // Also check for size separately (in case it's not in the main regex match)
+      if (buttonUrl) {
+        const sizeMatch = calloutText.match(/size:\s*(sm|default|lg|icon)/i)
+        if (sizeMatch && sizeMatch[1]) {
+          buttonSize = sizeMatch[1].toLowerCase() as 'sm' | 'default' | 'lg' | 'icon'
+        }
       }
       
       // Debug logging in development
@@ -614,10 +627,12 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         displayText = displayText.replace(/icon:\s*[A-Za-z0-9-]+/i, '').trim()
       }
       if (buttonUrl) {
-        displayText = displayText.replace(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i, '').trim()
+        displayText = displayText.replace(/(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?(?:\s+size:\s*(sm|default|lg|icon))?/i, '').trim()
         // Remove button icon patterns - match the full pattern including the colon
         displayText = displayText.replace(/icon:leading:\s*[A-Za-z0-9-]+/gi, '').trim()
         displayText = displayText.replace(/icon:trailing:\s*[A-Za-z0-9-]+/gi, '').trim()
+        // Remove size pattern
+        displayText = displayText.replace(/size:\s*(sm|default|lg|icon)/gi, '').trim()
         // Also remove any leftover colon patterns (e.g., ":ArrowRight" if pattern was partially matched)
         displayText = displayText.replace(/^:\s*[A-Za-z0-9-]+\s*/i, '').trim()
       }
@@ -633,6 +648,7 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
             <Button 
               asChild 
               variant={buttonVariant}
+              size={buttonSize}
               className="w-fit"
             >
               <Link 
