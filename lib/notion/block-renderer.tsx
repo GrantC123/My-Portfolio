@@ -400,6 +400,26 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       const calloutChildren = (block as any).children || []
       const hasChildren = calloutChildren.length > 0
       
+      // Check if this is a spacer callout (format: "spacer:sm", "spacer:md", "spacer:lg", "spacer:xl", or "spacer:16", "spacer:32", etc.)
+      const spacerMatch = calloutText.match(/spacer:\s*(sm|md|lg|xl|2xl|\d+)/i)
+      if (spacerMatch && spacerMatch[1]) {
+        const spacerSize = spacerMatch[1].toLowerCase()
+        // Map named sizes to Tailwind classes
+        const spacerClasses: { [key: string]: string } = {
+          'sm': 'h-4',      // 1rem (16px)
+          'md': 'h-8',      // 2rem (32px)
+          'lg': 'h-12',     // 3rem (48px)
+          'xl': 'h-16',     // 4rem (64px)
+          '2xl': 'h-24',    // 6rem (96px)
+        }
+        
+        // If it's a number, use it directly as a Tailwind spacing value (e.g., "spacer:16" = h-16)
+        let spacerClass = spacerClasses[spacerSize] || `h-${spacerSize}`
+        
+        // Return a spacer div (hidden, just for spacing)
+        return <div key={id} className={spacerClass} aria-hidden="true" />
+      }
+      
       // Check if this is a full-width marker (hidden callout used as a marker)
       const isFullWidthMarker = calloutText.toUpperCase().includes('FULLWIDTH') || 
                                 calloutText.toUpperCase().includes('FULL WIDTH') ||
