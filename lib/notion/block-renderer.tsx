@@ -618,6 +618,29 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       const LeadingIcon = buttonLeadingIcon
       const TrailingIcon = buttonTrailingIcon
       
+      // If this is a button callout, render just the button without the callout container
+      if (buttonUrl) {
+        return (
+          <div key={id} className="my-6">
+            <Button 
+              asChild 
+              variant={buttonVariant}
+              className="w-fit"
+            >
+              <Link 
+                href={buttonUrl} 
+                target={buttonUrl.startsWith('http') ? '_blank' : undefined} 
+                rel={buttonUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >
+                {LeadingIcon && <LeadingIcon className="size-4" />}
+                {displayText || 'Visit Link'}
+                {TrailingIcon && <TrailingIcon className="size-4" />}
+              </Link>
+            </Button>
+          </div>
+        )
+      }
+      
       // Check if callout is inside a column_list by checking parent context
       // We'll use a data attribute to detect this, but for now, make callouts stretch when in columns
       return (
@@ -629,20 +652,11 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
               </div>
             )}
             <div className="flex-1">
-              {displayText && !buttonUrl && (
+              {displayText && (
                 <div className={`${style.text} mb-2`}>
                   {block.callout?.rich_text?.map((text: any, idx: number) => {
-                    // Skip text that matches icon: or button: patterns
+                    // Skip text that matches icon: patterns
                     if (lucideIconName && /icon:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
-                      return null
-                    }
-                    if (buttonUrl && /(?:button|link):\s*(https?:\/\/[^\s<>]+|mailto:[^\s<>]+|\/[^\s<>]*)(?:\s+variant:\s*(primary|secondary))?/i.test(text.plain_text)) {
-                      return null
-                    }
-                    if (buttonUrl && /icon:leading:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
-                      return null
-                    }
-                    if (buttonUrl && /icon:trailing:\s*[A-Za-z0-9-]+/i.test(text.plain_text)) {
                       return null
                     }
                     
@@ -655,25 +669,6 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
                     
                     return <span key={idx}>{content}</span>
                   })}
-                </div>
-              )}
-              {buttonUrl && (
-                <div className="mt-4">
-                  <Button 
-                    asChild 
-                    variant={buttonVariant}
-                    className="w-fit"
-                  >
-                    <Link 
-                      href={buttonUrl} 
-                      target={buttonUrl.startsWith('http') ? '_blank' : undefined} 
-                      rel={buttonUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    >
-                      {LeadingIcon && <LeadingIcon className="size-4" />}
-                      {displayText || 'Visit Link'}
-                      {TrailingIcon && <TrailingIcon className="size-4" />}
-                    </Link>
-                  </Button>
                 </div>
               )}
               {hasChildren && (
