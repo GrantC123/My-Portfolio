@@ -20,7 +20,10 @@ const Footer = () => {
       <div className="container mx-auto px-4 max-w-[1280px] flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
         <div className="text-sm text-white text-center md:text-left">grantcrowderdesign@gmail.com</div>
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-4">
-          <div className="text-sm text-white">© 2025 Grant Crowder Design | Crafted with love</div>
+          <div className="flex flex-col items-center md:items-end gap-1">
+            <div className="text-sm text-white">© 2025 Grant Crowder Design</div>
+            <div className="text-xs text-zinc-400">Built with Cursor, Notion, and Supabase</div>
+          </div>
           <Link
             href="https://www.linkedin.com/in/grantcrowder/"
             target="_blank"

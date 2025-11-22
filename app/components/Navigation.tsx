@@ -55,7 +55,7 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
 
   return (
     <nav className="relative border-b border-zinc-500 bg-zinc-950">
-      <div className="container mx-auto px-4 max-w-[1280px] py-4 flex justify-between items-center">
+      <div className="container mx-auto px-4 max-w-[1280px] py-4 flex justify-between items-center relative z-20 bg-zinc-950">
         <Link href="/">
           <img
             src="/images/header-logo.svg"
@@ -68,7 +68,7 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
 
         {/* Mobile menu button */}
         <button
-          className="md:hidden focus:outline-none text-white"
+          className="md:hidden focus:outline-none text-white relative z-30"
           onClick={toggleMenu}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
@@ -95,8 +95,14 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
       </div>
 
       {/* Mobile navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden py-4 px-4 bg-zinc-950 border-t border-zinc-500 absolute w-full z-50">
+      <div 
+        className={`md:hidden absolute w-full top-full left-0 z-10 transition-all duration-300 ease-out ${
+          isMenuOpen 
+            ? 'translate-y-0 max-h-96 opacity-100' 
+            : '-translate-y-full max-h-0 opacity-0 pointer-events-none overflow-hidden'
+        }`}
+      >
+        <div className="py-4 px-4 bg-zinc-900 border-t border-zinc-500 shadow-lg">
           <div className="flex flex-col space-y-4">
             <Link
               href="/#work"
@@ -113,29 +119,22 @@ export default function Navigation({ showProgressBar }: NavigationProps) {
               About
             </Link>
             <Link
-              href="/resume"
-              className="text-sm py-2 text-white hover:text-coral-300 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Resume
-            </Link>
-            <Link
               href="https://www.linkedin.com/in/grantcrowder/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm py-2 text-white hover:text-coral-300 transition-colors flex items-center"
+              className="text-sm py-2 text-white hover:text-coral-300 transition-colors flex items-center gap-1"
               onClick={() => setIsMenuOpen(false)}
             >
-              <LinkedInIcon className="mr-2" />
+              <LinkedInIcon />
               LinkedIn
             </Link>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Scroll Progress Bar */}
       {shouldShowProgressBar && (
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800">
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800 z-30">
           <div 
             className="h-full bg-coral-300 transition-all duration-150 ease-out"
             style={{ width: `${scrollProgress}%` }}

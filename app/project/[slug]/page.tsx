@@ -158,7 +158,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     return (
       <div className="min-h-screen bg-white">
         {/* Hero Section with Breadcrumbs */}
-        <section className="bg-zinc-950 border-b border-zinc-500">
+        <section className="bg-zinc-950 border-b border-zinc-500 relative z-0">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
             {/* Breadcrumbs */}
             <div className="pt-16 pb-4">
@@ -449,7 +449,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     return (
       <div className="min-h-screen bg-white">
         {/* Hero Section with Breadcrumbs */}
-        <section className="bg-zinc-950 border-b border-zinc-500">
+        <section className="bg-zinc-950 border-b border-zinc-500 relative z-0">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
             {/* Breadcrumbs */}
             <div className="pt-16 pb-4">
@@ -659,7 +659,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     return (
       <div className="min-h-screen bg-zinc-950">
         {/* Hero Section with Breadcrumbs */}
-        <section className="bg-zinc-950 border-b border-zinc-500">
+        <section className="bg-zinc-950 border-b border-zinc-500 relative z-0">
           <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
             {/* Breadcrumbs */}
             <div className="pt-16 pb-4">
