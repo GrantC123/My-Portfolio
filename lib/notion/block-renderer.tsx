@@ -647,7 +647,7 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         <div key={id} className={`${style.bg} ${style.border} border rounded-lg p-4 my-6 h-full flex flex-col`}>
           <div className="flex flex-col flex-1">
             {LucideIcon && (
-              <div className={`${style.iconBg} rounded-full p-2 w-fit mb-4 flex items-center justify-center`}>
+              <div className={`${style.iconBg} rounded-full p-2 w-fit mb-1 flex items-center justify-center`}>
                 <LucideIcon className={style.text} size={20} />
               </div>
             )}
