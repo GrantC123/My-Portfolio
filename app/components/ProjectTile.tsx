@@ -2,6 +2,7 @@ import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Chip } from "@/components/ui/chip"
+import { Button } from "@/components/ui/button"
 
 export interface Project {
   slug: string
@@ -40,12 +41,15 @@ export default function ProjectTile({ project }: ProjectTileProps) {
             </h3>
             <p className="font-normal text-base leading-6 text-zinc-400">{project.description}</p>
           </div>
-          <div className="border-2 border-coral-300 flex items-center justify-center gap-2.5 px-6 py-4 rounded-lg w-full">
-            <span className="font-display font-bold text-base leading-normal text-white">View Project</span>
+          <Button
+            variant="tertiary"
+            className="w-full gap-2.5 px-6 py-4 rounded-lg pointer-events-none"
+          >
+            <span className="font-display font-bold text-base leading-normal">View Project</span>
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </div>
+          </Button>
         </div>
       </div>
       {/* Desktop: Side-by-side layout */}
@@ -72,12 +76,15 @@ export default function ProjectTile({ project }: ProjectTileProps) {
             </h3>
             <p className="font-normal text-base leading-6 text-zinc-400 line-clamp-3">{project.description}</p>
           </div>
-          <div className="border-2 border-coral-300 flex items-center justify-center gap-2.5 px-6 py-4 rounded-lg w-fit">
-            <span className="font-display font-bold text-base leading-normal text-white">View Project</span>
+          <Button
+            variant="tertiary"
+            className="w-fit gap-2.5 px-6 py-4 rounded-lg pointer-events-none"
+          >
+            <span className="font-display font-bold text-base leading-normal">View Project</span>
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </div>
+          </Button>
         </div>
       </div>
     </Link>
