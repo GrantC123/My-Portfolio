@@ -1,5 +1,7 @@
 import { getNotionClient } from "@/lib/notion/client"
 import { fetchAllBlocks } from "@/lib/notion/fetch-blocks"
+import { extractPageMetadata } from "@/lib/notion/page-properties"
+import { getProjectBySlug } from "@/lib/notion/get-project-by-slug"
 import { projects } from "../../data"
 import NotionPageContent from "./NotionPageContent"
 import Link from "next/link"
@@ -80,7 +82,10 @@ export async function generateStaticParams() {
 // Cache tags allow on-demand revalidation
 export const revalidate = 3600 // Revalidate every hour (ISR)
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params (Next.js 15 requirement)
+  const { slug } = await params
+  
   // Try to fetch from Notion first (server-side)
   let notionPageData: { page: any; blocks: any[] } | null = null
   
@@ -102,13 +107,13 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           filter: {
             property: 'Slug',
             rich_text: {
-              equals: params.slug,
+              equals: slug,
             },
           },
         }),
         next: { 
           revalidate: 3600, // Match page-level revalidate for ISR
-          tags: ['notion-projects', `notion-project-${params.slug}`]
+          tags: ['notion-projects', `notion-project-${slug}`]
         },
       })
       
@@ -119,6 +124,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
         if (pages.length > 0) {
           const page = pages[0]
           const pageId = 'id' in page ? page.id : ''
+          
           
           if (pageId) {
             // Fetch all blocks (including nested children for columns)
@@ -135,11 +141,20 @@ export default async function ProjectPage({ params }: { params: { slug: string }
 
   // If Notion page found, render it
   if (notionPageData && 'id' in notionPageData.page) {
-    return <NotionPageContent page={notionPageData.page} blocks={notionPageData.blocks} slug={params.slug} />
+    // Extract metadata to check for next project slug
+    const metadata = extractPageMetadata(notionPageData.page, notionPageData.blocks)
+    
+    // Fetch next project if specified
+    let nextProject = null
+    if (metadata.nextProjectSlug) {
+      nextProject = await getProjectBySlug(metadata.nextProjectSlug)
+    }
+    
+    return <NotionPageContent page={notionPageData.page} blocks={notionPageData.blocks} slug={slug} nextProject={nextProject} />
   }
 
   // Fallback to static project data
-  const project = projects.find(p => p.slug === params.slug)
+  const project = projects.find(p => p.slug === slug)
   if (!project) {
     return <div>Project not found</div>
   }

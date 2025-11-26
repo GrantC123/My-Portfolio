@@ -13,6 +13,7 @@ export interface PageMetadata {
   deliverables?: string
   outcomes?: string
   category?: string
+  nextProjectSlug?: string
 }
 
 function extractRichText(property: any): string {
@@ -144,6 +145,85 @@ export function extractPageMetadata(page: any, blocks: any[] = []): PageMetadata
     metadata.deliverables = extractRichText(props.Deliverables)
     metadata.outcomes = extractRichText(props.Outcomes || props.Outcome)
     metadata.category = extractSelect(props.Category)
+    // Extract Next Project Slug (text or rich_text property)
+    // Try direct access first, then fallback to name variations
+    let nextProjectProp = null
+    let foundPropertyName = null
+    
+    // First, try direct access to the exact property name
+    const directAccess = props['Next Project Slug']
+    if (directAccess !== undefined) {
+      nextProjectProp = directAccess
+      foundPropertyName = 'Next Project Slug'
+    }
+    
+    // If direct access didn't find it, try other name variations
+    if (!nextProjectProp || nextProjectProp === null) {
+      const possibleNames = [
+        'Next Project',
+        'NextProjectSlug',
+        'NextProject',
+        'next project slug',
+        'next project',
+        'nextProjectSlug',
+        'nextProject'
+      ]
+      
+      for (const name of possibleNames) {
+        const prop = props[name]
+        if (prop !== undefined && prop !== null) {
+          nextProjectProp = prop
+          foundPropertyName = name
+          break
+        }
+      }
+    }
+    
+    // If still not found, try case-insensitive search through all properties
+    if (!nextProjectProp || nextProjectProp === null) {
+      const allPropNames = Object.keys(props)
+      for (const propName of allPropNames) {
+        const lowerPropName = propName.toLowerCase().trim()
+        if (lowerPropName.includes('next') && (lowerPropName.includes('project') || lowerPropName.includes('slug'))) {
+          nextProjectProp = props[propName]
+          foundPropertyName = propName
+          break
+        }
+      }
+    }
+    
+    if (nextProjectProp) {
+      // Handle different property types
+      let extractedValue: string | undefined = undefined
+      
+      // Try rich_text first (most common for text properties in Notion)
+      if (nextProjectProp.rich_text && Array.isArray(nextProjectProp.rich_text)) {
+        extractedValue = nextProjectProp.rich_text
+          .map((text: any) => text.plain_text || '')
+          .join('')
+          .trim() || undefined
+      }
+      // Try title property type
+      else if (nextProjectProp.title && Array.isArray(nextProjectProp.title)) {
+        extractedValue = nextProjectProp.title
+          .map((text: any) => text.plain_text || '')
+          .join('')
+          .trim() || undefined
+      }
+      // Try using extractRichText helper
+      else if (nextProjectProp.type === 'rich_text' || nextProjectProp.type === 'title') {
+        extractedValue = extractRichText(nextProjectProp)?.trim() || undefined
+        if (!extractedValue) {
+          extractedValue = extractTitle(nextProjectProp)?.trim() || undefined
+        }
+      }
+      // Handle plain text property (less common)
+      else if (nextProjectProp.type === 'text' || nextProjectProp.text) {
+        extractedValue = (nextProjectProp.text || '').trim() || undefined
+      }
+      
+      metadata.nextProjectSlug = extractedValue
+    }
   }
 
   // No fallback for featured image - only use properties

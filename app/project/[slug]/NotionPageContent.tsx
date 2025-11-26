@@ -17,7 +17,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import ProjectTile from "../../components/ProjectTile"
+import ProjectTile, { Project } from "../../components/ProjectTile"
 import { projects } from "../../data"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
@@ -25,9 +25,10 @@ interface NotionPageContentProps {
   page: any
   blocks: NotionBlock[]
   slug?: string
+  nextProject?: Project | null
 }
 
-export default function NotionPageContent({ page, blocks, slug }: NotionPageContentProps) {
+export default function NotionPageContent({ page, blocks, slug, nextProject }: NotionPageContentProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
@@ -64,23 +65,37 @@ export default function NotionPageContent({ page, blocks, slug }: NotionPageCont
     }
   })
 
-  // Get all projects except the current one for "More Projects" section
-  const otherProjects = projects.slice(0, 2) // Just show first 2 for now
+  // Determine which projects to show in "More Projects" section
+  // If nextProject is specified from Notion, use it; otherwise use default behavior
+  let displayProjects: Project[] = []
+  let showNavigation = false
+  
+  if (nextProject) {
+    // Show only the specified next project
+    displayProjects = [nextProject]
+    showNavigation = false
+  } else {
+    // Fallback to default behavior: show first 2 projects (excluding current)
+    const otherProjects = projects.filter(p => p.slug !== slug).slice(0, 2)
+    displayProjects = otherProjects
+    showNavigation = otherProjects.length > 2
+  }
+  
   const [previewStartIndex, setPreviewStartIndex] = useState(0)
-  const previewCount = Math.min(2, otherProjects.length)
-  const currentPreviewProjects = otherProjects.slice(previewStartIndex, previewStartIndex + previewCount)
+  const previewCount = Math.min(2, displayProjects.length)
+  const currentPreviewProjects = displayProjects.slice(previewStartIndex, previewStartIndex + previewCount)
 
   const handlePrevious = () => {
     setPreviewStartIndex((prevIndex) => {
       const newIndex = prevIndex - 1
-      return newIndex < 0 ? otherProjects.length - 1 : newIndex
+      return newIndex < 0 ? displayProjects.length - 1 : newIndex
     })
   }
 
   const handleNext = () => {
     setPreviewStartIndex((prevIndex) => {
       const newIndex = prevIndex + 1
-      return newIndex >= otherProjects.length ? 0 : newIndex
+      return newIndex >= displayProjects.length ? 0 : newIndex
     })
   }
 
@@ -261,32 +276,34 @@ export default function NotionPageContent({ page, blocks, slug }: NotionPageCont
       {/* More Projects Section */}
       <section className="bg-zinc-900 py-16 border-t border-zinc-500">
         <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
-          <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
+          <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">Next Project</h2>
           <div className="flex flex-col gap-8 max-w-[1152px]">
             {currentPreviewProjects.map((previewProject, index) => (
               <ProjectTile key={index} project={previewProject} />
             ))}
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 mt-8">
-            <button
-              onClick={handlePrevious}
-              className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-              aria-label="Show previous projects"
-            >
-              <ArrowLeft size={16} />
-              <span>Previous</span>
-            </button>
-            <button
-              onClick={handleNext}
-              className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
-              aria-label="Show next projects"
-            >
-              <span>Next</span>
-              <ArrowRight size={16} />
-            </button>
-          </div>
+          {/* Navigation Buttons - only show if there are multiple projects to cycle through */}
+          {showNavigation && (
+            <div className="flex justify-center gap-4 mt-8">
+              <button
+                onClick={handlePrevious}
+                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
+                aria-label="Show previous projects"
+              >
+                <ArrowLeft size={16} />
+                <span>Previous</span>
+              </button>
+              <button
+                onClick={handleNext}
+                className="flex items-center gap-2 px-4 py-2 border border-zinc-500 rounded-lg hover:bg-zinc-800 text-white transition-colors"
+                aria-label="Show next projects"
+              >
+                <span>Next</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </div>
