@@ -5,6 +5,7 @@ import { normalizeImageUrl } from './image-url-utils'
 import * as LucideIcons from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import BeforeAfterSlider from '@/app/components/BeforeAfterSlider'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 
 export interface NotionBlock {
   id: string
@@ -484,6 +485,153 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         ;(block as any).__columnGap = `gap-${gapValue}`
         // Return null - this callout is just a marker, not rendered
         return null
+      }
+      
+      // Check if this is an accordion callout (format: "accordion:" or "accordion: Title")
+      const isAccordionCallout = calloutText.toLowerCase().includes('accordion:')
+      if (isAccordionCallout && hasChildren) {
+        // Parse children to find heading blocks (heading_1, heading_2, heading_3) and group content
+        const accordionItems: Array<{ trigger: string; headingType: 'heading_1' | 'heading_2' | 'heading_3'; isSmall: boolean; content: NotionBlock[] }> = []
+        let currentItem: { trigger: string; headingType: 'heading_1' | 'heading_2' | 'heading_3'; isSmall: boolean; content: NotionBlock[] } | null = null
+        
+        calloutChildren.forEach((childBlock: NotionBlock) => {
+          if (childBlock.type === 'heading_1' || childBlock.type === 'heading_2' || childBlock.type === 'heading_3') {
+            // If we have a previous item, save it
+            if (currentItem) {
+              accordionItems.push(currentItem)
+            }
+            // Start a new accordion item
+            let headingText = ''
+            let headingType: 'heading_1' | 'heading_2' | 'heading_3' = 'heading_2'
+            
+            if (childBlock.type === 'heading_1') {
+              headingText = childBlock.heading_1?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+              headingType = 'heading_1'
+            } else if (childBlock.type === 'heading_2') {
+              headingText = childBlock.heading_2?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+              headingType = 'heading_2'
+            } else if (childBlock.type === 'heading_3') {
+              headingText = childBlock.heading_3?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+              headingType = 'heading_3'
+            }
+            
+            // Check for h4: or size:h4 modifier (at start or end, colon optional)
+            let isSmall = false
+            let displayText = headingText.trim()
+            
+            // Check for modifier at the start: "h4: Text" or "size:h4: Text" or "size:h4 Text"
+            let smallMatch = displayText.match(/^(h4|size:h4)\s*:?\s*(.+)$/i)
+            if (smallMatch && smallMatch[2]) {
+              isSmall = true
+              displayText = smallMatch[2].trim()
+            } else {
+              // Check for modifier at the end: "Text size:h4" or "Text size:h4:"
+              smallMatch = displayText.match(/^(.+?)\s+(h4|size:h4)\s*:?$/i)
+              if (smallMatch && smallMatch[1]) {
+                isSmall = true
+                displayText = smallMatch[1].trim()
+              }
+            }
+            
+            // Debug logging in development
+            if (process.env.NODE_ENV === 'development') {
+              if (isSmall) {
+                console.log('[Accordion H4 Modifier]', {
+                  original: headingText,
+                  displayText,
+                  isSmall,
+                  matched: true
+                })
+              } else if (displayText.toLowerCase().includes('h4') || displayText.toLowerCase().includes('size:h4')) {
+                console.log('[Accordion H4 Modifier]', {
+                  original: headingText,
+                  displayText,
+                  isSmall,
+                  matched: false,
+                  containsH4: displayText.toLowerCase().includes('h4'),
+                  containsSizeH4: displayText.toLowerCase().includes('size:h4')
+                })
+              }
+            }
+            
+            currentItem = {
+              trigger: displayText,
+              headingType,
+              isSmall,
+              content: []
+            }
+          } else if (currentItem) {
+            // Add block to current item's content
+            currentItem.content.push(childBlock)
+          } else {
+            // Content before first heading - we can either ignore it or add to first item
+            // For now, we'll create a first item with empty trigger if needed
+            if (accordionItems.length === 0 && !currentItem) {
+              currentItem = {
+                trigger: '',
+                headingType: 'heading_2',
+                isSmall: false,
+                content: [childBlock]
+              }
+            }
+          }
+        })
+        
+        // Add the last item if it exists
+        if (currentItem) {
+          accordionItems.push(currentItem)
+        }
+        
+        // Helper function to get heading styles
+        const getHeadingStyles = (headingType: 'heading_1' | 'heading_2' | 'heading_3', isSmall: boolean) => {
+          // If h4 modifier is used, apply h4 styles regardless of heading type
+          if (isSmall) {
+            return 'font-display font-bold text-xl leading-[28px] text-white'
+          }
+          
+          switch (headingType) {
+            case 'heading_1':
+              return 'font-display font-bold text-5xl md:text-6xl leading-[48px] md:leading-[60px] text-white'
+            case 'heading_2':
+              return 'font-display font-bold text-4xl leading-[40px] text-white'
+            case 'heading_3':
+              return 'font-display font-bold text-3xl leading-[36px] text-white'
+            default:
+              return 'font-display font-bold text-4xl leading-[40px] text-white'
+          }
+        }
+        
+        // Only render accordion if we have at least one item with a trigger
+        if (accordionItems.length > 0 && accordionItems.some(item => item.trigger)) {
+          return (
+            <div key={id} className="my-8">
+              <Accordion type="single" collapsible className="w-full">
+                {accordionItems
+                  .filter(item => item.trigger) // Only include items with triggers
+                  .map((item, index) => (
+                    <AccordionItem key={`${id}-${index}`} value={`item-${index}`}>
+                      <AccordionTrigger className={`text-left ${getHeadingStyles(item.headingType, item.isSmall)} hover:no-underline`}>
+                        {item.isSmall ? (
+                          <h4 className="m-0">{item.trigger}</h4>
+                        ) : item.headingType === 'heading_1' ? (
+                          <h1 className="m-0">{item.trigger}</h1>
+                        ) : item.headingType === 'heading_2' ? (
+                          <h2 className="m-0">{item.trigger}</h2>
+                        ) : (
+                          <h3 className="m-0">{item.trigger}</h3>
+                        )}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-4">
+                          {renderNotionBlocks(item.content, allImages, onImageClick)}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+              </Accordion>
+            </div>
+          )
+        }
       }
       
       // Check if this is a full-width marker (hidden callout used as a marker)
