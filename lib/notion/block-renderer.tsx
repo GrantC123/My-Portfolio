@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { normalizeImageUrl } from './image-url-utils'
 import * as LucideIcons from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import BeforeAfterSlider from '@/app/components/BeforeAfterSlider'
 
 export interface NotionBlock {
   id: string
@@ -339,6 +340,27 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       // We'll pass this as a prop through the renderer
       const shouldBeFullWidth = (block as any).__fullWidth || false
       
+      // Parse aspect ratio from caption if present
+      const captionText = block.image?.caption?.map((cap: any) => cap.plain_text).join('') || ''
+      let aspectRatioClass = 'aspect-video' // default 16:9 Tailwind class
+      let aspectRatioStyle: React.CSSProperties | undefined = undefined // for custom ratios
+      let displayCaption = captionText
+      
+      // Check for aspect ratio patterns: "aspect: 3/4", "size: 3/4", "aspect:16/9", etc.
+      // Also handle variations like "aspect:3/4" (no space) or "aspect: 3/4 " (with trailing space)
+      const aspectMatch = captionText.match(/(?:aspect|size):\s*(\d+\/\d+)/i)
+      if (aspectMatch && aspectMatch[1]) {
+        const ratio = aspectMatch[1] // e.g., "3/4", "16/9", "1/1"
+        
+        // Use inline style for all custom aspect ratios (more reliable than Tailwind arbitrary values)
+        // This matches the approach used in MasonryGrid component
+        aspectRatioClass = '' // Don't use Tailwind class for custom ratios
+        aspectRatioStyle = { aspectRatio: ratio }
+        
+        // Remove the aspect ratio pattern from caption text (handle with or without space)
+        displayCaption = captionText.replace(/(?:aspect|size):\s*\d+\/\d+/i, '').trim()
+      }
+      
       return (
         <div 
           key={id} 
@@ -353,7 +375,10 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
             marginRight: '-50vw'
           } : {}}
         >
-          <div className={`relative w-full aspect-video bg-zinc-800 rounded-lg overflow-hidden ${shouldBeFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
+          <div 
+            className={`relative w-full ${aspectRatioClass} bg-zinc-800 rounded-lg overflow-hidden ${shouldBeFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}
+            style={aspectRatioStyle}
+          >
             <Image
               src={displayUrl}
               alt={block.image?.caption?.[0]?.plain_text || 'Image'}
@@ -365,9 +390,10 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />
             )}
           </div>
-          {block.image?.caption && block.image.caption.length > 0 && (
+          {/* Only show caption if there's text remaining after removing aspect ratio */}
+          {displayCaption && (
             <p className={`text-sm text-zinc-500 mt-2 text-center ${shouldBeFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
-              {block.image.caption.map((cap: any) => cap.plain_text).join('')}
+              {displayCaption}
             </p>
           )}
         </div>
@@ -418,6 +444,36 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         
         // Return a spacer div (invisible but takes up space)
         return <div key={id} className={`w-full ${spacerClass}`} aria-hidden="true" />
+      }
+      
+      // Check if this is a before/after slider callout
+      // Format: "slider: /path/to/before.jpg /path/to/after.jpg"
+      // Optional labels: "slider: /path/to/before.jpg /path/to/after.jpg before:Original after:Redesigned"
+      // Optional position: "slider: /path/to/before.jpg /path/to/after.jpg position:30"
+      const sliderMatch = calloutText.match(/slider:\s*([^\s]+)\s+([^\s]+)(?:\s+before:\s*([^\s]+))?(?:\s+after:\s*([^\s]+))?(?:\s+position:\s*(\d+))?/i)
+      
+      if (sliderMatch && sliderMatch[1] && sliderMatch[2]) {
+        const beforeImage = sliderMatch[1]
+        const afterImage = sliderMatch[2]
+        const beforeLabel = sliderMatch[3] || 'Before'
+        const afterLabel = sliderMatch[4] || 'After'
+        const defaultPosition = sliderMatch[5] ? parseInt(sliderMatch[5], 10) : 50
+        
+        // Normalize image URLs (handle both local paths and full URLs)
+        const normalizedBefore = normalizeImageUrl(beforeImage)
+        const normalizedAfter = normalizeImageUrl(afterImage)
+        
+        return (
+          <div key={id} className="my-8">
+            <BeforeAfterSlider
+              beforeImage={normalizedBefore.startsWith('/') ? normalizedBefore : beforeImage}
+              afterImage={normalizedAfter.startsWith('/') ? normalizedAfter : afterImage}
+              beforeLabel={beforeLabel}
+              afterLabel={afterLabel}
+              defaultPosition={defaultPosition}
+            />
+          </div>
+        )
       }
       
       // Check if this is a full-width marker (hidden callout used as a marker)

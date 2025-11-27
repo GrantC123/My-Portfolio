@@ -21,7 +21,7 @@ const buttonVariants = cva(
         primary:
           "bg-coral-300 border border-black text-black hover:bg-coral-200 hover:scale-105 transition-transform shadow-sm font-display font-bold",
         tertiary:
-          "border-0 bg-zinc-800 text-white hover:bg-zinc-700 font-display font-bold",
+          "border-0 bg-zinc-800 text-white font-display font-bold",
       },
       size: {
         default: "h-10 px-4 py-2",
