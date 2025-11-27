@@ -476,6 +476,16 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         )
       }
       
+      // Check if this is a column gap marker (format: "gap: 6", "column-gap: 8", etc.)
+      const gapMatch = calloutText.match(/(?:gap|column-gap):\s*(\d+)/i)
+      if (gapMatch && gapMatch[1]) {
+        const gapValue = gapMatch[1]
+        // Store the gap value on the block so renderNotionBlocks can access it
+        ;(block as any).__columnGap = `gap-${gapValue}`
+        // Return null - this callout is just a marker, not rendered
+        return null
+      }
+      
       // Check if this is a full-width marker (hidden callout used as a marker)
       const isFullWidthMarker = calloutText.toUpperCase().includes('FULLWIDTH') || 
                                 calloutText.toUpperCase().includes('FULL WIDTH') ||
@@ -785,6 +795,8 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       // Column list contains column blocks
       const columnBlocks = (block as any).children || []
       const columnListFullWidth = (block as any).__fullWidth || false
+      // Get the gap from the block (set by renderNotionBlocks) or use default
+      const columnGapValue = (block as any).__columnGap || 'gap-4'
       
       // Check if any column contains images (for full-width detection)
       const hasImages = columnBlocks.some((col: NotionBlock) => {
@@ -795,7 +807,7 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
       return (
         <div 
           key={id} 
-          className="flex flex-col md:flex-row gap-4 my-8"
+          className={`flex flex-col md:flex-row ${columnGapValue} my-8`}
           style={columnListFullWidth ? {
             width: '100vw',
             position: 'relative',
@@ -805,7 +817,7 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
             marginRight: '-50vw'
           } : {}}
         >
-          <div className={`w-full flex flex-col md:flex-row gap-4 items-stretch ${columnListFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
+          <div className={`w-full flex flex-col md:flex-row ${columnGapValue} items-stretch ${columnListFullWidth ? 'container mx-auto px-4 md:px-16 max-w-[1280px]' : ''}`}>
             {columnBlocks.map((columnBlock: NotionBlock, colIndex: number) => {
               const columnChildren = (columnBlock as any).children || []
               return (
@@ -855,6 +867,7 @@ export function renderNotionBlocks(
   let currentList: NotionBlock[] = []
   let listType: 'bulleted' | 'numbered' | null = null
   let isFullWidth = false // Affects all blocks when enabled
+  let columnGap = 'gap-4' // Default column gap
 
   function isFullWidthMarker(block: NotionBlock): boolean {
     if (block.type === 'callout') {
@@ -898,6 +911,16 @@ export function renderNotionBlocks(
     }
 
 
+    // Check for column gap markers
+    if (block.type === 'callout') {
+      const calloutText = block.callout?.rich_text?.map((text: any) => text.plain_text).join('') || ''
+      const gapMatch = calloutText.match(/(?:gap|column-gap):\s*(\d+)/i)
+      if (gapMatch && gapMatch[1]) {
+        columnGap = `gap-${gapMatch[1]}`
+        return // Don't render the callout, it's just a marker
+      }
+    }
+    
     // Check for full-width markers
     if (isFullWidthMarker(block)) {
       // Flush any regular content before switching to full-width
@@ -1086,6 +1109,9 @@ export function renderNotionBlocks(
           elements.push(rendered)
         }
       } else if (block.type === 'column_list') {
+        // Apply current column gap to this column_list
+        ;(block as any).__columnGap = columnGap
+        
         // Check if column_list contains images
         const columnBlocks = (block as any).children || []
         const hasImages = columnBlocks.some((col: NotionBlock) => {
@@ -1107,6 +1133,9 @@ export function renderNotionBlocks(
             elements.push(wrapFullWidth(rendered, `fullwidth-${block.id || index}`))
           }
         }
+        
+        // Reset gap to default after using it (so next column_list uses default unless another gap is set)
+        columnGap = 'gap-4'
       } else if (block.type === 'image' && insideColumnList) {
         // Image inside column_list - render normally without full-width
         const rendered = renderNotionBlock(block, allImages, onImageClick)
@@ -1122,6 +1151,13 @@ export function renderNotionBlocks(
       }
     } else {
       // Render normally (in narrow container)
+      // If it's a column_list, apply current gap
+      if (block.type === 'column_list') {
+        ;(block as any).__columnGap = columnGap
+        // Reset gap to default after using it
+        columnGap = 'gap-4'
+      }
+      
       const rendered = renderNotionBlock(block, allImages, onImageClick)
       if (rendered) {
         elements.push(rendered)
