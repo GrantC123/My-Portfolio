@@ -19,7 +19,6 @@ const nextConfig = {
         hostname: 'v0.blob.com',
       },
     ],
-    unoptimized: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
