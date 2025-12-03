@@ -61,12 +61,19 @@ git push
 
 ### Complete Workflow
 
-**Typical workflow after making changes:**
+**Typical workflow after making changes (three commands):**
 ```powershell
 git add -A
 git commit -m "Description of changes"
 git push
 ```
+
+**One-line version (works in all PowerShell versions):**
+```powershell
+git add -A; git commit -m "Description of changes"; git push
+```
+
+**Note:** Use `;` to chain commands in PowerShell. This works in all versions. If you have PowerShell 7+, you can also use `&&` which stops if a command fails.
 
 **After updating Notion content:**
 ```powershell
