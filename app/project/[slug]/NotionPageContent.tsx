@@ -154,7 +154,6 @@ export default function NotionPageContent({ page, blocks, slug, nextProject }: N
               fill
               className="object-cover"
               priority
-              unoptimized={metadata.featuredImage.startsWith('http') ? false : true}
             />
           </div>
         </section>

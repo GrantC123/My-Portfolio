@@ -32,7 +32,6 @@ export default function AboutNotionContent({ page, blocks, allImages }: AboutNot
                     sizes="(max-width: 768px) 100vw, 768px"
                     className="object-contain object-top rounded-xl"
                     priority
-                    unoptimized={featuredImage.startsWith('http') ? false : true}
                   />
                 </div>
               </div>

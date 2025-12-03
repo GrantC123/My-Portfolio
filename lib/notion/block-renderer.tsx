@@ -385,7 +385,6 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
               alt={block.image?.caption?.[0]?.plain_text || 'Image'}
               fill
               className={`object-cover transition-transform duration-500 ${hasClickHandler ? 'group-hover:scale-105' : ''}`}
-              unoptimized={isLocalImage ? true : false}
             />
             {hasClickHandler && (
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300" />

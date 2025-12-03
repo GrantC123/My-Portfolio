@@ -170,7 +170,6 @@ export default function NotionPageView({ params }: { params: { pageId: string } 
               fill
               className="object-cover"
               priority
-              unoptimized={metadata.featuredImage.startsWith('http') ? false : true}
             />
           </div>
         </section>
