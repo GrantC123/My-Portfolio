@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowDown } from "lucide-react"
 import { projects, testimonials } from "./data"
-import AnimatedText from "./components/AnimatedText"
+import BlurText from "@/components/ui/blur-text"
 import LogoMarquee from "./components/LogoMarquee"
 import TestimonialsSection from "./components/TestimonialsSection"
 import ProjectTile from "./components/ProjectTile"
@@ -28,10 +28,14 @@ export default async function Home() {
         <div className="mx-auto max-w-[1400px] px-6 md:px-36 flex-grow flex items-center">
           <div className="flex flex-col gap-6 w-full">
             <h1 className="font-display font-bold text-4xl md:text-[60px] leading-[40px] md:leading-[60px] text-white">
-              <span className="text-coral-300">I'm Grant</span>
-              <AnimatedText
-                text=" — Senior Product Designer and Creative Leader driving results through strategic design and team empowerment."
+              <BlurText
+                text="I'm Grant — Senior Product Designer and Creative Leader driving results through strategic design and team empowerment."
                 className="text-white"
+                delay={150}
+                animateBy="words"
+                direction="top"
+                highlightIndices={[0, 1]}
+                highlightClassName="text-coral-300"
               />
             </h1>
             <Button
