@@ -1,7 +1,4 @@
-'use client'
-
 import ProjectTile, { type Project } from "./ProjectTile"
-import { ScrollStackContainer } from "@/components/ui/scroll-stack"
 
 interface FeaturedProjectsProps {
   notionProjects: Project[]
@@ -18,16 +15,18 @@ export default function FeaturedProjects({ notionProjects, staticProjects }: Fea
     displayProjects.push(editorialProject)
   }
 
-  if (displayProjects.length === 0) {
-    return (
-      <div className="text-zinc-400 text-center py-8">
-        No featured projects found. Check your Notion database for projects with the "Featured" checkbox enabled.
-      </div>
-    )
-  }
-
   return (
-    <ScrollStackContainer projects={displayProjects} />
+    <div className="flex flex-col gap-8">
+      {displayProjects.length === 0 ? (
+        <div className="text-zinc-400 text-center py-8">
+          No featured projects found. Check your Notion database for projects with the "Featured" checkbox enabled.
+        </div>
+      ) : (
+        displayProjects.map((project, index) => (
+          <ProjectTile key={project.slug || index} project={project} />
+        ))
+      )}
+    </div>
   )
 }
 

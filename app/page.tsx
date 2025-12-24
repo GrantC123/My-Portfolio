@@ -65,7 +65,7 @@ export default async function Home() {
       </section>
 
       {/* Brands Section */}
-      <section className="py-16 bg-zinc-900 -mt-[48vh]">
+      <section className="py-16 bg-zinc-900">
         <div className="container mx-auto px-6 md:px-52">
           <div className="flex flex-col gap-8 max-w-[1024px]">
             <h2 className="font-display font-bold text-[30px] leading-[36px] text-white text-center">
