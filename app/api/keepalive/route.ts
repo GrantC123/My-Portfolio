@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Also allow POST for flexibility
-export async function POST() {
-  return GET()
+export async function POST(request: NextRequest) {
+  return GET(request)
 }
 
