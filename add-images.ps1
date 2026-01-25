@@ -77,19 +77,25 @@ if ($addedImages.Count -gt 0) {
     Write-Host "`n🔄 Revalidating site..." -ForegroundColor Cyan
     .\revalidate.ps1
     
-    Write-Host "`n✅ Done! Copy these paths into Notion:" -ForegroundColor Green
+    Write-Host "`n✅ Done! Copy these URLs into Notion:" -ForegroundColor Green
     Write-Host "`n----------------------------------------" -ForegroundColor DarkGray
+    
+    $domain = "https://www.grantcrowderdesign.com"
+    $fullUrls = @()
+    
     foreach ($path in $addedImages) {
-        Write-Host "$path" -ForegroundColor White
+        $fullUrl = "$domain$path"
+        Write-Host "$fullUrl" -ForegroundColor White
+        $fullUrls += $fullUrl
     }
     Write-Host "----------------------------------------`n" -ForegroundColor DarkGray
     
-    # Copy first path to clipboard for convenience
-    if ($addedImages.Count -eq 1) {
-        $addedImages[0] | Set-Clipboard
-        Write-Host "📋 Path copied to clipboard!" -ForegroundColor Green
-    } elseif ($addedImages.Count -gt 1) {
-        Write-Host "💡 Tip: Paths are ready to copy from above" -ForegroundColor Cyan
+    # Copy first URL to clipboard for convenience
+    if ($fullUrls.Count -eq 1) {
+        $fullUrls[0] | Set-Clipboard
+        Write-Host "📋 Full URL copied to clipboard!" -ForegroundColor Green
+    } elseif ($fullUrls.Count -gt 1) {
+        Write-Host "💡 Tip: URLs are ready to copy from above" -ForegroundColor Cyan
     }
     
     Write-Host ""
