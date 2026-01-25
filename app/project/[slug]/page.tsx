@@ -15,7 +15,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
-import EditorialGallery from "../../components/EditorialGallery"
 import ProjectTile from "../../components/ProjectTile"
 import ReviewTemplateImages from "./ReviewTemplateImages"
 
@@ -162,7 +161,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   // Check if this is the Bankrate Data Center case study
   const isBankrateCaseStudy = project.slug === "bankrate-data-center"
   const isReviewTemplate = project.slug === "bankrate-review-template"
-  const isGalleryProject = project.slug === "editorial-imagery"
 
   // Bankrate-specific data
   const bankrateImage = "/images/data-center/bankrate-data-center-hero.jpg"
@@ -646,135 +644,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 ))}
               </ul>
             </div>
-          </div>
-        </section>
-
-        {/* More Projects Section */}
-        <section className="bg-zinc-900 py-16 border-t border-zinc-500">
-          <div className="container mx-auto px-6 md:px-36 max-w-[1280px]">
-            <h2 className="font-display font-bold text-[30px] leading-[36px] text-white mb-8">More Projects</h2>
-            <div className="flex flex-col gap-8 max-w-[1152px]">
-              {projects
-                .filter((p) => p.slug !== project.slug)
-                .slice(0, 2)
-                .map((previewProject, index) => (
-                  <ProjectTile key={previewProject.slug || index} project={previewProject} />
-                ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    )
-  }
-
-  // For Editorial Imagery gallery project - Visual Design case study
-  if (isGalleryProject) {
-    // This will be handled by the MasonryGrid component with dynamic loading
-
-    return (
-      <div className="min-h-screen bg-zinc-950">
-        {/* Hero Section with Breadcrumbs */}
-        <section className="bg-zinc-950 border-b border-zinc-500 relative z-0">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            {/* Breadcrumbs */}
-            <div className="pt-16 pb-4">
-              <Breadcrumb>
-                <BreadcrumbList className="text-zinc-400">
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="/" className="text-zinc-400 hover:text-white underline">
-                        Home
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="text-zinc-600">
-                    <span>/</span>
-                  </BreadcrumbSeparator>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="/#work" className="text-zinc-400 hover:text-white underline">
-                        Work
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="text-zinc-600">
-                    <span>/</span>
-                  </BreadcrumbSeparator>
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="text-white">Visual Design</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-
-            {/* Hero Title */}
-            <div className="py-20 md:py-30">
-              <h1 className="font-display font-bold text-5xl md:text-6xl leading-[48px] md:leading-[60px] text-white w-full">
-                A collection of visual design work
-              </h1>
-            </div>
-          </div>
-        </section>
-
-        {/* Hero Image */}
-        <section className="w-full bg-zinc-950">
-          <div className="relative w-full h-[880px]">
-            <Image
-              src="/images/editorial/editorial-imagery-header.jpg"
-              alt={project.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </section>
-
-        {/* Project Summary Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <div className="max-w-[768px] mx-auto">
-              <div className="flex flex-col md:flex-row gap-10">
-                {/* Left: Description */}
-                <div className="flex-1">
-                  <h2 className="font-display font-bold text-2xl leading-[32px] text-white mb-6">
-                    Project Summary
-                  </h2>
-                  <p className="text-lg leading-[28px] text-zinc-400">
-                    Over my time at Redventures, I've had the opportunity to work on several brand heavy companies including NextAdvisor and Bankrate. When working on imagery, I have utilized AI to help me ideate and create final imagery assets.
-                  </p>
-                </div>
-
-                {/* Right: Project Details */}
-                <div className="flex-1 flex flex-col gap-6">
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Role</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">{project.role}</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Timeline</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">{project.timeline}</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Tools</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">Figma, Figma Slides, Figjam</p>
-                  </div>
-                  <Separator className="bg-zinc-600" />
-                  <div>
-                    <h4 className="font-display font-bold text-xl leading-[28px] text-white mb-4">Deliverables</h4>
-                    <p className="text-lg leading-[28px] text-zinc-400">{project.deliverables}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Dynamic Masonry Gallery Section */}
-        <section className="bg-zinc-950 py-16">
-          <div className="container mx-auto px-4 md:px-16 max-w-[1280px]">
-            <EditorialGallery />
           </div>
         </section>
 

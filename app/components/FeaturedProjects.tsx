@@ -6,14 +6,8 @@ interface FeaturedProjectsProps {
 }
 
 export default function FeaturedProjects({ notionProjects, staticProjects }: FeaturedProjectsProps) {
-  // Find the editorial design case study
-  const editorialProject = staticProjects.find(p => p.slug === "editorial-imagery")
-  
-  // Combine: Notion projects first, then editorial at the bottom
-  const displayProjects = [...notionProjects]
-  if (editorialProject) {
-    displayProjects.push(editorialProject)
-  }
+  // Combine Notion projects with any static projects
+  const displayProjects = [...notionProjects, ...staticProjects]
 
   return (
     <div className="flex flex-col gap-8">

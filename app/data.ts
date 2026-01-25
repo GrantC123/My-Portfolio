@@ -1,25 +1,6 @@
 export const projects = [
-  {
-    category: "VISUAL DESIGN",
-    title: "Editorial Imagery",
-    description: "A series of striking editorial images for a leading fashion magazine's digital platform.",
-    image: "/images/editorial/editorial-imagery-header.jpg",
-    slug: "editorial-imagery",
-    overview:
-      "In the competitive world of digital fashion media, visual impact is everything. Our client, a leading fashion magazine, needed to refresh their visual identity to stand out in crowded social feeds and capture the attention of their target audience while maintaining their established brand voice.",
-    challenge:
-      "The magazine needed to create visually compelling imagery that would stand out in a crowded digital space while maintaining their brand identity.",
-    challengeDetails:
-      "With declining engagement rates and increasing competition from both traditional publishers and social media influencers, the magazine needed a visual strategy that would be instantly recognizable, highly shareable, and adaptable across various content types and platforms.",
-    solution:
-      "We developed a unique visual style combining bold typography with avant-garde photography, creating a distinctive look that increased engagement on their digital platforms.",
-    solutionDetails:
-      "The new visual direction features a signature color palette, custom typography treatments that integrate with imagery, distinctive photo editing techniques, and a flexible system of layouts that maintain brand recognition while allowing for content-specific customization.",
-    client: "Fashion Forward Magazine",
-    timeline: "3 months",
-    role: "Visual Designer",
-    deliverables: "Digital Illustrations, Photo Editing, Typography Designs, Style Guide",
-  },
+  // Static projects can be added here
+  // The editorial imagery project is now managed through Notion
 ]
 
 export const testimonials = [
