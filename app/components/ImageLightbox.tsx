@@ -120,7 +120,7 @@ export default function ImageLightbox({
         <div className="relative w-full h-full">
           {/* Image container with padding */}
           <div 
-            className="flex items-center justify-center px-8 py-8 overflow-hidden w-full h-full"
+            className="flex items-center justify-center p-8 overflow-hidden w-full h-full"
             onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -130,7 +130,7 @@ export default function ImageLightbox({
           >
             <div 
               ref={imageRef}
-              className="relative max-w-full max-h-[90vh] w-auto h-auto rounded-[4px] transition-transform duration-200"
+              className="relative w-full h-full rounded-[4px] transition-transform duration-200"
               style={{
                 transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
                 transformOrigin: 'center center',
@@ -140,11 +140,11 @@ export default function ImageLightbox({
               <Image
                 src={images[currentIndex]}
                 alt={`Image ${currentIndex + 1} of ${images.length}`}
-                width={2000}
-                height={1500}
-                className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-[4px] select-none"
+                fill
+                className="object-contain rounded-[4px] select-none"
                 priority
                 draggable={false}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 90vw"
               />
             </div>
           </div>
