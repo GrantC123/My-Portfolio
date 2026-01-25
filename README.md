@@ -84,30 +84,43 @@ git add -A; git commit -m "Description of changes"; git push
 
 ### Quick Method (Recommended)
 
-Use the automated script to add images with one command:
+**For Figma Exports:**
 
-```powershell
-.\add-images.ps1 C:\Downloads\my-image.jpg
+If you export images directly from Figma to your project folder:
+
+1. Export image from Figma to `public/images/[folder]/` (e.g., `public/images/data-center/`)
+2. Run the script:
+   ```powershell
+   .\add-images.ps1
+   ```
+3. Select the folder where you exported (e.g., data-center)
+4. Script will auto-detect new images and show them
+5. Confirm to commit, push, and revalidate
+6. URLs are displayed and copied to clipboard
+7. Paste in Notion ✅
+
+The script automatically:
+- ✅ Detects all uncommitted images in the folder
+- ✅ Commits them to Git
+- ✅ Pushes to GitHub
+- ✅ Runs revalidation
+- ✅ Displays full URLs (with domain)
+- ✅ Copies URLs to clipboard
+
+**Example:**
 ```
-
-The script will:
-1. Show you a menu of available folders (editorial, data-center, etc.)
-2. Copy the image to the selected folder
-3. Commit and push to GitHub automatically
-4. Run revalidation
-5. Display the path to paste in Notion (and copy to clipboard)
-
-**Examples:**
-
-```powershell
-# Add single image
-.\add-images.ps1 C:\Downloads\hero-image.jpg
-
-# Add multiple images at once
-.\add-images.ps1 C:\Downloads\image1.jpg,C:\Downloads\image2.png,C:\Downloads\image3.jpg
-
-# Add all images from a folder
-.\add-images.ps1 C:\Downloads\*.jpg
+Figma → Export to public/images/data-center/hero.jpg
+↓
+.\add-images.ps1
+↓
+Select folder: 2 (data-center)
+↓
+Found: hero.jpg
+↓
+Confirm: y
+↓
+https://www.grantcrowderdesign.com/images/data-center/hero.jpg
+(copied to clipboard)
 ```
 
 ### Manual Method
