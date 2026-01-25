@@ -6,6 +6,7 @@ import * as LucideIcons from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import BeforeAfterSlider from '@/app/components/BeforeAfterSlider'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
+import EditorialGallery from '@/app/components/EditorialGallery'
 
 export interface NotionBlock {
   id: string
@@ -483,6 +484,27 @@ export function renderNotionBlock(block: NotionBlock, allImages: string[] = [], 
         // Store the gap value on the block so renderNotionBlocks can access it
         ;(block as any).__columnGap = `gap-${gapValue}`
         // Return null - this callout is just a marker, not rendered
+        return null
+      }
+      
+      // Check if this is a masonry gallery callout (format: "gallery:editorial" or "masonry:editorial")
+      const galleryMatch = calloutText.match(/(?:gallery|masonry):\s*(\w+)/i)
+      if (galleryMatch && galleryMatch[1]) {
+        const galleryType = galleryMatch[1].toLowerCase()
+        
+        // Currently only supporting "editorial" gallery type
+        if (galleryType === 'editorial') {
+          return (
+            <div key={id} className="my-8 -mx-4 md:-mx-16">
+              <EditorialGallery />
+            </div>
+          )
+        }
+        
+        // Could add more gallery types in the future:
+        // if (galleryType === 'portfolio') return <PortfolioGallery />
+        // if (galleryType === 'photography') return <PhotographyGallery />
+        
         return null
       }
       

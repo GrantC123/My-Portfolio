@@ -108,6 +108,76 @@ To add images that will appear on your live site:
 
 **Note:** The image must be pushed to GitHub first before it will appear on your live site. The revalidation step refreshes your site to pull the latest content from Notion.
 
+## Notion Callout Components
+
+You can use special callout blocks in Notion to add interactive components to your project pages. Just create a callout block with the appropriate text:
+
+### Masonry Gallery
+Displays a dynamic masonry grid of images from a folder. Images are automatically loaded from the folder and randomized.
+
+**Format:**
+```
+💠 gallery:editorial
+```
+or
+```
+🖼️ masonry:editorial
+```
+
+**Usage:** Add images to `public/images/editorial/` folder, and they'll automatically appear in the gallery.
+
+### Before/After Slider
+Creates an interactive image comparison slider.
+
+**Format:**
+```
+🔄 slider: /path/to/before.jpg /path/to/after.jpg
+```
+
+**Optional parameters:**
+- `before:Label` - Custom label for before image
+- `after:Label` - Custom label for after image
+- `position:50` - Default slider position (0-100)
+
+**Example:**
+```
+🔄 slider: /images/before.jpg /images/after.jpg before:Original after:Redesigned position:30
+```
+
+### Accordion
+Creates collapsible sections with headings as triggers.
+
+**Format:**
+```
+📋 accordion:
+```
+
+Add child blocks with heading_1, heading_2, or heading_3 as section titles, followed by content blocks.
+
+**Optional modifiers:**
+- Add `h4:` or `size:h4` to heading text for smaller trigger text
+
+### Spacer
+Adds vertical spacing between sections.
+
+**Format:**
+```
+⬇️ spacer:md
+```
+
+**Sizes:** `sm` (16px), `md` (32px), `lg` (48px), `xl` (64px), `2xl` (96px)
+Or use a custom number: `spacer:16` for 16 units of spacing.
+
+### Column Gap
+Controls the gap between columns in multi-column layouts.
+
+**Format:**
+```
+↔️ gap:6
+```
+
+Use any Tailwind spacing number (e.g., 2, 4, 6, 8, 10).
+
 ## Development
 
 **Start local server:**
