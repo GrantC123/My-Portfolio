@@ -82,7 +82,37 @@ git add -A; git commit -m "Description of changes"; git push
 
 ## How to Add Images to Notion Projects
 
-To add images that will appear on your live site:
+### Quick Method (Recommended)
+
+Use the automated script to add images with one command:
+
+```powershell
+.\add-images.ps1 C:\Downloads\my-image.jpg
+```
+
+The script will:
+1. Show you a menu of available folders (editorial, data-center, etc.)
+2. Copy the image to the selected folder
+3. Commit and push to GitHub automatically
+4. Run revalidation
+5. Display the path to paste in Notion (and copy to clipboard)
+
+**Examples:**
+
+```powershell
+# Add single image
+.\add-images.ps1 C:\Downloads\hero-image.jpg
+
+# Add multiple images at once
+.\add-images.ps1 C:\Downloads\image1.jpg,C:\Downloads\image2.png,C:\Downloads\image3.jpg
+
+# Add all images from a folder
+.\add-images.ps1 C:\Downloads\*.jpg
+```
+
+### Manual Method
+
+To add images manually:
 
 1. **Add the image to your image folder:**
    - Place your image file in `public/images/` (or the appropriate subfolder like `public/images/editorial/`, `public/images/data-center/`, etc.)
