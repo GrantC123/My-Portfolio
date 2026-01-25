@@ -47,6 +47,12 @@ export async function getFeaturedProjects(): Promise<Project[]> {
             },
           ],
         },
+        sorts: [
+          {
+            property: 'Sort Order',
+            direction: 'ascending',
+          },
+        ],
       }),
       next: { 
         revalidate: 3600, // Match page-level revalidate for ISR
@@ -168,7 +174,25 @@ export async function getFeaturedProjects(): Promise<Project[]> {
       }
     }).filter((project: Project) => project.slug) // Only include projects with a slug
     
-    return projects
+    // Sort projects by Sort Order property with alphabetical tie-breaker
+    // Map projects with their sort order
+    const projectsWithOrder = projects.map((project, index) => ({
+      project,
+      sortOrder: pages[index]?.properties?.['Sort Order']?.number || 
+                 pages[index]?.properties?.['Display Order']?.number || 
+                 999, // Default: projects without sort order appear at the end
+    }))
+    
+    // Sort: primary by sortOrder (ascending), secondary alphabetically by title
+    projectsWithOrder.sort((a, b) => {
+      if (a.sortOrder !== b.sortOrder) {
+        return a.sortOrder - b.sortOrder
+      }
+      // Tie-breaker: alphabetical by title (case-insensitive)
+      return a.project.title.localeCompare(b.project.title, undefined, { sensitivity: 'base' })
+    })
+    
+    return projectsWithOrder.map(item => item.project)
   } catch (error) {
     console.error('Error fetching featured projects:', error)
     return []
