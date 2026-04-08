@@ -1,10 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowDown } from "lucide-react"
-import { projects, testimonials } from "./data"
+import { projects } from "./data"
 import BlurText from "@/components/ui/blur-text"
 import LogoMarquee from "./components/LogoMarquee"
-import TestimonialsSection from "./components/TestimonialsSection"
 import ProjectTile from "./components/ProjectTile"
 import { Button } from "@/components/ui/button"
 import FeaturedProjects from "./components/FeaturedProjects"
@@ -76,9 +75,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* Testimonials Section */}
-      <TestimonialsSection testimonials={testimonials} />
     </div>
   )
 }
