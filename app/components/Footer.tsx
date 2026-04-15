@@ -21,7 +21,7 @@ const Footer = () => {
         <div className="text-sm text-white text-center md:text-left">grantcrowderdesign@gmail.com</div>
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-4">
           <div className="flex flex-col items-center md:items-end gap-1">
-            <div className="text-sm text-white">© 2025 Grant Crowder Design</div>
+            <div className="text-sm text-white">© {new Date().getFullYear()} Grant Crowder Design</div>
             <div className="text-xs text-zinc-400">Built with Cursor, Notion, and Supabase</div>
           </div>
           <Link
